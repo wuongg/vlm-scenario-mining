@@ -12,15 +12,15 @@
     "held_out_ok": true
   },
   "smoke": {
-    "n_images_found": 50,
-    "n_images_missing": 450,
+    "n_images_found": 500,
+    "n_images_missing": 0,
     "detector_ran": true,
-    "n_smoked": 50,
+    "n_smoked": 500,
     "object_recall_50": null,
     "note": "official frozen-500 table; missing images = parse-fail = miss",
-    "n_images_missing_scored_as_miss": 450,
-    "object_recall": 0.02404274265360641,
-    "tp": 27,
+    "n_images_missing_scored_as_miss": 0,
+    "object_recall": 0.3446126447016919,
+    "tp": 387,
     "n_gt_objects": 1123,
     "by_group": {
       "barrier": {
@@ -44,22 +44,22 @@
         "recall": 0.0
       },
       "traffic_sign": {
-        "tp": 2,
+        "tp": 5,
         "n": 35,
-        "recall": 0.05714285714285714
+        "recall": 0.14285714285714285
       },
       "vehicle": {
-        "tp": 18,
+        "tp": 324,
         "n": 425,
-        "recall": 0.042352941176470586
+        "recall": 0.7623529411764706
       },
       "vru": {
-        "tp": 7,
+        "tp": 58,
         "n": 74,
-        "recall": 0.0945945945945946
+        "recall": 0.7837837837837838
       }
     },
-    "elapsed_s": 683.3541414737701
+    "elapsed_s": 5578.10209107399
   },
   "setup_difference": [
     {
@@ -84,7 +84,7 @@
     },
     {
       "axis": "images",
-      "gap": "50/500 CODA2022-test images present locally; missing scored as miss"
+      "gap": "500/500 CODA2022-test images present locally; missing scored as miss"
     }
   ],
   "wording": "cross-locale sanity comparison under a different setup \u2014 not a leaderboard claim",

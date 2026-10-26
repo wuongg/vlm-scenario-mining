@@ -1,0 +1,549 @@
+{
+  "provenance": "grid",
+  "frozen": false,
+  "official_first_run": true,
+  "day9_freeze": "pending",
+  "headline": "pedestrian_cross",
+  "recall_tIoU": {
+    "api": {
+      "0.3": {
+        "tp": 3,
+        "fp": 1,
+        "fn": 7,
+        "n_pred": 4,
+        "n_gt": 10,
+        "recall": 0.3,
+        "precision": 0.75
+      },
+      "0.5": {
+        "tp": 3,
+        "fp": 1,
+        "fn": 7,
+        "n_pred": 4,
+        "n_gt": 10,
+        "recall": 0.3,
+        "precision": 0.75
+      },
+      "0.7": {
+        "tp": 3,
+        "fp": 1,
+        "fn": 7,
+        "n_pred": 4,
+        "n_gt": 10,
+        "recall": 0.3,
+        "precision": 0.75
+      }
+    },
+    "detector": {
+      "0.3": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      },
+      "0.5": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      },
+      "0.7": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      }
+    },
+    "union": {
+      "0.3": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      },
+      "0.5": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      },
+      "0.7": {
+        "tp": 10,
+        "fp": 41,
+        "fn": 0,
+        "n_pred": 51,
+        "n_gt": 10,
+        "recall": 1.0,
+        "precision": 0.19607843137254902
+      }
+    }
+  },
+  "primary_cell": {
+    "backend": "union",
+    "tIoU": 0.5,
+    "recall": 1.0
+  },
+  "neff": {
+    "n": 10,
+    "tp": 10,
+    "n_scenes": 10,
+    "icc": 0.0,
+    "mbar": 2.0,
+    "deff": 1.0,
+    "n_eff": 10.0,
+    "p": 1.0,
+    "wilson_lo": 0.7224598312333834,
+    "wilson_hi": 1.0,
+    "caveat": "n_scenes=10 \u2014 diagnostic, not a population CI",
+    "n_scenes_with_gt_pos": 5
+  },
+  "per_scene": {
+    "min": 1.0,
+    "median": 1.0,
+    "max": 1.0,
+    "per_scene": [
+      {
+        "scene": "scene-0061",
+        "tp": 2,
+        "n_gt": 2,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0553",
+        "tp": 3,
+        "n_gt": 3,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0655",
+        "tp": 1,
+        "n_gt": 1,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0757",
+        "tp": 1,
+        "n_gt": 1,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-1094",
+        "tp": 3,
+        "n_gt": 3,
+        "recall": 1.0
+      }
+    ]
+  },
+  "condition_breakdown": {
+    "by_light_map": [
+      {
+        "light": "day",
+        "map": "boston-seaport",
+        "n": 16,
+        "n_gt": 5,
+        "tp": 5,
+        "recall": 1.0
+      },
+      {
+        "light": "day",
+        "map": "singapore-onenorth",
+        "n": 15,
+        "n_gt": 2,
+        "tp": 2,
+        "recall": 1.0
+      },
+      {
+        "light": "day",
+        "map": "singapore-queenstown",
+        "n": 14,
+        "n_gt": 0,
+        "tp": 0,
+        "recall": null
+      },
+      {
+        "light": "night",
+        "map": "singapore-hollandvillage",
+        "n": 15,
+        "n_gt": 3,
+        "tp": 3,
+        "recall": 1.0
+      }
+    ],
+    "night_confound": "all night=hollandv"
+  },
+  "fp_taxonomy": {
+    "api": {
+      "not_fp": 53,
+      "gt_bounded_hallucination": 2,
+      "schema-forced": 5
+    },
+    "detector": {
+      "event_fp": 41,
+      "sample_n": 15,
+      "sample_seed": 13,
+      "sample_labels": {
+        "event-FP-standing": 7,
+        "object-FP": 7,
+        "boundary": 1
+      },
+      "note": "Day-6 D19 sample of 15/41; not re-drawn Day 8"
+    }
+  },
+  "claim_audit": {
+    "n_claims": 4,
+    "gt_bounded_hallucination": 2,
+    "detector_unsupported": 0,
+    "caveat": "n_claims is 4-scale; report raw counts, not a rate",
+    "corpus_api": "not run (D20); unsupported rate is GT-60 claims only",
+    "claims": [
+      {
+        "window_id": "scene-0061_CAM_FRONT_LEFT_1532402935154844",
+        "class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_class_set": [],
+        "gt_bounded_hallucination": true,
+        "detector_supported": true
+      },
+      {
+        "window_id": "scene-0655_CAM_FRONT_1535385099362404",
+        "class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_bounded_hallucination": false,
+        "detector_supported": true
+      },
+      {
+        "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+        "class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_class_set": [],
+        "gt_bounded_hallucination": true,
+        "detector_supported": true
+      },
+      {
+        "window_id": "scene-1094_CAM_FRONT_RIGHT_1542800850920339",
+        "class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_class_set": [
+          "pedestrian_cross"
+        ],
+        "gt_bounded_hallucination": false,
+        "detector_supported": true
+      }
+    ]
+  },
+  "gt60_stitch": {
+    "api": {
+      "pre": 4,
+      "post": 4,
+      "delta": 0,
+      "overmerge_incidents": 0
+    },
+    "detector": {
+      "pre": 51,
+      "post": 39,
+      "delta": -12,
+      "overmerge_incidents": 0
+    },
+    "union": {
+      "pre": 51,
+      "post": 39,
+      "delta": -12,
+      "overmerge_incidents": 0
+    }
+  },
+  "corpus_stitch_d22": {
+    "pre": 221,
+    "post": 45,
+    "delta": -176,
+    "overmerge_incidents": 0,
+    "index_headline_events": 45,
+    "before": {
+      "pre": 221,
+      "post": 60,
+      "delta": -161,
+      "overmerge_incidents": 15
+    }
+  },
+  "routing": {
+    "by_family": {
+      "safety_maneuver": {
+        "family": "safety_maneuver",
+        "n": 60,
+        "n_gt": 0,
+        "c_auto": 1.0,
+        "c_miss": 5.0,
+        "tau_star": 0.3,
+        "U_star": 0.85,
+        "curve": [
+          {
+            "tau": 0.3,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.4,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.5,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.6,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.7,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.8,
+            "pct_auto": 0.0,
+            "n_auto": 0,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.0
+          },
+          {
+            "tau": 0.9,
+            "pct_auto": 0.0,
+            "n_auto": 0,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.0
+          }
+        ]
+      },
+      "safety_spatial": {
+        "family": "safety_spatial",
+        "n": 60,
+        "n_gt": 10,
+        "c_auto": 1.0,
+        "c_miss": 5.0,
+        "tau_star": 0.8,
+        "U_star": 0.36666666666666664,
+        "curve": [
+          {
+            "tau": 0.3,
+            "pct_auto": 0.9333333333333333,
+            "n_auto": 56,
+            "fn_auto": 3,
+            "fn_auto_rate": 0.3,
+            "recall_auto": 0.6666666666666666,
+            "utility": -0.5666666666666667
+          },
+          {
+            "tau": 0.4,
+            "pct_auto": 0.9333333333333333,
+            "n_auto": 56,
+            "fn_auto": 3,
+            "fn_auto_rate": 0.3,
+            "recall_auto": 0.6666666666666666,
+            "utility": -0.5666666666666667
+          },
+          {
+            "tau": 0.5,
+            "pct_auto": 0.9333333333333333,
+            "n_auto": 56,
+            "fn_auto": 3,
+            "fn_auto_rate": 0.3,
+            "recall_auto": 0.6666666666666666,
+            "utility": -0.5666666666666667
+          },
+          {
+            "tau": 0.6,
+            "pct_auto": 0.9333333333333333,
+            "n_auto": 56,
+            "fn_auto": 3,
+            "fn_auto_rate": 0.3,
+            "recall_auto": 0.6666666666666666,
+            "utility": -0.5666666666666667
+          },
+          {
+            "tau": 0.7,
+            "pct_auto": 0.9333333333333333,
+            "n_auto": 56,
+            "fn_auto": 3,
+            "fn_auto_rate": 0.3,
+            "recall_auto": 0.6666666666666666,
+            "utility": -0.5666666666666667
+          },
+          {
+            "tau": 0.8,
+            "pct_auto": 0.36666666666666664,
+            "n_auto": 22,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": 1.0,
+            "utility": 0.36666666666666664
+          },
+          {
+            "tau": 0.9,
+            "pct_auto": 0.35,
+            "n_auto": 21,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": 1.0,
+            "utility": 0.35
+          }
+        ]
+      },
+      "compliance": {
+        "family": "compliance",
+        "n": 60,
+        "n_gt": 0,
+        "c_auto": 1.0,
+        "c_miss": 5.0,
+        "tau_star": 0.3,
+        "U_star": 0.85,
+        "curve": [
+          {
+            "tau": 0.3,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.4,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.5,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.6,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.7,
+            "pct_auto": 0.85,
+            "n_auto": 51,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.85
+          },
+          {
+            "tau": 0.8,
+            "pct_auto": 0.0,
+            "n_auto": 0,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.0
+          },
+          {
+            "tau": 0.9,
+            "pct_auto": 0.0,
+            "n_auto": 0,
+            "fn_auto": 0,
+            "fn_auto_rate": 0.0,
+            "recall_auto": null,
+            "utility": 0.0
+          }
+        ]
+      }
+    },
+    "c_auto": 1.0,
+    "c_miss": 5.0,
+    "note": "D23. U=c_auto*(pct_auto)-c_miss*(fn_auto_rate). API records have no logit; skeleton uses defaults + T0 auto-accept. Family-level only."
+  },
+  "routing_summary": {
+    "c_auto": 1.0,
+    "c_miss": 5.0,
+    "note": "D23. U=c_auto*(pct_auto)-c_miss*(fn_auto_rate). API records have no logit; skeleton uses defaults + T0 auto-accept. Family-level only.",
+    "tau_star": {
+      "safety_maneuver": 0.3,
+      "safety_spatial": 0.8,
+      "compliance": 0.3
+    },
+    "U_star": {
+      "safety_maneuver": 0.85,
+      "safety_spatial": 0.36666666666666664,
+      "compliance": 0.85
+    }
+  },
+  "scene_1077": {
+    "scene": "scene-1077",
+    "n_windows": 36,
+    "n_t0_flags": 0,
+    "n_ped_boxes": 0,
+    "n_moto_boxes": 14,
+    "n_vehicle_boxes": 828,
+    "maps": {
+      "singapore-hollandvillage": 216
+    },
+    "lights": {
+      "night": 216
+    },
+    "cause": "T0 silent because no enabled predicate fired: night hollandv arterial, moto boxes=14 (lane_split needs \u22653 frames straddle), ped_cross v2 needs ego-path\u2229crossing AND ped in polygon, cut_in D15 is 0 corpus-wide. Not a map-lookup crash \u2014 windows exist and objects project."
+  },
+  "do_not_quote_coda_0024": true
+}

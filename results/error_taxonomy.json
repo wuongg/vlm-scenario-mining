@@ -1,0 +1,18 @@
+{
+  "scene-1077": {
+    "scene": "scene-1077",
+    "n_windows": 36,
+    "n_t0_flags": 0,
+    "n_ped_boxes": 0,
+    "n_moto_boxes": 14,
+    "n_vehicle_boxes": 828,
+    "maps": {
+      "singapore-hollandvillage": 216
+    },
+    "lights": {
+      "night": 216
+    },
+    "cause": "T0 silent because no enabled predicate fired: night hollandv arterial, moto boxes=14 (lane_split needs \u22653 frames straddle), ped_cross v2 needs ego-path\u2229crossing AND ped in polygon, cut_in D15 is 0 corpus-wide. Not a map-lookup crash \u2014 windows exist and objects project."
+  },
+  "detector_event_fp": "see results/detector_fp_audit.json"
+}

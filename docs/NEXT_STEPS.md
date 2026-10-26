@@ -4,7 +4,7 @@ Proposal numbers are **not** the paper numbers. Measured on nuScenes mini after 
 
 ## Headline (frozen)
 
-Primary event-level cell = recall@tIoU=0.5 on `{pedestrian_cross}` only (pre-reg v0.2.1).
+Primary event-level cell = recall@tIoU=0.5 on `{pedestrian_cross}` only (pre-reg v0.2.3). Day-8 first-run grid: union **1.0** (10/10) — freeze Day 9.
 
 CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen fallback: 8/9 classes <3 positives). Mini is pedestrian_cross event-level + qualitative.
 
@@ -52,9 +52,25 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 
 - Kill-switch **3/3 pass — v1.0-track continues** (sunk-cost). Days 8–10 = official eval + routing skeleton + README. No v1.0 tag today.
 - D20: **SHIP 2-point frontier**. No corpus-API retry. `results/cost_frontier.csv`: detector ($0, R=1.0, P=0.196, 9944 s) + API-GT60 ($0, R=0.3, P=0.75, 765 s) + union ($0, R=1.0, P=0.196, 10708 s). Draft grid until Day 9.
-- Corpus detector **360/360** (4457 boxes, 5159 s). Stitch ped_cross 221→**60 events** (overmerge 15). 9 windows with no boxes. Index headline = 60.
-- CODA-500 official: 50/500 images local; 450 missing = miss. Object recall **0.024** (27/1123). Wording: cross-locale sanity, not a leaderboard claim. Overlap 0, held-out stands.
+- Corpus detector **360/360** (4457 boxes, 5159 s). Stitch ped_cross 221→60 events (overmerge 15) — **superseded Day 8 / D22**.
+- CODA-500 on Day 7 was 50/500 images. The missing-image figure is a **denominator artifact** (missing = miss). **Do not quote it as CODA recall.** See Day 8 / D21.
 - GT-60 schema **ok** 60/60 (2-axis, event_id, latency, doubt).
+
+## Day 8 (done)
+
+- D21: fetched remaining CODA2022-test images (HF `CODA2022-test.zip`, 428 MB) → **500/500** jpgs. Official object-R **0.345 (387/1123)**, 0 missing, 5578 s. VRU 0.784 / vehicle 0.762; barrier/cone/other/light 0 under the combined caption. Smoke 0.177 on the first 50 is appendix only. Do not quote the Day-7 missing-image figure as recall. Pre-reg stays v0.2.3.
+- D22: stitch guard `max_event_duration_s=30`, `max_windows=15`, gap≤1. Corpus **221→45** (delta −176), overmerge **0**. (Old 60 = 45 + 15 cap-6 fragments.) GT-60 detector **51→39**, overmerge 0. Index headline = 45.
+- scene-1077 T0 silent: night hollandv, 0 ped boxes, 14 moto (not ≥3-frame straddle), ped_cross v2 join not met, cut_in 0. Not a map-lookup crash. `results/error_taxonomy.json`.
+- Routing skeleton: U=1·%auto − 5·FN-auto. Family-level GT-60 sweep. τ* spatial=0.8 (U=0.367); maneuver/compliance=0.3 (U=0.85, n_gt=0). Step-function (API has no logit). Plot `results/day8_routing_skeleton.png`.
+- Official GT-60 first run (grid, not Day-9 freeze): union ped_cross recall@tIoU 0.3/0.5/0.7 = **1.0** (10/10), Wilson n_eff=10 ICC=0 → [0.72, 1.0] diagnostic. Per-scene min/med/max = 1.0 (5 scenes with GT pos). API 0.3 (3/10). Claim-audit: 2/4 GT-bounded hallucination, 0/4 detector-unsupported (n=4, raw counts only). CSV `results/official_eval.csv`.
+- D20 2-point frontier unchanged. Box-level split stays a note, not a 4th point.
+- No v1.0 tag.
+
+## Remaining (Days 9–12)
+
+- Day 9: freeze the official table (same cells as Day 8 unless a bug). Interpretation gate.
+- Day 10–11: README T1/T2 skeleton; still no v1.0 tag until that lands.
+- Day 12: pretty plots (today's `day8_*.png` are drafts). Tag v1.0 after README + interpretation_gate.
 
 ## Day 6 (done — commit `0e5e22d`)
 

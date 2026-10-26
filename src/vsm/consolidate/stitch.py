@@ -1,4 +1,8 @@
-"""Union-merge findings per class. gap≤1 window. Stitcher never writes GT event_id."""
+"""Union-merge findings per class. gap≤1 window. Stitcher never writes GT event_id.
+
+D22: over-merge guard is duration/window cap. Linking stays class + gap≤1.
+Standing-ped IoU chains are split at max_event_duration (30 s / 15 windows).
+"""
 
 from __future__ import annotations
 
@@ -6,9 +10,15 @@ from collections import defaultdict
 
 import polars as pl
 
+from vsm.config import cfg_dict
+
 _STRIDE_US = 1_500_000  # 3 frames × 0.5 s
-_GAP_US = 2 * _STRIDE_US  # gap≤1 window
-_OVERMERGE_N = 6
+_EVAL = cfg_dict("eval")
+_STITCH = dict(_EVAL.get("stitch") or {})
+_GAP_WINDOWS = int(_STITCH.get("gap_windows") or 1)
+_GAP_US = (_GAP_WINDOWS + 1) * _STRIDE_US  # gap≤1 window
+_MAX_DUR_US = int(float(_STITCH.get("max_event_duration_s") or 30) * 1_000_000)
+_MAX_WINDOWS = int(_STITCH.get("max_windows") or 15)
 
 
 def _scene_cam_ts(wid: str) -> tuple[str, str, int]:
@@ -16,6 +26,12 @@ def _scene_cam_ts(wid: str) -> tuple[str, str, int]:
     if len(bits) < 3:
         return str(wid), "", 0
     return bits[0], "_".join(bits[1:-1]), int(bits[-1])
+
+
+def _can_link(prev: dict, rec: dict) -> bool:
+    """True iff the gap between consecutive same-class windows is ≤1."""
+
+    return (rec["_ts"] - prev["_ts"]) <= _GAP_US
 
 
 def stitch_events(findings: pl.DataFrame, cfg=None) -> pl.DataFrame:
@@ -49,17 +65,19 @@ def stitch_events(findings: pl.DataFrame, cfg=None) -> pl.DataFrame:
             if not cur:
                 cur = [rec]
                 continue
-            gap = rec["_ts"] - cur[-1]["_ts"]
-            if gap <= _GAP_US and len(cur) < _OVERMERGE_N:
+            ok = _can_link(cur[-1], rec)
+            dur_ok = (rec["_ts"] - cur[0]["_ts"]) <= _MAX_DUR_US
+            n_ok = len(cur) < _MAX_WINDOWS
+            if ok and dur_ok and n_ok:
                 cur.append(rec)
-            else:
-                if gap <= _GAP_US and len(cur) >= _OVERMERGE_N:
-                    overmerge_incidents += 1
-                groups += 1
-                gid = f"{key[0]}|{key[1]}|{key[2]}|{groups}"
-                for x in cur:
-                    x["stitch_group"] = gid
-                cur = [rec]
+                continue
+            if ok and not (dur_ok and n_ok):
+                overmerge_incidents += 1
+            groups += 1
+            gid = f"{key[0]}|{key[1]}|{key[2]}|{groups}"
+            for x in cur:
+                x["stitch_group"] = gid
+            cur = [rec]
         if cur:
             groups += 1
             gid = f"{key[0]}|{key[1]}|{key[2]}|{groups}"

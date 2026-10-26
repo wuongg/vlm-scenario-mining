@@ -1,0 +1,9 @@
+group,tp,n_gt,recall
+all,387,1123,0.3446126447016919
+vru,58,74,0.7837837837837838
+vehicle,324,425,0.7623529411764706
+traffic_sign,5,35,0.14285714285714285
+traffic_light,0,9,0.0
+barrier,0,172,0.0
+traffic_cone,0,204,0.0
+other,0,204,0.0

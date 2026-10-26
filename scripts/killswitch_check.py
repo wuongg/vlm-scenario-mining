@@ -42,9 +42,9 @@ def _index_ok() -> tuple[bool, str]:
 
 
 def _no_p1() -> tuple[bool, str]:
-    banned = ["embedder", "mcp", "routing"]
+    banned = ["embedder", "mcp"]
     hits = [p.name for p in (REPO_ROOT / "src" / "vsm").rglob("*") if any(b in p.name.lower() for b in banned)]
-    return len(hits) == 0, f"banned_names={hits}"
+    return len(hits) == 0, f"banned_names={hits} (routing skeleton authorized after Day-7 3/3)"
 
 
 def _api_terminal() -> tuple[bool, str]:

@@ -1,0 +1,17 @@
+{
+  "d21": true,
+  "images_on_disk": 500,
+  "denominator": 500,
+  "n_images_missing": 0,
+  "do_not_quote_0024": true,
+  "why_0024_is_not_recall": "Day-7 scored missing images as miss (450/500). That 27/1123 figure is a denominator artifact, not detector failure.",
+  "smoke_subset_R": 0.177,
+  "smoke_subset_n": 50,
+  "official_R": 0.3446126447016919,
+  "official_tp": 387,
+  "official_n_gt_objects": 1123,
+  "elapsed_s": 5578.10209107399,
+  "source": "HuggingFace data-loader/CODA-LM_raw_data CODA2022-test.zip (428MB); names NNNN.jpg matching CODA-LM test_NNNN.json",
+  "wording": "cross-locale sanity comparison under a different setup — not a leaderboard claim",
+  "table": "results/coda_full.json"
+}

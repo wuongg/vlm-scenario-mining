@@ -44,6 +44,18 @@ labeling:
 match:
   primary_tIoU: 0.5
   ap_is_secondary: true
+stitch:
+  gap_windows: 1
+  max_event_duration_s: 30
+  max_windows: 15
+  note: "D22. link = same class AND gap<=1 window. Over-merge guard = duration<=30s AND n<=15. Overmerge incident = gap ok but cap hit. Identity IoU (associate_windows tau=0.3) is not a stitch split."
+routing:
+  c_auto: 1.0
+  c_miss: 5.0
+  tau_sweep: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  claim_conf_default: 0.85
+  none_conf_default: 0.75
+  note: "D23. U=c_auto*(pct_auto)-c_miss*(fn_auto_rate). API records have no logit; skeleton uses defaults + T0 auto-accept. Family-level only."
 ci:
   job_timeout_min: 15
   fail_fast: true

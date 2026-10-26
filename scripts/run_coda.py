@@ -1,14 +1,18 @@
-"""Load CODA-LM Test 500, overlap check, detector smoke on ≥50 images if present."""
+"""Load CODA-LM Test 500, overlap check, detector smoke or full 500."""
 
 from __future__ import annotations
 
+import argparse
 import json
+import time
+from pathlib import Path
 
 import polars as pl
 
 from vsm.config import REPO_ROOT
 from vsm.eval.coda import DENOMINATOR, load_coda_test, object_level_recall, overlap_check, resolve_image
 from vsm.ingest.convert import _find_version_dir, _load_table
+from vsm.mining.cache import atomic_write_json, atomic_write_parquet
 
 
 def _mini_tokens() -> set[str]:
@@ -21,7 +25,12 @@ def _mini_tokens() -> set[str]:
         return set()
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--n", type=int, default=50, help="smoke n; --full sets 500")
+    parser.add_argument("--full", action="store_true")
+    args = parser.parse_args(argv)
+    n_run = DENOMINATOR if args.full else int(args.n)
     records = load_coda_test()
     overlap = overlap_check(records, _mini_tokens())
     image_hits = []
@@ -40,7 +49,7 @@ def main() -> int:
         "object_recall_50": None,
         "note": "CODA-LM snapshot is annotations-only until CODA2022-test images land under data/coda/test/images",
     }
-    if len(image_hits) >= 50:
+    if len(image_hits) >= min(50, n_run):
         from PIL import Image
 
         from vsm.eval.coda import coda_group
@@ -48,42 +57,72 @@ def main() -> int:
         from vsm.vlm.backends.detector import GroundingDinoTiny
 
         det = GroundingDinoTiny()
-        rows = [{"frame_id": i, "clip_ref": h["path"], "path": h["path"]} for i, h in enumerate(image_hits[:50])]
-        boxes = det.detect_objects(pl.DataFrame(rows))
+        take = image_hits[:n_run]
+        t0 = time.time()
+        cache_dir = REPO_ROOT / "data" / "cache" / "detector" / "coda"
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        dest_boxes = REPO_ROOT / "results" / "coda_detector_500.parquet"
+        parts: list[pl.DataFrame] = []
         preds: dict[str, list[dict]] = {}
-        by_fid = {i: h["image_id"] for i, h in enumerate(image_hits[:50])}
-        size_by_id = {}
-        for h in image_hits[:50]:
+        size_by_id: dict[str, tuple[int, int]] = {}
+        for i, h in enumerate(take, start=1):
+            iid = h["image_id"]
+            shard = cache_dir / f"{Path(iid).name}.parquet"
+            if shard.exists():
+                df = pl.read_parquet(shard)
+            else:
+                df = det.detect_objects(pl.DataFrame([{"frame_id": i - 1, "clip_ref": h["path"], "path": h["path"]}]))
+                if df.height:
+                    df = df.with_columns(pl.lit(iid).alias("image_id"))
+                atomic_write_parquet(df, shard)
+            parts.append(df)
             with Image.open(h["path"]) as im:
-                size_by_id[h["image_id"]] = im.size
-        for rec in boxes.to_dicts() if boxes.height else []:
-            iid = by_fid.get(int(rec.get("frame_id") or -1))
-            if iid is None:
-                continue
-            bbox = rec.get("bbox_2d") or []
-            if len(bbox) < 4:
-                continue
-            w, h = size_by_id.get(iid, (1000, 1000))
-            xyxy = [float(v) for v in rescale_qwen_bbox(bbox, int(w), int(h))]
-            preds.setdefault(iid, []).append(
-                {
-                    "class": rec.get("class"),
-                    "group": coda_group(str(rec.get("class") or "")),
-                    "bbox_xyxy": xyxy,
+                size_by_id[iid] = im.size
+            for rec in df.to_dicts() if df.height else []:
+                bbox = rec.get("bbox_2d") or []
+                if len(bbox) < 4:
+                    continue
+                w, hh = size_by_id.get(iid, (1000, 1000))
+                xyxy = [float(v) for v in rescale_qwen_bbox(bbox, int(w), int(hh))]
+                preds.setdefault(iid, []).append(
+                    {
+                        "class": rec.get("class"),
+                        "group": coda_group(str(rec.get("class") or "")),
+                        "bbox_xyxy": xyxy,
+                    }
+                )
+            if i % 50 == 0 or i == len(take):
+                nonempty = [p for p in parts if p.height]
+                cat = pl.concat(nonempty, how="diagonal_relaxed") if nonempty else pl.DataFrame()
+                if args.full and cat.height:
+                    atomic_write_parquet(cat, dest_boxes)
+                elapsed = time.time() - t0
+                rate = elapsed / i
+                progress = {
+                    "coda": True,
+                    "done": i,
+                    "n": len(take),
+                    "elapsed_s": elapsed,
+                    "s_per_image": rate,
+                    "eta_s": rate * (len(take) - i),
                 }
-            )
-        subset = [r for r in records if r["image_id"] in {h["image_id"] for h in image_hits[:50]}]
-        # 50-image smoke only — not the frozen-500 official number
+                atomic_write_json(progress, REPO_ROOT / "results" / "coda_progress.json")
+                print(json.dumps(progress))
+        subset = [r for r in records if r["image_id"] in {h["image_id"] for h in take}]
         smoke_metrics = object_level_recall(subset, preds)
         smoke.update(
             {
                 "detector_ran": True,
-                "n_smoked": 50,
-                "object_recall_50": smoke_metrics["object_recall"],
+                "n_smoked": len(take),
+                "object_recall_50": smoke_metrics["object_recall"] if len(take) == 50 else None,
+                "object_recall": smoke_metrics["object_recall"],
                 "tp": smoke_metrics["tp"],
                 "n_gt_objects": smoke_metrics["n_gt_objects"],
                 "by_group": smoke_metrics["by_group"],
-                "note": "smoke on 50 images; official table uses frozen 500",
+                "elapsed_s": time.time() - t0,
+                "note": (
+                    "official frozen-500 table" if args.full else "smoke on 50 images; official table uses frozen 500"
+                ),
             }
         )
     report = {
@@ -92,10 +131,27 @@ def main() -> int:
         "n_gt_objects": sum(r["n_objects"] for r in records),
         "overlap": overlap,
         "smoke": smoke,
+        "setup_difference": [
+            {
+                "axis": "event-vs-object",
+                "gap": "CODA is object-level groups; mini headline is event-level ped_cross",
+            },
+            {
+                "axis": "resolution",
+                "gap": "GD-tiny runs 960x540 combined (D12), not native CODA resolution",
+            },
+            {
+                "axis": "prompts",
+                "gap": "combined lowercase '{cls} .' caption vs paper per-phrase / extra vocab",
+            },
+            {
+                "axis": "denominator",
+                "gap": "parse-fail = miss; denom frozen 500 even if images missing",
+            },
+        ],
     }
-    dest = REPO_ROOT / "results" / "coda_smoke.json"
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    dest = REPO_ROOT / "results" / ("coda_full.json" if args.full else "coda_smoke.json")
+    atomic_write_json(report, dest)
     print(json.dumps(report, indent=2))
     return 0
 

@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-10-26T15:46:38Z",
+  "deadline_local": "2026-11-01T18:00:00+07:00",
+  "now_local": "2026-10-26T22:46:38.785578+07:00",
+  "past_deadline": false,
+  "pass": true,
+  "items": [
+    {
+      "item": "GT n=60 labeled",
+      "pass": true,
+      "note": "GT labeled 60/60"
+    },
+    {
+      "item": "two backends on the 60",
+      "pass": true,
+      "note": "api parse_ok=55 detector_windows=60"
+    },
+    {
+      "item": "keyword index + coverage_report",
+      "pass": true,
+      "note": "duckdb=True coverage=True"
+    },
+    {
+      "item": "no P1 embedder/MCP/routing",
+      "pass": true,
+      "note": "banned_names=[]"
+    },
+    {
+      "item": "API terminal freeze path",
+      "pass": true,
+      "note": "status=canary_freeze freeze_ok=True"
+    },
+    {
+      "item": "geometry fixture",
+      "pass": true,
+      "note": "geometry fixture is CI-green; real-mini gate is local"
+    },
+    {
+      "item": "night confound",
+      "pass": true,
+      "note": "night confound recorded (hollandv only) \u2014 condition-breakdown, not headline"
+    }
+  ]
+}

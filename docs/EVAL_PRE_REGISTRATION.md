@@ -1,6 +1,8 @@
-# Eval pre-registration v0.2.2 — FROZEN 2026-10-26
+# Eval pre-registration v0.2.3 — FROZEN 2026-10-26
 
 Changes after this file = version bump + changelog. Do not edit in place.
+
+v0.2.3 adds only the corpus-API appendix (D17). Headline, GT list, seeds, tIoU, kill-switch, backends, and prior appendices are unchanged.
 
 v0.2.2 changes only the backend / decoding-parity rows (item 6, short items 1 and 4). Headline, GT list, seeds, tIoU, kill-switch, and the v0.2.1 scene-0061 appendix are unchanged.
 
@@ -72,3 +74,11 @@ Primary claims in the README (Day 12) must equal the primary table.
 Allocation oversample concentrates 15/60 in scene-0061; per-scene range reported; headline recall also reported leave-one-scene-out for scene-0061.
 
 This is a reporting guard, not a redraw. The n=60 list and seed=7 formula stay frozen.
+
+## Appendix — corpus API held at GT-60 (v0.2.3)
+
+Corpus API tier held at GT-60 only due to backend instability (canary alarms D17). Corpus tier = detector-only. Frontier has 2 API points (GT-60) + detector corpus point.
+
+Day 7 decides: retry the canary once if the reseller restabilizes, or ship the 2-point frontier. Do not override D17 today.
+
+This is a reporting guard, not a backend swap and not a GT redraw.

@@ -171,9 +171,7 @@ def main() -> int:
         existing = json.loads(dest_records.read_text(encoding="utf-8"))
     gt_ids = list(_EVAL["gt_list"]["window_ids"])
     done_ids = {
-        str(r.get("window_id"))
-        for r in existing
-        if r.get("role") in {None, "gt60", "corpus"} and not r.get("error")
+        str(r.get("window_id")) for r in existing if r.get("role") in {None, "gt60", "corpus"} and not r.get("error")
     }
     # Live canary-lite every session — never skip because a prior file exists.
     canary_jobs = [(wid, _window_frames(windows, frames, wid), "canary") for wid in _CANARY_IDS]

@@ -1,0 +1,377 @@
+{
+  "draft": true,
+  "do_not_quote_outside_repo": true,
+  "finding": "object-level detector recall is not event-level ped_cross precision; the join rule is what turns boxes into events",
+  "event_level": {
+    "unit": "window_event",
+    "class": "pedestrian_cross",
+    "tp": 10,
+    "fp": 41,
+    "fn": 0,
+    "n_pred": 51,
+    "n_gt": 10,
+    "precision": 0.19607843137254902,
+    "recall": 1.0,
+    "frontier": {
+      "usd": 0,
+      "R": 1.0,
+      "P": 0.19607843137254902
+    }
+  },
+  "box_level_all": {
+    "unit": "box",
+    "vru_only": false,
+    "iou": 0.5,
+    "tp": 1077,
+    "fp": 1970,
+    "fn": 2635,
+    "n_gt": 3712,
+    "precision": 0.3534624220544798,
+    "recall": 0.2901400862068966,
+    "logit_thr": 0.3
+  },
+  "box_level_vru": {
+    "unit": "box",
+    "vru_only": true,
+    "iou": 0.5,
+    "tp": 218,
+    "fp": 278,
+    "fn": 812,
+    "n_gt": 1030,
+    "precision": 0.43951612903225806,
+    "recall": 0.21165048543689322,
+    "logit_thr": 0.3
+  },
+  "frontier_detector_only": {
+    "usd": 0,
+    "R": 1.0,
+    "P": 0.19607843137254902,
+    "n_pred": 51
+  },
+  "fp_windows": 41,
+  "sample_n": 15,
+  "sample_seed": 13,
+  "sample": [
+    {
+      "window_id": "scene-0061_CAM_FRONT_RIGHT_1532402929170339",
+      "n_ped_gt": 85,
+      "n_ped_det": 19,
+      "gt_note": "barriers + distant far-side figures",
+      "auto_label": "event-FP-standing",
+      "human_label": "event-FP-standing",
+      "why": "far sidewalk figures behind barriers, not traversing ego path"
+    },
+    {
+      "window_id": "scene-1100_CAM_FRONT_LEFT_1542800990904844",
+      "n_ped_gt": 0,
+      "n_ped_det": 6,
+      "gt_note": "night empty-ish approach",
+      "auto_label": "object-FP",
+      "human_label": "object-FP",
+      "why": "night empty-ish approach; VRU box on street furniture / glare"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_1532402938162460",
+      "n_ped_gt": 9,
+      "n_ped_det": 4,
+      "gt_note": "s2 range after anchor flip: van+cones post-zebra",
+      "auto_label": "event-FP-standing",
+      "human_label": "object-FP",
+      "why": "post-zebra van+cones; no ped in 6 frames (C3 range)"
+    },
+    {
+      "window_id": "scene-0916_CAM_FRONT_LEFT_1538984245404844",
+      "n_ped_gt": 0,
+      "n_ped_det": 1,
+      "gt_note": "parked cars in lot",
+      "auto_label": "object-FP",
+      "human_label": "object-FP",
+      "why": "parking-lot aisle, n_ped_gt=0; VRU box with no ped in objects_json"
+    },
+    {
+      "window_id": "scene-0757_CAM_FRONT_LEFT_1535657124604799",
+      "n_ped_gt": 2,
+      "n_ped_det": 5,
+      "gt_note": "UPS truck fills the frame",
+      "auto_label": "event-FP-standing",
+      "human_label": "object-FP",
+      "why": "UPS side panel fills the frame; no traversing VRU"
+    },
+    {
+      "window_id": "scene-1094_CAM_FRONT_1542800855412460",
+      "n_ped_gt": 9,
+      "n_ped_det": 7,
+      "gt_note": "night arterial after mall",
+      "auto_label": "event-FP-standing",
+      "human_label": "event-FP-standing",
+      "why": "night arterial after mall; sidewalk figures, not a crossing"
+    },
+    {
+      "window_id": "scene-0103_CAM_FRONT_LEFT_1533151606504799",
+      "n_ped_gt": 29,
+      "n_ped_det": 14,
+      "gt_note": "sidewalk peds at Boston curb, not entering roadway",
+      "auto_label": "boundary",
+      "human_label": "boundary",
+      "why": "Boston curb sidewalk peds, not entering roadway"
+    },
+    {
+      "window_id": "scene-1100_CAM_FRONT_1542800992412460",
+      "n_ped_gt": 3,
+      "n_ped_det": 7,
+      "gt_note": "night intersection, far sidewalk figure",
+      "auto_label": "event-FP-standing",
+      "human_label": "event-FP-standing",
+      "why": "night far sidewalk figure"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_LEFT_1532402935154844",
+      "n_ped_gt": 28,
+      "n_ped_det": 10,
+      "gt_note": "s3-anchor: sidewalk/plaza peds. no flip",
+      "auto_label": "boundary",
+      "human_label": "event-FP-standing",
+      "why": "Fusionopolis plaza / sidewalk peds on phone"
+    },
+    {
+      "window_id": "scene-0916_CAM_FRONT_1538984249912460",
+      "n_ped_gt": 0,
+      "n_ped_det": 1,
+      "gt_note": "parking lot curve",
+      "auto_label": "object-FP",
+      "human_label": "object-FP",
+      "why": "parking-lot curve, n_ped_gt=0; VRU box on empty lot / vehicle"
+    },
+    {
+      "window_id": "scene-0655_CAM_FRONT_1535385103912404",
+      "n_ped_gt": 4,
+      "n_ped_det": 1,
+      "gt_note": "bus + cherry picker, no VRU crossing",
+      "auto_label": "event-FP-standing",
+      "human_label": "event-FP-standing",
+      "why": "bus + cherry-picker; workers standing, no walk-across"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_LEFT_1532402941254844",
+      "n_ped_gt": 55,
+      "n_ped_det": 19,
+      "gt_note": "building entrance plaza, standing figures",
+      "auto_label": "boundary",
+      "human_label": "event-FP-standing",
+      "why": "building-entrance plaza, standing figures"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_1532402941262460",
+      "n_ped_gt": 16,
+      "n_ped_det": 7,
+      "gt_note": "s2 range: van+cones, no crossing",
+      "auto_label": "event-FP-standing",
+      "human_label": "object-FP",
+      "why": "van+cones, C3 range, no ped"
+    },
+    {
+      "window_id": "scene-0757_CAM_FRONT_1535657117112404",
+      "n_ped_gt": 1,
+      "n_ped_det": 1,
+      "gt_note": "s2-anchor: Coca-Cola van through intersection != cut_in. no flip",
+      "auto_label": "event-FP-standing",
+      "human_label": "object-FP",
+      "why": "Coca-Cola van through intersection, not a VRU crossing"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_LEFT_1532402933604844",
+      "n_ped_gt": 20,
+      "n_ped_det": 13,
+      "gt_note": "Fusionopolis plaza sidewalk peds",
+      "auto_label": "boundary",
+      "human_label": "event-FP-standing",
+      "why": "plaza sidewalk peds, same as the session-3 sidewalk anchor"
+    }
+  ],
+  "sample_counts": {
+    "event-FP-standing": 7,
+    "object-FP": 7,
+    "boundary": 1
+  },
+  "error_taxonomy_detector_event_fp": {
+    "unit": "window_event",
+    "class": "pedestrian_cross",
+    "n_fp": 41,
+    "sample_n": 15,
+    "sample_seed": 13,
+    "counts": {
+      "event-FP-standing": 7,
+      "object-FP": 7,
+      "boundary": 1
+    },
+    "rows": [
+      {
+        "kind": "object-FP",
+        "meaning": "VRU box on a non-ped (van, cone, furniture, panel, empty lot)"
+      },
+      {
+        "kind": "event-FP-standing",
+        "meaning": "real ped present but standing/waiting/walking along \u2014 not traversing"
+      },
+      {
+        "kind": "boundary",
+        "meaning": "ped at curb/crossing but not entering ego-path"
+      }
+    ],
+    "finding": "object-level detector recall is not event-level ped_cross precision; the join rule is what turns boxes into events"
+  },
+  "phrase_confusion_keep": "traffic/none and vehicle/none are generic combined-caption leftovers; do not add person. \u2014 would retune the frozen tau sweep (D18)",
+  "neff": {
+    "n": 10,
+    "tp": 10,
+    "n_scenes": 10,
+    "icc": 0.0,
+    "mbar": 2.0,
+    "deff": 1.0,
+    "n_eff": 10.0,
+    "p": 1.0,
+    "wilson_lo": 0.7224598312333834,
+    "wilson_hi": 1.0,
+    "caveat": "n_scenes=10 \u2014 diagnostic, not a population CI"
+  },
+  "per_scene": {
+    "min": 0.0,
+    "median": 1.0,
+    "max": 1.0,
+    "per_scene": [
+      {
+        "scene": "scene-0061",
+        "tp": 2,
+        "n_gt": 2,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0103",
+        "tp": 0,
+        "n_gt": 0,
+        "recall": 0.0
+      },
+      {
+        "scene": "scene-0553",
+        "tp": 3,
+        "n_gt": 3,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0655",
+        "tp": 1,
+        "n_gt": 1,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0757",
+        "tp": 1,
+        "n_gt": 1,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-0796",
+        "tp": 0,
+        "n_gt": 0,
+        "recall": 0.0
+      },
+      {
+        "scene": "scene-0916",
+        "tp": 0,
+        "n_gt": 0,
+        "recall": 0.0
+      },
+      {
+        "scene": "scene-1077",
+        "tp": 0,
+        "n_gt": 0,
+        "recall": 0.0
+      },
+      {
+        "scene": "scene-1094",
+        "tp": 3,
+        "n_gt": 3,
+        "recall": 1.0
+      },
+      {
+        "scene": "scene-1100",
+        "tp": 0,
+        "n_gt": 0,
+        "recall": 0.0
+      }
+    ]
+  },
+  "phrase_confusion": {
+    "n_detector_boxes": 4111,
+    "n_frames": 324,
+    "fp": {
+      "duplicates": 344,
+      "wrong_phrase": 15,
+      "moto_bicycle": 1
+    },
+    "mean_gt_drop_rate": 0.7978328912388869,
+    "drop_rate_is_not_detector_miss": true,
+    "top_pairs": [
+      {
+        "detector": "traffic",
+        "gt": "none",
+        "n": 1387
+      },
+      {
+        "detector": "vehicle",
+        "gt": "none",
+        "n": 1023
+      },
+      {
+        "detector": "vehicle",
+        "gt": "vehicle",
+        "n": 866
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "none",
+        "n": 309
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "pedestrian",
+        "n": 249
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "none",
+        "n": 113
+      },
+      {
+        "detector": "bicycle",
+        "gt": "none",
+        "n": 74
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "motorcycle",
+        "n": 43
+      },
+      {
+        "detector": "other",
+        "gt": "none",
+        "n": 13
+      },
+      {
+        "detector": "bicycle",
+        "gt": "bicycle",
+        "n": 10
+      },
+      {
+        "detector": "bicycle",
+        "gt": "other",
+        "n": 5
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "vehicle",
+        "n": 4
+      }
+    ]
+  }
+}

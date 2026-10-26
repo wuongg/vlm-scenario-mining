@@ -1,0 +1,28 @@
+{
+  "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+  "params": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "model_id": "qwen/qwen3.8-27b",
+    "backend": "iteracompute",
+    "input": "image_middle_1"
+  },
+  "note": "same window, same prompt hash, T=0: JSON shape flips. Citation for README: same input, same params, different claims — why claims need evidence.",
+  "run_a_canary1": {
+    "source": "results/itera_canary.json",
+    "completion_tokens": 183,
+    "parse_ok": true,
+    "none": false,
+    "n_findings": 0,
+    "class_set_coarse": "claim",
+    "raw_head": "```json\n[\n  {\"frame_idx\": 0, \"detections\": [], \"findings\": []},\n  ... six empty frame objects ...\n]\n```"
+  },
+  "run_b_session2_recollect": {
+    "source": "results/itera_canary_session2.json",
+    "completion_tokens": 83,
+    "parse_ok": true,
+    "none": true,
+    "n_findings": 0,
+    "class_set_coarse": "none"
+  }
+}

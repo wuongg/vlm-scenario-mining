@@ -119,8 +119,8 @@ backends_actual:
   api_vlm: "iteracompute/qwen/qwen3.8-27b"
   local_vlm: "local-only"
   free_quota_only: true
-  pre_reg: "v0.2.2"
-  note: "D16. DashScope unavailable. Canary required every session. 1 image/request."
+  pre_reg: "v0.2.3"
+  note: "D16 IteraCompute. D17 corpus API held at GT-60. Canary required every session. 1 image/request."
 canary:
   n: 5
   required_every_session: true

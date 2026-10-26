@@ -25,6 +25,8 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 | D16 | 2026-10-26 | ADOPTED | VLM | Backend switch DashScope → IteraCompute. Canary 4-check. Grounding on claims only. |
 | C4 | 2026-10-26 | CASE | LABEL | session-3 anchors 0/5 class-flip. C1/C2 kept (not rewritten from VLM). |
 | D17 | 2026-10-26 | ADOPTED | VLM | Canary-lite session-2 freeze: 0757 class-set claim→none; 0916 parse_ok flip after missing_none_flag validator. Corpus API not started. Token-only alarms logged, not freeze. |
+| D18 | 2026-10-26 | ADOPTED | DETECT | Keep combined caption; do not add `person .`. traffic/none 1387 and vehicle/none 1023 are documented generic leftovers, not a phrase bug. |
+| D19 | 2026-10-26 | ADOPTED | EVAL | Detector event-level ped_cross R=1.0 P=0.196 vs VRU box-level P=0.440 R=0.212 (IoU>0.5, τ=0.30, GT-60). Object recall ≠ event precision; join turns boxes into events. |
 | D4 | 2026-10-26 | ADOPTED | GEOM | Synthetic oracle (hand-computed pixels) is the CI fixture; real-devkit compare is a local gate after download |
 | D5 | 2026-10-26 | ADOPTED | INGEST | Mini tgz uses structure/gzip/tar integrity, not a self-computed SHA; map v1.3 and CODA-LM Test pin SHA after download |
 | D6 | 2026-10-26 | ADOPTED | INDEX | DuckDB FTS stemmer='none'; Python BM25 fallback if the fts extension cannot load |
@@ -62,3 +64,5 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 - REJECTED: redrawing the n=60 GT list because scene-0061 holds 15/60. Formula is frozen. Report per-scene range + leave-one-scene-out for scene-0061 (pre-reg v0.2.1 appendix).
 - CASE C4 (session-3 anchors, not a rule-change): 5 blinded relabels. **0/5 class-flip.** C1 lot-aisle and C2/C3 zebra kept; not rewritten from IteraCompute output. 25 new windows labeled → GT 60/60.
 - ADOPTED D17: Canary-lite session-2 vs `canary_baseline.json` (class-set ±1 / token >20% / parse_ok flip; no hashes). Recollect fired. Hard freeze: 0757 class-set `claim`→`none`; 0916 parse_ok flip (`schema_violation` after missing_none_flag). Token-only deltas logged (T=0 still varies 24–183). Corpus API **not started**; GT-60 API records kept. Ledger: freeze, $0.
+- ADOPTED D18: Phrase-confusion traffic/none + vehicle/none are generic combined-caption boxes with no specific phrase match. Keep documented. Do not add `person .` — that would retune the frozen τ sweep on GT-60.
+- ADOPTED D19: 15/41 event-FP sample (seed 13, contact sheet): event-FP-standing 7 / object-FP 7 / boundary 1. Standing+boundary = 8/15 event-semantics FPs; object-FP is the other half (van/cones/UPS/empty lot). Headline still: object-level detector recall is not event-level ped_cross precision; the join rule is what turns boxes into events. Box-level VRU P=0.440 R=0.212 vs event-level P=0.196 R=1.0. Frontier detector-only = ($0, R=1.0, P=0.196). τ sweep does not move this point (box threshold already frozen).

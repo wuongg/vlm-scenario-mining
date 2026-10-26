@@ -48,12 +48,21 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - CODA-LM path on: load 500 (1,123 GT objects), overlap 0. Detector smoke 50: object-level recall 0.177 (not official).
 - 6 Day-3 commits pushed (`e6a3b38`).
 
-## Day 5 (in progress)
+## Day 6 (in progress)
+
+- Pre-reg **v0.2.3** appendix: corpus API held at GT-60 (D17). Detector-only corpus. Day 7 retry-or-ship.
+- Detector 41 FP: 15 sampled (seed 13) → standing 7 / object-FP 7 / boundary 1. Box-level VRU P=0.440 R=0.212 vs event-level P=0.196 R=1.0 (GT-60, τ=0.30, IoU>0.5).
+- Frontier detector-only = ($0, R=1.0, P=0.196). API tier contributes claims, not coverage; union ≈ detector on this corpus.
+- 0757 oscillation evidence in `results/0757_oscillation.json`. Phrase keep (D18).
+- `eval/metrics.py` implemented (n_eff-Wilson, per-scene range, condition-breakdown, interpretation_gate). `scripts/killswitch_check.py` local pass.
+- CODA 500 starts after the corpus detector pass finishes (checkpointed, resume via `data/cache/detector/coda/`).
+
+## Day 5 (done — commits `b1e1d94` `5e0a650`)
 
 - Tag **v0.3-mined** pushed (`93749b0`). Gitleaks: git history + targeted src/scripts/results clean; `results/env` gitignored. full-tree scan skipped: data/raw is not tracked; history + code scans clean.
 - Canary-lite session-2: **freeze** after re-collect (D17). 0757 class-set claim→none; 0916 parse_ok flip. Corpus API **not started**. GT-60 API tokens remain 76,424 / 30M.
 - GT **60/60**. Session-3 anchors **0/5 flip**. C1/C2 not rewritten from the model.
-- Draft ped_cross recall@0.5 (grid, not official): API 0.3 (3/10); detector/union 1.0 (51 pred, 41 FP). Stitch detector 51→39 (delta −12), over-merge 0.
+- Draft ped_cross recall@0.5 (grid, not official): API 0.3 (3/10); detector/union 1.0 (51 pred, 41 FP). Stitch detector 51→39 (delta −12), over-merge 0. API tier contributes claims, not coverage; union ≈ detector on this corpus.
 - FP taxonomy GT-60 API: schema-forced 5, perception-limit 2, C1 disagreement 1.
 - Quadrant: agree-true 1 / T0-only 5 / VLM-only 3 / both-miss-GT 4.
 

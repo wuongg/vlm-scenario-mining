@@ -5,6 +5,7 @@ Format: what changed and why.
 
 ## [Unreleased]
 
+- Pre-reg v0.2.3 appendix: corpus API held at GT-60. Detector event vs box P/R split (D19). `eval/metrics.py` n_eff-Wilson + kill-switch script. Phrase keep (D18).
 - Session-3 GT 60/60; canary-lite freeze (D17) blocked corpus API. missing_none_flag → schema_violation (0757). Draft ped_cross stitch/recall + quadrant on GT-60.
 
 ## [v0.3-mined] — 2026-10-26

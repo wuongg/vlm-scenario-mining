@@ -1,0 +1,57 @@
+{
+  "n_windows": 5,
+  "window_ids": [
+    "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+    "scene-0796_CAM_FRONT_LEFT_1538448756504844",
+    "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+    "scene-0916_CAM_FRONT_1538984236412460",
+    "scene-0061_CAM_FRONT_LEFT_1532402935154844"
+  ],
+  "n_findings": 24,
+  "parse_ok": 1.0,
+  "parse_ok_target": 0.8,
+  "parse_ok_pass": true,
+  "detector": true,
+  "api_vlm": false,
+  "api_note": "DASHSCOPE_API_KEY missing \u2014 T0+detector-only E2E; key needed before Day 4",
+  "search_hits": [
+    {
+      "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+      "score": 3.9000000000000004,
+      "cls": "lane_split_moto"
+    },
+    {
+      "window_id": "scene-0061_CAM_FRONT_LEFT_1532402935154844",
+      "score": 3.9000000000000004,
+      "cls": "lane_split_moto"
+    }
+  ],
+  "classes": [
+    {
+      "class": "cut_in",
+      "len": 3
+    },
+    {
+      "class": "sidewalk_mount",
+      "len": 1
+    },
+    {
+      "class": "pedestrian_cross",
+      "len": 2
+    },
+    {
+      "class": "lane_split_moto",
+      "len": 10
+    },
+    {
+      "class": "",
+      "len": 5
+    },
+    {
+      "class": "lane_intrusion",
+      "len": 3
+    }
+  ],
+  "fps": 2.0,
+  "clip_col": "clip_ref"
+}

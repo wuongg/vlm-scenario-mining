@@ -48,7 +48,16 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - CODA-LM path on: load 500 (1,123 GT objects), overlap 0. Detector smoke 50: object-level recall 0.177 (not official).
 - 6 Day-3 commits pushed (`e6a3b38`).
 
-## Day 4 (GT-60 detector + API done — v0.3-mined eligible, not tagged this turn)
+## Day 5 (in progress)
+
+- Tag **v0.3-mined** pushed (`93749b0`). Gitleaks: git history + targeted src/scripts/results clean; `results/env` gitignored. full-tree scan skipped: data/raw is not tracked; history + code scans clean.
+- Canary-lite session-2: **freeze** after re-collect (D17). 0757 class-set claim→none; 0916 parse_ok flip. Corpus API **not started**. GT-60 API tokens remain 76,424 / 30M.
+- GT **60/60**. Session-3 anchors **0/5 flip**. C1/C2 not rewritten from the model.
+- Draft ped_cross recall@0.5 (grid, not official): API 0.3 (3/10); detector/union 1.0 (51 pred, 41 FP). Stitch detector 51→39 (delta −12), over-merge 0.
+- FP taxonomy GT-60 API: schema-forced 5, perception-limit 2, C1 disagreement 1.
+- Quadrant: agree-true 1 / T0-only 5 / VLM-only 3 / both-miss-GT 4.
+
+## Day 4 (done — tagged v0.3-mined)
 
 - D14: corpus = 1 middle frame; GT-60 = full 6 frames. Sequential overnight, checkpoint 50, atomic write, heartbeat.
 - D15: cut_in tightened (slope + ego-lane ≥25% ≥2). **105 → 0**. status=enabled. Coverage splits T0-enabled / T0-disabled.

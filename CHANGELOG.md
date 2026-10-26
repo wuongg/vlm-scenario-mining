@@ -5,6 +5,8 @@ Format: what changed and why.
 
 ## [Unreleased]
 
+- Session-3 GT 60/60; canary-lite freeze (D17) blocked corpus API. missing_none_flag → schema_violation (0757). Draft ped_cross stitch/recall + quadrant on GT-60.
+
 ## [v0.3-mined] — 2026-10-26
 
 - GT-60 mined on detector (60/60, 4,111 boxes) + API tier (55/60 parse_ok, iteracompute `qwen/qwen3.8-27b`, $0).

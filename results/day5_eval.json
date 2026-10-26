@@ -1,0 +1,174 @@
+{
+  "draft": true,
+  "do_not_quote_outside_repo": true,
+  "n_labeled": 60,
+  "n_gt_ped_cross": 10,
+  "stitch": {
+    "api": {
+      "pre": 4,
+      "post": 4,
+      "delta": 0,
+      "overmerge_incidents": 0
+    },
+    "detector": {
+      "pre": 51,
+      "post": 39,
+      "delta": -12,
+      "overmerge_incidents": 0
+    },
+    "union": {
+      "pre": 51,
+      "post": 39,
+      "delta": -12,
+      "overmerge_incidents": 0
+    }
+  },
+  "recall_tIoU_0.5_draft": {
+    "api_grid": {
+      "tp": 3,
+      "fp": 1,
+      "fn": 7,
+      "n_pred": 4,
+      "n_gt": 10,
+      "recall": 0.3,
+      "draft": true,
+      "provenance": "grid"
+    },
+    "detector_grid": {
+      "tp": 10,
+      "fp": 41,
+      "fn": 0,
+      "n_pred": 51,
+      "n_gt": 10,
+      "recall": 1.0,
+      "draft": true,
+      "provenance": "grid"
+    },
+    "union_grid": {
+      "tp": 10,
+      "fp": 41,
+      "fn": 0,
+      "n_pred": 51,
+      "n_gt": 10,
+      "recall": 1.0,
+      "draft": true,
+      "provenance": "grid"
+    }
+  },
+  "fp_taxonomy": {
+    "counts": {
+      "not_fp": 53,
+      "perception-limit": 2,
+      "schema-forced": 5
+    },
+    "c1_gt_none_vlm_claim": 1,
+    "c1_window_id": "scene-0916_CAM_FRONT_1538984236412460",
+    "note": "C1 kept; disagreement counted, GT not rewritten from the model",
+    "examples": {
+      "perception-limit": [
+        "scene-0061_CAM_FRONT_LEFT_1532402935154844",
+        "scene-0916_CAM_FRONT_1538984236412460"
+      ],
+      "schema-forced": [
+        "scene-0553_CAM_FRONT_RIGHT_1535489309370482",
+        "scene-0796_CAM_FRONT_LEFT_1538448744404844",
+        "scene-1077_CAM_FRONT_1542800379862460",
+        "scene-1094_CAM_FRONT_LEFT_1542800849404844",
+        "scene-1094_CAM_FRONT_1542800849412460"
+      ]
+    }
+  },
+  "quadrant": {
+    "class": "pedestrian_cross",
+    "agree_true": 1,
+    "t0_only": 5,
+    "vlm_only": 3,
+    "both_miss_gt": 4,
+    "vlm_only_ids": [
+      "scene-0916_CAM_FRONT_1538984236412460",
+      "scene-0061_CAM_FRONT_LEFT_1532402935154844",
+      "scene-0655_CAM_FRONT_1535385099362404"
+    ],
+    "semantics_pay": "Where semantics pay: scene-0655 FRONT is a GT-positive in-window walk-across that T0's map-join missed and the API claimed. The other VLM-only rows are GT-none FPs (C1 lot-aisle; sidewalk standing) \u2014 semantics also hallucinate. T0-only is join geometry without a confirmed in-window crossing.",
+    "n_gt": 60,
+    "n_gt_pos": 10,
+    "n_t0": 6,
+    "n_vlm": 4
+  },
+  "phrase_confusion": {
+    "n_detector_boxes": 4111,
+    "n_frames": 324,
+    "fp": {
+      "duplicates": 344,
+      "wrong_phrase": 15,
+      "moto_bicycle": 1
+    },
+    "mean_gt_drop_rate": 0.7978328912388869,
+    "drop_rate_is_not_detector_miss": true,
+    "top_pairs": [
+      {
+        "detector": "traffic",
+        "gt": "none",
+        "n": 1387
+      },
+      {
+        "detector": "vehicle",
+        "gt": "none",
+        "n": 1023
+      },
+      {
+        "detector": "vehicle",
+        "gt": "vehicle",
+        "n": 866
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "none",
+        "n": 309
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "pedestrian",
+        "n": 249
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "none",
+        "n": 113
+      },
+      {
+        "detector": "bicycle",
+        "gt": "none",
+        "n": 74
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "motorcycle",
+        "n": 43
+      },
+      {
+        "detector": "other",
+        "gt": "none",
+        "n": 13
+      },
+      {
+        "detector": "bicycle",
+        "gt": "bicycle",
+        "n": 10
+      },
+      {
+        "detector": "bicycle",
+        "gt": "other",
+        "n": 5
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "vehicle",
+        "n": 4
+      }
+    ]
+  },
+  "n_api_claim_windows": 4,
+  "n_detector_pred_windows": 51,
+  "n_union": 51
+}

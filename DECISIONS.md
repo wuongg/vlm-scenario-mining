@@ -23,6 +23,8 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 | C2 | 2026-10-26 | SUPERSEDED | LABEL | session-1 borderline ped_cross on 0061 FRONT 2939662460 — flipped in session-2 (C3) |
 | C3 | 2026-10-26 | CASE | LABEL | session-2 anchor alarm: 1/5 class-flip. STOP + re-read card + range re-label none |
 | D16 | 2026-10-26 | ADOPTED | VLM | Backend switch DashScope → IteraCompute. Canary 4-check. Grounding on claims only. |
+| C4 | 2026-10-26 | CASE | LABEL | session-3 anchors 0/5 class-flip. C1/C2 kept (not rewritten from VLM). |
+| D17 | 2026-10-26 | ADOPTED | VLM | Canary-lite session-2 freeze: 0757 class-set claim→none; 0916 parse_ok flip after missing_none_flag validator. Corpus API not started. Token-only alarms logged, not freeze. |
 | D4 | 2026-10-26 | ADOPTED | GEOM | Synthetic oracle (hand-computed pixels) is the CI fixture; real-devkit compare is a local gate after download |
 | D5 | 2026-10-26 | ADOPTED | INGEST | Mini tgz uses structure/gzip/tar integrity, not a self-computed SHA; map v1.3 and CODA-LM Test pin SHA after download |
 | D6 | 2026-10-26 | ADOPTED | INDEX | DuckDB FTS stemmer='none'; Python BM25 fallback if the fts extension cannot load |
@@ -58,3 +60,5 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 - CASE C3 (session-2 anchor alarm, not a rule-change): 5 blinded anchors at start of session 2. **1/5 class-flip** on `scene-0061_CAM_FRONT_1532402939662460` (`pedestrian_cross` → `none`). Protocol: STOP → re-read card (TRIGGER = in-window crossing) → re-label the range. Adjacent GT-60 windows `…2938162460` and `…2941262460` labeled `none` (post-zebra van+cones, no ped in 6 frames). Other 4 anchors no-flip. Card unchanged. Last-write-wins loader replaces the session-1 row.
 - ADOPTED: `assert_t0_no_gt_access` — deleting `sample_annotation` from a manifest leaves T0 flags identical. T0 reads `objects_json` + map polygons + `calibrated_sensor` only.
 - REJECTED: redrawing the n=60 GT list because scene-0061 holds 15/60. Formula is frozen. Report per-scene range + leave-one-scene-out for scene-0061 (pre-reg v0.2.1 appendix).
+- CASE C4 (session-3 anchors, not a rule-change): 5 blinded relabels. **0/5 class-flip.** C1 lot-aisle and C2/C3 zebra kept; not rewritten from IteraCompute output. 25 new windows labeled → GT 60/60.
+- ADOPTED D17: Canary-lite session-2 vs `canary_baseline.json` (class-set ±1 / token >20% / parse_ok flip; no hashes). Recollect fired. Hard freeze: 0757 class-set `claim`→`none`; 0916 parse_ok flip (`schema_violation` after missing_none_flag). Token-only deltas logged (T=0 still varies 24–183). Corpus API **not started**; GT-60 API records kept. Ledger: freeze, $0.

@@ -1,0 +1,101 @@
+{
+  "draft": true,
+  "do_not_quote_outside_repo": true,
+  "n_labeled": 35,
+  "n_gt_ped_cross": 4,
+  "n_pred_windows": 51,
+  "stitch": {
+    "pre": 51,
+    "post": 39,
+    "delta": -12
+  },
+  "n_identity_events": 51,
+  "recall_tIoU_draft": {
+    "0.3": 1.0,
+    "0.5": 1.0,
+    "0.7": 1.0
+  },
+  "match_tIoU_0.5": {
+    "tp": 4,
+    "fp": 47,
+    "fn": 0,
+    "n_pred": 51,
+    "n_gt": 4,
+    "recall": 1.0
+  },
+  "phrase_confusion": {
+    "n_detector_boxes": 4111,
+    "n_frames": 324,
+    "fp": {
+      "duplicates": 344,
+      "wrong_phrase": 15,
+      "moto_bicycle": 1
+    },
+    "mean_gt_drop_rate": 0.7978328912388869,
+    "drop_rate_is_not_detector_miss": true,
+    "top_pairs": [
+      {
+        "detector": "traffic",
+        "gt": "none",
+        "n": 1387
+      },
+      {
+        "detector": "vehicle",
+        "gt": "none",
+        "n": 1023
+      },
+      {
+        "detector": "vehicle",
+        "gt": "vehicle",
+        "n": 866
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "none",
+        "n": 309
+      },
+      {
+        "detector": "pedestrian",
+        "gt": "pedestrian",
+        "n": 249
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "none",
+        "n": 113
+      },
+      {
+        "detector": "bicycle",
+        "gt": "none",
+        "n": 74
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "motorcycle",
+        "n": 43
+      },
+      {
+        "detector": "other",
+        "gt": "none",
+        "n": 13
+      },
+      {
+        "detector": "bicycle",
+        "gt": "bicycle",
+        "n": 10
+      },
+      {
+        "detector": "bicycle",
+        "gt": "other",
+        "n": 5
+      },
+      {
+        "detector": "motorcycle",
+        "gt": "vehicle",
+        "n": 4
+      }
+    ]
+  },
+  "n_detector_boxes": 4111,
+  "n_windows_in_boxes": 60
+}

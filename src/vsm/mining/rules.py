@@ -225,30 +225,42 @@ def rule_sidewalk_mount(boxes: list[dict], mode: Mode, **ctx: Any) -> list[Flag]
 
 
 def rule_cut_in(boxes: list[dict], mode: Mode, **ctx: Any) -> list[Flag]:
-    """Lateral enter then center-band + growing height."""
+    """Lateral enter AND closure slope AND ego-lane occupancy ≥25% ≥2 frames. Not 2D-only."""
 
-    del mode
     window_id = str(ctx.get("window_id") or "")
+    lanes = (ctx.get("layers") or {}).get("lane") or []
+    cs = ctx.get("cs")
     early: list[float] = []
     late: list[float] = []
-    hs_early: list[float] = []
-    hs_late: list[float] = []
+    seq: list[list[list[float]]] = []
     half = max(len(boxes) // 2, 1)
+    n_lane = 0
     for i, row in enumerate(boxes):
-        for b in _boxes(row, _is_vehicle):
+        vehs = _boxes(row, _is_vehicle)
+        seq.append(vehs)
+        for b in vehs:
             cx = _cx_norm(b)
-            h = max(b[3] - b[1], 1.0)
             if i < half:
                 early.append(cx)
-                hs_early.append(h)
             else:
                 late.append(cx)
-                hs_late.append(h)
+        if mode == "A" and lanes and cs is not None:
+            ego_xy = _ego_xy(str(row.get(COLS.EGO_POSE_JSON.value) or "{}"))
+            ego_lane = _nearest_lane(Point(*ego_xy), lanes) if ego_xy else None
+            if ego_lane is not None:
+                pts = _ground_points(row, _is_vehicle, cs)
+                inside = sum(1 for x, y in pts if ego_lane.contains(Point(x, y)))
+                if pts and inside / len(pts) >= _INTRUSION_FRAC:
+                    n_lane += 1
+        elif any(_CTR_LO <= _cx_norm(b) <= _CTR_HI for b in vehs):
+            n_lane += 1
     if not early or not late:
         return []
-    if any(c < 0.28 or c > 0.72 for c in early) and any(_CTR_LO <= c <= _CTR_HI for c in late):
-        if max(hs_late) > max(hs_early) * 1.1:
-            return [Flag("cut_in", window_id, GEOMETRY_B, len(boxes))]
+    lateral = any(c < 0.28 or c > 0.72 for c in early) and any(_CTR_LO <= c <= _CTR_HI for c in late)
+    closed = scale_slope_flag(seq).fired
+    if lateral and closed and n_lane >= _INTRUSION_N:
+        geom = GEOMETRY_A if mode == "A" else GEOMETRY_B
+        return [Flag("cut_in", window_id, geom, n_lane, note="tight_v2_slope_and_lane")]
     return []
 
 
@@ -403,9 +415,15 @@ def run_t0_window(
     flags: list[Flag] = []
     wid = str(window.get(WIN_COLS.WINDOW_ID.value) or "")
     ctx = {"window_id": wid, "layers": layers or {}, "cs": cs, "manifest": {}}
-    for _name, rule in RULES.items():
+    for name, rule in RULES.items():
         mode = choose_mode(available, rule)
-        flags.extend(rule.fn(frames, mode, **ctx))
+        fired = rule.fn(frames, mode, **ctx)
+        status = str((_RULES.get("rules") or {}).get(name, {}).get("status") or "enabled")
+        if status == "disabled":
+            for flag in fired:
+                flag.t0_support = "disabled"
+                flag.note = (flag.note + " " if flag.note else "") + "T0-disabled"
+        flags.extend(fired)
     return flags
 
 
@@ -454,6 +472,7 @@ def run_t0(
                     "n_frames": flag.n_frames,
                     "note": flag.note,
                     "t0_support": flag.t0_support,
+                    "t0_enabled": flag.t0_support != "disabled",
                     "backend": "t0",
                 }
             )
@@ -468,6 +487,7 @@ def run_t0(
                 "n_frames": pl.Int64,
                 "note": pl.Utf8,
                 "t0_support": pl.Utf8,
+                "t0_enabled": pl.Boolean,
                 "backend": pl.Utf8,
             }
         )

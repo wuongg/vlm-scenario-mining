@@ -1,10 +1,12 @@
 {
   "n_windows": 360,
-  "n_flags": 197,
-  "n_windows_flagged": 153,
+  "n_flags": 92,
+  "n_windows_flagged": 92,
   "assert_t0_no_gt_access": true,
+  "cut_in_before_d15": 105,
+  "cut_in_after_d15": 0,
   "by_class": {
-    "cut_in": 105,
+    "cut_in": 0,
     "lane_intrusion": 21,
     "lane_split_moto": 17,
     "pedestrian_cross": 21,
@@ -14,14 +16,12 @@
     "turn_lane_drift": 0,
     "red_light_violation": 0
   },
-  "geometry_mode": {
-    "A_mapful": 92,
-    "B_mapless": 105
-  },
+  "t0_enabled_flags": 92,
+  "t0_disabled_flags": 0,
   "notes": {
-    "cut_in": "same 105-count 2D heuristic as Day-2; Mode B, expected FP-heavy, not n_pos",
-    "lane_split_moto": "17 flags vs 72 windows with moto>=3 frames; straddle is stricter than presence",
-    "oncoming_turn_lane": "T0 support thin — coverage-only, never auto-fire",
+    "cut_in": "D15 tighten: closure slope AND ego-lane ≥25% ≥2 frames. 105 → 0. status remains enabled (<30)",
+    "lane_split_moto": "17 flags vs 72 windows with moto>=3 frames",
+    "oncoming_turn_lane": "T0 support thin — coverage-only",
     "red_light_violation": "presence_only; no lamp objects on mini → 0"
   }
 }

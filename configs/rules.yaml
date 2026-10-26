@@ -30,8 +30,9 @@ rules:
     t0_support: full
   cut_in:
     family: safety_maneuver
-    required_capabilities: [calibrated_ego]
+    required_capabilities: [map, calibrated_ego]
     t0_support: full
+    status: enabled  # D15: tightened; disable if still >30 windows after remeasure
   lead_braking:
     family: safety_maneuver
     required_capabilities: [calibrated_ego]

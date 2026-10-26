@@ -1,0 +1,22 @@
+{
+  "pass": "gt60",
+  "n_windows_expected": 60,
+  "n_windows_done": 60,
+  "n_frames_per_window": 6,
+  "n_boxes": 4111,
+  "box_threshold_floor": 0.25,
+  "sweep": [
+    0.25,
+    0.3,
+    0.35,
+    0.4
+  ],
+  "cache": {
+    "hit": 0,
+    "miss": 165,
+    "n": 165
+  },
+  "elapsed_s": 4784.72144818306,
+  "partial_json": 0,
+  "path": "C:\\Users\\phamv\\Downloads\\vlm-scenario-mining\\results\\detector_gt60.parquet"
+}

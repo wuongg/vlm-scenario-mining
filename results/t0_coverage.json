@@ -1,0 +1,18 @@
+{
+  "n_flags": 92,
+  "t0_enabled": {
+    "n_flags": 92,
+    "n_windows": 82,
+    "by_class": {
+      "sidewalk_mount": 33,
+      "pedestrian_cross": 21,
+      "lane_split_moto": 17,
+      "lane_intrusion": 21
+    }
+  },
+  "t0_disabled": {
+    "n_flags": 0,
+    "n_windows": 0,
+    "by_class": {}
+  }
+}

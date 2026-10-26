@@ -2,37 +2,57 @@
 
 Proposal numbers are **not** the paper numbers. Measured on nuScenes mini after `integrity_gate` + `build_frames_table` on 2026-10-26.
 
-## Measured (Day 1)
+## Headline (frozen)
+
+Primary event-level cell = recall@tIoU=0.5 on `{pedestrian_cross}` only (pre-reg v0.2.1).
+
+CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen fallback: 8/9 classes <3 positives). Mini is pedestrian_cross event-level + qualitative.
+
+## Measured
 
 | quantity | proposal | measured | note |
 |---|---|---|---|
 | scenes | 10 | **10** | integrity_gate asserts 10 |
 | keyframes (samples) | ~404 | **404** | inside band [390, 420] |
-| frames rows (kf × 3 cams) | 1,200 | **1,212** | 404 × 3; proposal undershot by 12 |
-| windows | 360 | **360** | N=floor((K−6)/3)+1 per (scene, cam) matches |
+| frames rows (kf × 3 cams) | 1,200 | **1,212** | 404 × 3 |
+| windows | 360 | **360** | N=floor((K−6)/3)+1 per (scene, cam) |
 | SG scenes | unspecified | **6** | 3 hollandvillage + 2 queenstown + 1 onenorth; Boston 4 |
-| night frames / windows | 3 night scenes, all hollandv | **363 frames / 108 windows** | all `singapore-hollandvillage` — confound holds |
-| GT drop-rate mean | — | **0.799** (Day-1 0.584 was a bug) | per (box, this camera) + z>near. FRONT 0.705 / LEFT 0.903 / RIGHT 0.790. 11,233 behind-cam boxes were kept after sign-flip without z. In-front-only denom = 0.604. Not a VLM miss. See D8. |
-| geometry max pixel error | <2 px | **0.00 px** | synthetic oracle; mutations all fail as required |
+| night frames / windows | 3 night scenes, all hollandv | **363 frames / 108 windows** | confound holds |
+| GT drop-rate mean | — | **0.799** | D8. FRONT 0.705 / LEFT 0.903 / RIGHT 0.790 |
+| geometry max pixel error | <2 px | **0.00 px** | synthetic oracle |
+| GT labeling | "26 h" (wrong) | **~24 s/window → 60 ≈ 25–30 min** | session-1 n=10, mean 24.1 s. GT is not the bottleneck. |
+| moto ≥3 frames | — | **72 windows** | T0 `lane_split_moto` support |
+| join v2 JOIN-FP | — | **1/3 = 33%** | D11; below 40% fallback. v1 was 2/5 = 40% |
+| scene-0061 share of GT-60 | — | **15/60** | do not redraw; leave-one-scene-out (appendix v0.2.1) |
+| T0 flags / 360 | — | **197 flags, 153 windows** | lane_split_moto 17; pedestrian_cross 21; cut_in 105 (loose 2D); lead/oncoming/turn/red=0 |
+| DINO steady-state | — | **13.45 s/frame combined** | load 4.4 s once. 960×540 = 13.85 s (no win). per-phrase 105 s. 360 middles ≈ 81 min; 2160 ≈ 8.3 h |
 
-## Design deltas to ask, not silently patch
+## Design deltas (ask, not silently patch)
 
-1. `architecture_final_v5_mvp.md` and `architecture_final_v4.md` (DESIGN_LOG) were **not in the workspace**. Taxonomy 9+1 was reconstructed from mining-rule names in `repo_design_v1.md`. Swap `configs/taxonomy.yaml` if DESIGN_LOG differs.
-2. repo_design ts-invariant says gap=1/12 s. Frames table is keyframes at fps=2. Mini keyframe gaps include 0.40/0.45/0.55 s (12 Hz tick slip). Gate uses `ts_gap_s=0.5 ± 0.12`. Data is not rewritten.
-3. Mini ships **13** JSON tables; the gate asserts the **11** load-bearing ones in `configs/ingest.yaml` `tables_required`.
-4. Official map URL `nuscenes.org/data/nuScenes-map-expansion-v1.3.zip` returned an HTML login page (200). Zenodo fallback is the pin. SHA-256 `9dbc80a095b6b28d9b79fc9a43471a750dc92ca78c6d0db288fd92b34be5a144`.
-5. HuggingFace `archive/main.zip` for CODA-LM is HTML. Day 1 used `huggingface_hub.snapshot_download` of `CODA-LM/Test/*` (n=500). Dir SHA `55e94b2924731a3c5a0c8a78391209d61141f00879b0e7794c2a764558608217`.
-6. Day-1 user brief asked for backends + keyword index + pre-reg draft, which repo_design §7 places on Days 3 and 6. Implemented as **skeletons that run**, not the full cascade.
-7. nuScenes `sample.json` has no `data` map and `sample_data.json` has no `channel` — join via calibrated_sensor → sensor. Not a rename; the JSON dump != the Python NuScenes object.
+1. `architecture_final_v5_mvp.md` and `architecture_final_v4.md` were **not in the workspace**. Taxonomy is the spec 9+1 (D7).
+2. Frames table is keyframes at fps=2, not 1/12 s. Gate uses `ts_gap_s=0.5 ± 0.12`.
+3. Mini ships **13** JSON tables; gate asserts the **11** load-bearing ones.
+4. Map pin = Zenodo SHA `9dbc80a0…be5a144`.
+5. CODA-LM Test pin dir SHA `55e94b29…608217` (annotations). Images are CODA2022-test, not in that snapshot.
+6. nuScenes `sample.json` has no `data` map — join via calibrated_sensor → sensor.
 
 ## Day 2 (done)
 
-- Headline frozen: `{pedestrian_cross}` only. 41 map-join positives (BOS 17 / HV-night 15 / ON 9 / QT 0). 8 classes out-of-headline (<3 verified pos).
-- GT list n=60 SHA `a380a0340051e72d8c41695256d949e49c058ee63f2a3c1c7153ebec68e2215c`. Session 1 labeled 10 (1 pedestrian_cross with doubt, 1 none with doubt, 8 none). Mean latency 24.1 s.
-- local_vlm RAM gate failed → local-only branch.
-- T0 rules still Day 3.
+- Headline `{pedestrian_cross}`. GT list n=60 SHA `a380a034…e2215c`. Session 1: 10 labeled (1 pedestrian_cross+doubt, 1 none+doubt, 8 none).
+- local_vlm RAM gate failed → local-only (D10).
 
-## Day 3
+## Day 3 (this tag stays v0.2-eval-frozen; next tag = v0.3-mined)
 
-- `vlm/prompt+parse` + detector/api smoke on 5 windows.
-- `mining/rules` Mode A/B + cascade E2E.
+- T0 Mode A/B on 360 → `results/t0_flags.parquet`. Sanitized-manifest assert.
+- Join v2 + 10 re-handchecks. DINO config D12 (combined 960×540, 1 frame/window).
+- Smoke E2E 5 labeled windows. **DASHSCOPE_API_KEY still needed before Day 4.**
+- CODA-LM path on: load 500 (1,123 GT objects), overlap check (no `nuscenes_sample_tokens.json`, 0 mini-token leak → held-out stands). Detector smoke 50 images: object-level recall **0.177** (vehicle 0.68 / vru 0.88 / cone+barrier 0 — phrases do not cover them). Not the official 500-image number.
+- Smoke E2E 5 labeled windows: parse_ok **1.0**. Search works. **DASHSCOPE_API_KEY still missing — needed before Day 4.**
+
+## Effort (corrected)
+
+| task | old guess | now |
+|---|---|---|
+| GT labeling 60 | ~26 h | **25–30 min** (24 s/window) |
+| Detector 2,160 native per-phrase forwards | overnight | **infeasible on CPU** — D12 cuts to 360 resized combined forwards |
+| T0 360 | — | CPU, map+bbox, no torch |

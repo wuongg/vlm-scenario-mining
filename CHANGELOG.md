@@ -5,6 +5,11 @@ Format: what changed and why.
 
 ## [Unreleased]
 
+- Pre-reg bump v0.2 → v0.2.1: appendix only (scene-0061 15/60 + leave-one-scene-out). Formula and GT list unchanged.
+- Tighten pedestrian_cross join to v2 (ped ground in crossing polygon). JOIN-FP 2/5 → 1/3.
+- T0 Mode A/B + closure slope-fit + sanitized-manifest assert. CODA-LM Test 500 loader (object-level, denom 500).
+- Detector D12: combined caption, 960×540, one middle frame per window.
+
 ## [v0.2-eval-frozen] — 2026-10-26
 
 - Swap taxonomy to the spec 9+1 (safety vs compliance) so GT freeze does not encode the Day-1 reconstructed class list.

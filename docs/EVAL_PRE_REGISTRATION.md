@@ -1,6 +1,8 @@
-# Eval pre-registration v0.2 — FROZEN 2026-10-26
+# Eval pre-registration v0.2.1 — FROZEN 2026-10-26
 
 Changes after this file = version bump + changelog. Do not edit in place.
+
+v0.2.1 adds only the Appendix note on scene-0061 allocation concentration. The eight load-bearing items and twelve short items are unchanged from v0.2.
 
 Numbers live in `configs/eval.yaml`. GT list SHA-256: `a380a0340051e72d8c41695256d949e49c058ee63f2a3c1c7153ebec68e2215c`.
 
@@ -60,3 +62,9 @@ Session cap 75'. Interleave scene order with seed 13. `definition_doubt` is a re
 12. **Condition columns** — light, blur_quartile, density_bin, visibility_bin on every frame; night=hollandv.
 
 Primary claims in the README (Day 12) must equal the primary table.
+
+## Appendix — scene-0061 concentration (v0.2.1)
+
+Allocation oversample concentrates 15/60 in scene-0061; per-scene range reported; headline recall also reported leave-one-scene-out for scene-0061.
+
+This is a reporting guard, not a redraw. The n=60 list and seed=7 formula stay frozen.

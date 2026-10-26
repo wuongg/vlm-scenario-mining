@@ -37,6 +37,9 @@ build/
 htmlcov/
 
 results/*.jsonl
+!results/gt_labels.jsonl
+!results/handchecks_pedestrian_cross.jsonl
+!results/quick_scan.jsonl
 results/day1_five_windows.json
 
 # Editor

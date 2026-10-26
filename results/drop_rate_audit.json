@@ -1,0 +1,12 @@
+{
+  "n_rows": 1212,
+  "mean_all_boxes_denom": 0.7993282170442684,
+  "mean_infront_denom": 0.6041140321695259,
+  "per_cam_mean_all_denom": {
+    "CAM_FRONT": 0.7053455166918187,
+    "CAM_FRONT_LEFT": 0.9027796829528019,
+    "CAM_FRONT_RIGHT": 0.7898594514881846
+  },
+  "behind_total": 27112,
+  "behind_kept_without_z": 11233
+}

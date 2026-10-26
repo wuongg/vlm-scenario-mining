@@ -1,0 +1,34 @@
+{
+  "join_rule_pedestrian_cross": "ped_cross_v1_crossing_layer_ego_path_and_ped_object",
+  "t0_rules": "not implemented (Day 3) — not used as evidence",
+  "n_pseudo": 41,
+  "pseudo_by_class": [{"class": "pedestrian_cross", "len": 41}],
+  "headline": ["pedestrian_cross"],
+  "headline_why": "Only class with >=3 corpus positives after applying the pre-registered <3 rule. cut_in/lead_braking 2D heuristics were discarded as fake (105 cut_in on first try). 20-window quick scan found 0 verified cut_in/lead_braking. Spec fallback 3-class is NOT claimed.",
+  "out_of_headline": ["cut_in", "lead_braking", "oncoming", "turn_lane_drift", "lane_split_moto", "lane_intrusion", "sidewalk_mount", "red_light_violation"],
+  "notes": {
+    "pedestrian_cross": "41 map-join positives (Boston 17 / HV-night 15 / onenorth 9 / queenstown 0). Hand-check 5 pos: 3 agree-with-doubt, 2 JOIN-FP (curb peds on painted crossing). Join is an upper bound.",
+    "cut_in": "object support (vehicles) exists; class positives not verified — out of headline",
+    "lead_braking": "object support (lead vehicles) exists; class positives not verified — out of headline",
+    "lane_split_moto": "72 windows with motorcycle in >=3 frames (Boston 9 / SG 63); straddle not verified. support not absent; class not scored.",
+    "oncoming": "support not present in corpus — VN-deployment taxonomy (wrong-way-only)",
+    "turn_lane_drift": "support not present in corpus — VN-deployment taxonomy",
+    "red_light_violation": "support not present in corpus — VN-deployment taxonomy (no signal GT)",
+    "lane_intrusion": "T0 Mode A not implemented (Day 3); not counted",
+    "sidewalk_mount": "T0 Mode A not implemented (Day 3); not counted"
+  },
+  "handcheck_window_ids": [
+    "scene-0061_CAM_FRONT_1532402933612460",
+    "scene-0061_CAM_FRONT_1532402935162463",
+    "scene-0061_CAM_FRONT_1532402936662460",
+    "scene-0103_CAM_FRONT_1533151605012404",
+    "scene-0103_CAM_FRONT_1533151606512404",
+    "scene-0757_CAM_FRONT_1535657108262404",
+    "scene-0916_CAM_FRONT_1538984246912460",
+    "scene-0655_CAM_FRONT_1535385108412412",
+    "scene-0061_CAM_FRONT_1532402944162460",
+    "scene-1100_CAM_FRONT_1542800989412460"
+  ],
+  "quick_scan_n": 20,
+  "quick_scan_verified_class_positives": 0
+}

@@ -37,7 +37,7 @@ def cascade_synthetic() -> int:
     hits = search_scenarios(conn, "xe máy cắt làn", 5)
     if not hits:
         raise SystemExit("search('xe máy cắt làn') returned 0 hits on synth findings")
-    if hits[0].cls != "lane_split_moto" and hits[0].family != "spatial":
+    if hits[0].cls != "lane_split_moto" and hits[0].family != "safety_spatial":
         # fallback maps motorcycle → lane_split_moto; accept either field
         if "lane_split" not in (hits[0].cls + hits[0].text_en):
             raise SystemExit(f"unexpected top hit {hits[0]}")

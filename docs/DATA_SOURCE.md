@@ -7,11 +7,12 @@
 - Expected: 10 scenes. Sample/keyframe count is measured at ingest and written to `docs/NEXT_STEPS.md` (proposal 10 / ~404 / 360 windows).
 - Cameras used: front-triad `CAM_FRONT`, `CAM_FRONT_LEFT`, `CAM_FRONT_RIGHT`.
 - Map expansion pin: **v1.3**. Official portal is account-gated; Day 1 also tries `https://www.nuscenes.org/data/nuScenes-map-expansion-v1.3.zip` then the Zenodo fallback in `configs/ingest.yaml`. SHA-256 is recorded in `data/manifest.yaml` after the first local download.
+- Zenodo [record 15667707](https://zenodo.org/records/15667707) (`10.5281/zenodo.15667707`) is the public copy of **nuScenes-map-expansion-v1.3.zip** (398.5 MB; folders `basemap` / `expansion` / `prediction`). Cross-checked against the official [nuscenes-devkit map-expansion notes](https://github.com/nutonomy/nuscenes-devkit) (v1.3 = lidar basemap + 11 semantic layers; extract those three folders into `maps/`). Local size 398,535,531 bytes matches the Zenodo listing.
 - Singapore maps in mini: `singapore-onenorth` (1 scene), `singapore-hollandvillage` (3), `singapore-queenstown` (2) plus `boston-seaport` (4). **SG scene count = 6.** Do not copy a proposal number into a paper table.
 
 ## Caveats that bind eval
 
-- **`red_light` has no GT** on nuScenes (no signal-state labels). Unsupported-claim audit may mention it; GT-bounded hallucination must not. Use `signal_state=unclear` when the lamp is unreadable.
+- **`red_light_violation` has no GT** on nuScenes (no signal-state labels). The class is a *violation event*, not a lamp state. `signal_state` is an attribute (on|off|unclear). Unsupported-claim audit may mention it; GT-bounded hallucination must not.
 - **Night confound:** mini has 3 Night scenes, all in `singapore-hollandvillage`. A night-condition claim is a map claim until a larger split exists. See `configs/ingest.yaml` `conditions.night_map_confound`.
 - **GT bbox drop-rate** from `box_in_image` is a separate column (`gt_drop_rate`). Dropped boxes are not VLM misses.
 

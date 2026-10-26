@@ -125,9 +125,10 @@ def _map_class(raw: str) -> str | None:
     if "motorcycle" in key or "moto" in key:
         return "lane_split_moto"
     if "pedestrian" in key or "ped" in key:
-        return "ped_cross"
+        return "pedestrian_cross"
     if "traffic light" in key or "red" in key:
-        return "red_light"
+        # lamp ≠ violation event
+        return None
     if key in {"car", "truck", "bus"}:
         return None
     return None

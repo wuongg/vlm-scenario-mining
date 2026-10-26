@@ -99,5 +99,5 @@ def class_family(cls_id: str) -> str:
         if cls_id in members:
             return fam
     if cls_id in CLASS_IDS:
-        return "maneuver"
+        return "safety_maneuver"
     raise ValueError(f"unknown class {cls_id!r}")

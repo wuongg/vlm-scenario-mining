@@ -15,7 +15,7 @@ def _finding(**kwargs) -> VLMFinding:
         claim="cut_in",
         supporting_frames=[0, 1],
         confidence=0.7,
-        family="maneuver",
+        family="safety_maneuver",
         signal_state="unclear",
         attributes={},
     )

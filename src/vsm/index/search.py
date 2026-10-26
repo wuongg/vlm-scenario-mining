@@ -49,13 +49,13 @@ def _python_bm25(conn: duckdb.DuckDBPyConnection, query_en: str, top_k: int) -> 
 
 def _family_class(doc: str) -> tuple[str, str]:
     if "lane_split_moto" in doc or "motorcycle" in doc:
-        return "spatial", "lane_split_moto"
-    if "ped_cross" in doc or "pedestrian" in doc:
-        return "vru", "ped_cross"
+        return "safety_spatial", "lane_split_moto"
+    if "pedestrian_cross" in doc or "pedestrian" in doc:
+        return "safety_spatial", "pedestrian_cross"
     if "cut_in" in doc:
-        return "maneuver", "cut_in"
+        return "safety_maneuver", "cut_in"
     if "lead_braking" in doc:
-        return "maneuver", "lead_braking"
+        return "safety_maneuver", "lead_braking"
     return "", ""
 
 

@@ -1,21 +1,28 @@
-# 9+1 classes. Source: repo_design_v1.md mining-rule identifiers + DATA_SOURCE caveats.
-# DESIGN_LOG ontology was not in the workspace on Day 1 — swap this file if it differs.
-# Multi-label rule: 1 maneuver + 0-1 spatial + optional ped_cross. none XOR any class.
+# Spec 9+1 (Day 2 REPLACE of D3). Two families for scoring:
+#   safety_* = recall-first; compliance = precision-first.
+# uncertain is a schema slot, not a class. none = empty-per-taxonomy.
+# Multi-label axes: 1 safety_maneuver + 0-1 spatial-slot + optional pedestrian_cross.
+# Spatial-slot members = safety_spatial minus pedestrian_cross (VRU is the third axis).
 
 families:
-  maneuver: [cut_in, cut_out, lead_braking, overtaking]
-  spatial: [lane_split_moto, lane_intrusion, sidewalk_mount]
-  vru: [ped_cross]
-  signal: [red_light]
+  safety_maneuver: [cut_in, lead_braking, oncoming, turn_lane_drift]
+  safety_spatial: [lane_split_moto, sidewalk_mount, lane_intrusion, pedestrian_cross]
+  compliance: [red_light_violation]
   none: [none]
+
+label_axes:
+  maneuver: safety_maneuver
+  spatial_slot: [lane_split_moto, sidewalk_mount, lane_intrusion]
+  vru_slot: pedestrian_cross
+  max_maneuver: 1
+  max_spatial_slot: 1
 
 precedence:
   - none
   - uncertain
-  - maneuver
-  - spatial
-  - vru
-  - signal
+  - safety_maneuver
+  - safety_spatial
+  - compliance
 
 pegasus_6lm:
   L1_road: "Road geometry, lanes, markings"
@@ -27,55 +34,55 @@ pegasus_6lm:
 
 classes:
   cut_in:
-    family: maneuver
+    family: safety_maneuver
     pegasus: [L4_objects, L1_road]
     trigger: "Another vehicle enters the ego lane from an adjacent lane and becomes the lead, closing laterally then longitudinally."
-    exclude: "Ego lane-change; already-ahead vehicle; parked vehicle that never occupies the ego path."
-  cut_out:
-    family: maneuver
-    pegasus: [L4_objects, L1_road]
-    trigger: "Lead vehicle leaves the ego lane, exposing a new lead or empty path."
-    exclude: "Lead turning at an intersection while remaining in a dedicated turn lane that ego is not in."
+    exclude: "Ego lane-change; already-ahead vehicle; parked vehicle that never occupies the ego path. signal_state is an ATTRIBUTE (on|off|unclear) and does not participate in matching."
   lead_braking:
-    family: maneuver
+    family: safety_maneuver
     pegasus: [L4_objects]
-    trigger: "Lead vehicle decelerates sharply in-lane (closure slope on 1/h, not a single-frame jump)."
+    trigger: "Lead vehicle decelerates sharply in-lane (closure slope on 1/h over the window, not a single-frame jump)."
     exclude: "Ego braking with a stable lead; stopped traffic already at rest for the whole window."
-  overtaking:
-    family: maneuver
+  oncoming:
+    family: safety_maneuver
     pegasus: [L4_objects, L1_road]
-    trigger: "A vehicle passes ego or ego is passed, with a completed along-track order swap."
-    exclude: "Parallel travel with no order swap; oncoming traffic."
+    trigger: "WRONG-WAY-ONLY: an actor occupies a lane whose legal travel direction is opposite the actor's heading."
+    exclude: "Oncoming traffic in a correctly oriented opposite lane (standard two-way). If this EXCLUDE is ignored the class has ~100% prevalence and dies."
+  turn_lane_drift:
+    family: safety_maneuver
+    pegasus: [L1_road, L4_objects]
+    trigger: "A vehicle in a dedicated turn-lane proceeds straight through the intersection instead of turning (one frozen turn direction)."
+    exclude: "Vehicle that turns as the dedicated lane requires; through-lane traffic that never entered a turn pocket."
   lane_split_moto:
-    family: spatial
+    family: safety_spatial
     pegasus: [L4_objects, L1_road]
     trigger: "Motorcycle straddles the lane boundary (≥3 frames, moving) — VN 'xe máy cắt làn'."
     exclude: "Motorcycle fully inside one lane; bicycle; parked two-wheeler on the shoulder."
-  lane_intrusion:
-    family: spatial
-    pegasus: [L4_objects, L1_road]
-    trigger: "Object bbox intersects the ego-lane polygon ≥25% for ≥2 frames (positive predicate)."
-    exclude: "Legal occupancy of the ego lane (lead/behind); map-mode degraded without a lane polygon AND no pixel-band fallback fired."
   sidewalk_mount:
-    family: spatial
+    family: safety_spatial
     pegasus: [L1_road, L4_objects]
     trigger: "≥50% of the object bbox sits on walkway (Mode A) or non-road mask (Mode B)."
     exclude: "Pedestrian on sidewalk; vehicle legally in a driveway cut."
-  ped_cross:
-    family: vru
+  lane_intrusion:
+    family: safety_spatial
+    pegasus: [L4_objects, L1_road]
+    trigger: "Object bbox intersects the ego-lane polygon ≥25% for ≥2 frames (positive predicate, not a residual catch-all)."
+    exclude: "Legal occupancy of the ego lane (lead/behind); map-mode degraded without a lane polygon AND no pixel-band fallback fired."
+  pedestrian_cross:
+    family: safety_spatial
     pegasus: [L4_objects, L1_road]
     trigger: "Pedestrian or cyclist crosses the ego path or a marked/unmarked crossing in-window."
     exclude: "Pedestrian waiting on the curb with no trajectory into the roadway."
-  red_light:
-    family: signal
+  red_light_violation:
+    family: compliance
     pegasus: [L2_infra, L4_objects]
-    trigger: "A relevant actor (ego or other) is in the intersection while the facing signal is red."
-    exclude: "No GT for signal state on nuScenes mini — do not score as a VLM miss; use signal_state=unclear when the lamp is unreadable."
+    trigger: "EVENT: a relevant actor (ego or other) occupies the intersection against a red facing signal — a violation, not a lamp-state class."
+    exclude: "Lamp visible but no actor in the intersection; signal_state is an ATTRIBUTE (on|off|unclear) and is not itself the class. No signal-state GT on nuScenes mini."
   none:
     family: none
     pegasus: []
-    trigger: "No listed scenario is clearly present in the window."
-    exclude: "Do not combine with any positive class. Use uncertain instead of none when the definition is doubtful."
+    trigger: "No listed scenario is clearly present in the window (empty-per-taxonomy)."
+    exclude: "Do not combine with any positive class. Use the uncertain schema slot (not a class) when the definition is doubtful."
 
 detector_phrases:
   # Grounding-DINO-tiny: per-phrase "class ." lowercase, remove_combined=true. No repetition trick.
@@ -90,14 +97,14 @@ detector_phrases:
 
 vn_synonyms:
   cut_in: ["cắt đầu", "cắt vào làn", "xe cắt vào", "cut in"]
-  cut_out: ["cắt ra", "tách làn", "cut out"]
   lead_braking: ["phanh gấp", "phanh đột ngột", "xe trước phanh", "lead brake"]
-  overtaking: ["vượt", "overtake", "bỏ lại"]
+  oncoming: ["đi ngược chiều", "ngược chiều", "wrong way", "oncoming wrong-way"]
+  turn_lane_drift: ["làn rẽ đi thẳng", "sai làn rẽ", "turn lane drift"]
   lane_split_moto: ["xe máy cắt làn", "xe may cat lan", "motor cắt làn", "straddle", "lane split"]
   lane_intrusion: ["lấn làn", "lan intrusion", "xâm nhập làn"]
   sidewalk_mount: ["lên vỉa hè", "leo vỉa hè", "sidewalk", "walkway"]
-  ped_cross: ["người đi bộ sang đường", "người sang đường", "pedestrian crossing", "jaywalk"]
-  red_light: ["vượt đèn đỏ", "đèn đỏ", "red light"]
+  pedestrian_cross: ["người đi bộ sang đường", "người sang đường", "pedestrian crossing", "jaywalk"]
+  red_light_violation: ["vượt đèn đỏ", "vi phạm đèn đỏ", "red light violation"]
   none: ["không có", "none", "không kịch bản"]
   motorcycle: ["xe máy", "xe may", "motor", "moto"]
   pedestrian: ["người đi bộ", "người", "ped"]

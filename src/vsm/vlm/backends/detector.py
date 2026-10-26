@@ -172,7 +172,7 @@ class GroundingDinoTiny:
         for rec in df.to_dicts() if df.height else []:
             bbox = tuple(int(v) for v in rec["bbox_2d"][:4])
             raw = str(rec["class"]).lower()
-            mapped = "lane_split_moto" if "motor" in raw else ("ped_cross" if "ped" in raw else None)
+            mapped = "lane_split_moto" if "motor" in raw else ("pedestrian_cross" if "ped" in raw else None)
             if mapped is None:
                 continue
             findings.append(

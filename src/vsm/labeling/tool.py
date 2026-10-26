@@ -16,19 +16,21 @@ from vsm.constants import COLS, WIN_COLS
 
 _TAX = cfg_dict("taxonomy")
 _EVAL = cfg_dict("eval")
-MANEUVER = list(_TAX["families"]["maneuver"])
-SPATIAL = list(_TAX["families"]["spatial"])
+MANEUVER = list(_TAX["families"]["safety_maneuver"])
+SPATIAL = list(_TAX["label_axes"]["spatial_slot"])
+VRU_SLOT = str(_TAX["label_axes"]["vru_slot"])
 JSONL_PATH = REPO_ROOT / "results" / "gt_labels.jsonl"
+QUICK_PATH = REPO_ROOT / "results" / "quick_scan.jsonl"
 
 
 class LabelForm(BaseModel):
-    """One maneuver XOR none/uncertain, plus 0-1 spatial and optional ped_cross."""
+    """1 safety_maneuver XOR none/uncertain, plus 0-1 spatial-slot and optional pedestrian_cross."""
 
     window_id: str
     event_id: str = ""
     maneuver: str | None = None
     spatial: str | None = None
-    ped_cross: bool = False
+    pedestrian_cross: bool = False
     none: bool = False
     uncertain: bool = False
     definition_doubt: bool = False
@@ -42,18 +44,24 @@ class LabelForm(BaseModel):
 
     @model_validator(mode="after")
     def _one_maneuver(self) -> LabelForm:
-        if self.none and (self.maneuver or self.spatial or self.ped_cross):
+        if self.none and (self.maneuver or self.spatial or self.pedestrian_cross):
             raise ValueError("none cannot combine with a positive class")
         if self.maneuver and self.maneuver not in MANEUVER:
             raise ValueError(f"maneuver must be one of {MANEUVER}")
         if self.spatial and self.spatial not in SPATIAL:
             raise ValueError(f"spatial must be one of {SPATIAL} or empty")
-        if not self.none and not self.uncertain and not self.maneuver and not self.spatial and not self.ped_cross:
-            raise ValueError("choose 1 maneuver, 0-1 spatial, ped_cross, none, or uncertain")
+        if (
+            not self.none
+            and not self.uncertain
+            and not self.maneuver
+            and not self.spatial
+            and not self.pedestrian_cross
+        ):
+            raise ValueError("choose 1 maneuver, 0-1 spatial, pedestrian_cross, none, or uncertain")
         return self
 
     def class_set(self) -> list[str]:
-        """Return the multi-label class_set written to the GT JSONL."""
+        """Return the multi-label class_set written to the GT JSONL. uncertain is not a class."""
 
         if self.none:
             return ["none"]
@@ -62,10 +70,8 @@ class LabelForm(BaseModel):
             out.append(self.maneuver)
         if self.spatial:
             out.append(self.spatial)
-        if self.ped_cross:
-            out.append("ped_cross")
-        if self.uncertain and not out:
-            out.append("uncertain")
+        if self.pedestrian_cross:
+            out.append(VRU_SLOT)
         return out
 
 
@@ -163,23 +169,23 @@ def launch(
         paths = [Path(p) for p in subset[COLS.CLIP_REF.value].to_list()]
         opened = time.perf_counter()
         print(f"window {row[WIN_COLS.WINDOW_ID.value]}  blinded={blinded}")
-        print(f"maneuver {MANEUVER}  spatial {SPATIAL}  or none/uncertain")
+        print(f"maneuver {MANEUVER}  spatial {SPATIAL}  {VRU_SLOT}  or none/uncertain")
         try:
             _show_grid(paths)
         except Exception:
             print("display unavailable; clip_ref:", paths)
         maneuver = input("maneuver (empty if none): ").strip() or None
         spatial = input("spatial (empty ok): ").strip() or None
-        ped = input("ped_cross y/N: ").strip().lower() == "y"
+        ped = input(f"{VRU_SLOT} y/N: ").strip().lower() == "y"
         none = input("none y/N: ").strip().lower() == "y"
-        uncertain = input("uncertain y/N: ").strip().lower() == "y"
+        uncertain = input("uncertain y/N (schema slot, not a class): ").strip().lower() == "y"
         doubt = input("definition_doubt y/N: ").strip().lower() == "y"
         note = input("note: ").strip()
         form = LabelForm(
             window_id=str(row[WIN_COLS.WINDOW_ID.value]),
             maneuver=maneuver,
             spatial=spatial,
-            ped_cross=ped,
+            pedestrian_cross=ped,
             none=none,
             uncertain=uncertain,
             definition_doubt=doubt,
@@ -197,14 +203,18 @@ def launch(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="6-frame labeling tool")
     parser.add_argument("--smoke", type=int, default=0, help="headless N windows")
+    parser.add_argument("--quick", type=int, default=0, help="quick-mode presence flags for N windows")
     parser.add_argument("--blinded", action="store_true")
-    parser.add_argument("--labeler", default="day1")
+    parser.add_argument("--labeler", default="day2")
     args = parser.parse_args(argv)
     if args.smoke:
         path = smoke_test(args.smoke, blinded=args.blinded)
         print(f"smoke jsonl={path}")
         return 0
-    print("interactive mode needs frames/windows parquet — use --smoke 5 on Day 1")
+    if args.quick:
+        print("quick-mode: use scripts/run_prevalence.py --quick-scan (non-interactive batch)")
+        return 0
+    print("interactive mode needs frames/windows parquet — use --smoke 5")
     return 0
 
 

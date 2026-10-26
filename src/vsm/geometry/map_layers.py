@@ -47,9 +47,9 @@ def load_map_layers(map_name: str, map_root: Path | None = None) -> dict[str, li
         # nuScenes expansion files often omit a top-level version; if present it must match.
         raise MapVersionError(f"map {map_name} version {version!r} != pinned {_PINNED_VERSION!r}")
     node_ix = {n["token"]: n for n in payload.get("node", [])}
+    poly_ix = {p["token"]: p for p in payload.get("polygon", [])}
 
-    def _poly_from_record(rec: dict) -> Polygon | None:
-        ext = rec.get("exterior_node_tokens") or rec.get("exterior_nodes") or []
+    def _poly_from_nodes(ext: list) -> Polygon | None:
         coords = []
         for tok in ext:
             node = node_ix.get(tok)
@@ -65,15 +65,33 @@ def load_map_layers(map_name: str, map_root: Path | None = None) -> dict[str, li
         except ValueError:
             return None
 
+    def _polys_from_record(rec: dict) -> list[Polygon]:
+        ext = rec.get("exterior_node_tokens") or rec.get("exterior_nodes") or []
+        if ext:
+            p = _poly_from_nodes(ext)
+            return [p] if p is not None and not p.is_empty else []
+        tokens: list = []
+        if rec.get("polygon_tokens"):
+            tokens = list(rec["polygon_tokens"])
+        elif rec.get("polygon_token"):
+            tokens = [rec["polygon_token"]]
+        out_p: list[Polygon] = []
+        for tok in tokens:
+            linked = poly_ix.get(str(tok)) or {}
+            p = _poly_from_nodes(linked.get("exterior_node_tokens") or linked.get("exterior_nodes") or [])
+            if p is not None and not p.is_empty:
+                out_p.append(p)
+        return out_p
+
     out: dict[str, list[Polygon]] = {name: [] for name in _LAYER_NAMES}
     alias = {"sidewalk": "walkway", "walkway": "walkway", "driveable_area": "drivable_area"}
     for layer in _LAYER_NAMES:
         key = layer
         records = payload.get(key) or payload.get(alias.get(key, key)) or []
         for rec in records:
-            poly = _poly_from_record(rec)
-            if poly is not None and not poly.is_empty:
-                out[layer].append(poly)
+            if not isinstance(rec, dict):
+                continue
+            out[layer].extend(_polys_from_record(rec))
     return out
 
 

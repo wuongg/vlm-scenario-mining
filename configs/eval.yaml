@@ -1,0 +1,36 @@
+n_gt: 60
+tIoU: [0.3, 0.5, 0.7]
+seeds:
+  gt_list: 7
+  label_interleave: 13
+  search_demo: 0
+allocation:
+  rule: "stratified_by_map_then_light"
+  min_windows_per_map: 5
+  out_of_headline_if_positives_lt: 3
+  maps_expected: ["boston-seaport", "singapore-onenorth", "singapore-hollandvillage", "singapore-queenstown"]
+prevalence:
+  # Headline class-set is frozen on Day 2 AFTER this audit runs on the labeled 10 + pseudo-GT.
+  skeleton_only: true
+kill_switch:
+  deadline_local: "2026-11-01T18:00:00+07:00"  # Day 7 18:00
+  checklist:
+    - "GT n=60 labeled or prevalence says a class is out-of-headline"
+    - "At least two backends produced schema-valid WindowOutput on the 60"
+    - "Keyword index search + negative-space coverage_report run on the corpus"
+    - "No P1 embedder / MCP / routing work started"
+    - "If API quota TERMINAL: freeze detector+fallback numbers and stop spend"
+    - "If geometry fixture red on real mini: do not mine"
+    - "If night confound (all night=hollandv) dominates a claim: condition-breakdown, not headline"
+labeling:
+  smoke_n: 5
+  session_cap_min: 75
+  definition_card_seconds: 90
+  blinded_relabel: true
+match:
+  primary_tIoU: 0.5
+  ap_is_secondary: true
+ci:
+  job_timeout_min: 15
+  fail_fast: true
+  synthetic_windows: 3

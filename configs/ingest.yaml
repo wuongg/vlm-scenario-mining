@@ -1,0 +1,92 @@
+cameras:
+  - CAM_FRONT
+  - CAM_FRONT_LEFT
+  - CAM_FRONT_RIGHT
+camera_role: front-triad
+image:
+  width: 1600
+  height: 900
+  qwen_bbox_max: 1000
+window:
+  w: 6
+  fps: 2
+  stride: 3
+mini:
+  url: "https://www.nuscenes.org/data/v1.0-mini.tgz"
+  filename: "v1.0-mini.tgz"
+  version: "v1.0-mini"
+  # Public, no account. Integrity is gzip -t + tar list + structure — NOT a self SHA.
+  expected_scenes: 10
+  expected_samples_band: [390, 420]
+  expected_keyframe_per_scene_band: [13, 41]
+  expected_frames_rows_band: [1100, 1300]  # scenes × kf × 3 cams; proposal said 1,200
+  expected_windows: 360
+  tables:
+    - attribute
+    - calibrated_sensor
+    - category
+    - ego_pose
+    - instance
+    - log
+    - map
+    - sample
+    - sample_annotation
+    - sample_data
+    - scene
+    - sensor
+    - visibility
+  # User said "11 tables parse". Mini ships 13 JSON tables. Gate asserts these 11 load-bearing ones:
+  tables_required:
+    - calibrated_sensor
+    - category
+    - ego_pose
+    - instance
+    - log
+    - sample
+    - sample_annotation
+    - sample_data
+    - scene
+    - sensor
+    - visibility
+map:
+  version: "1.3"
+  filename: "nuScenes-map-expansion-v1.3.zip"
+  url: "https://www.nuscenes.org/data/nuScenes-map-expansion-v1.3.zip"
+  url_fallback: "https://zenodo.org/records/15667707/files/nuScenes-map-expansion-v1.3.zip?download=1"
+  sha256: "9dbc80a095b6b28d9b79fc9a43471a750dc92ca78c6d0db288fd92b34be5a144"
+  layers: [driveable_area, sidewalk, ped_crossing, lane]
+coda:
+  name: "CODA-LM-Test-500"
+  url: "https://huggingface.co/datasets/KaiChen1998/coda-lm/archive/main.zip"
+  filename: "coda-lm-main.zip"
+  expected_n_test: 500
+  sha256: "55e94b2924731a3c5a0c8a78391209d61141f00879b0e7794c2a764558608217"  # sha256_dir of CODA-LM/Test json snapshot
+integrity:
+  quat_norm_eps: 0.001
+  ts_gap_s: 0.5          # nominal keyframe period (2 Hz)
+  ts_gap_eps_s: 0.12     # one 12 Hz tick (0.083) + filename rounding; 0.08 false-quarantined 7/10 mini scenes
+  camera_hz: 12
+  keyframe_hz: 2
+  translation_finite: true
+  drop_rate_col: "gt_drop_rate"
+conditions:
+  night_tokens: ["night", "Night"]
+  night_map_confound: "singapore-hollandvillage"
+  expected_night_scenes_mini: 3
+  blur_method: "laplacian_variance"
+  density_edges: [0, 5, 15, 40, 999]
+  density_labels: ["empty", "sparse", "medium", "dense"]
+  visibility_levels: [1, 2, 3, 4]
+provenance:
+  grid: "grid"
+  anchor: "anchor"
+geometry_mode:
+  mapful: "A_mapful"
+  mapless: "B_mapless"
+paths:
+  raw: "data/raw"
+  frames: "data/frames"
+  cache: "data/cache"
+  coda: "data/coda"
+  mini_root: "data/raw/v1.0-mini"
+  map_root: "data/raw/maps"

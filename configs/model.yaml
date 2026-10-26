@@ -1,0 +1,67 @@
+# Dated model ids. Decoding is greedy. Repair is one-shot. Free-quota-only is the default.
+
+backends:
+  fallback:
+    name: "fallback"
+    comment: "NOT A BASELINE — CI-only keyword path"
+    ci_only: true
+  detector:
+    name: "detector"
+    model_id: "IDEA-Research/grounding-dino-tiny"
+    model_date: "2024-05-28"
+    box_threshold_sweep: [0.25, 0.30, 0.35, 0.40]
+    box_threshold_default: 0.30
+    text_threshold: 0.25
+    remove_combined: true
+    phrase_template: "{cls} ."
+    phrase_lowercase: true
+    repetition_trick: false
+    nms: "class_agnostic"
+    nms_iou: 0.5
+    cache_dir: "data/cache/detector"
+  api_vlm:
+    name: "api_vlm"
+    model_id: "qwen3-vl-plus"
+    model_date: "2026-10-26"
+    base_url_env: "VLM_BASE_URL"
+    base_url_default: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    api_key_env: "DASHSCOPE_API_KEY"
+    video_file_input: true
+    fps_param_required: true
+    log_usage_from_response: true  # never estimate prompt_tokens by hand
+    free_quota_only: true
+    temperature: 0.0
+    top_p: 1.0
+    max_tokens: 1024
+    retry_repair: 1
+    # Rate-limit footnote: 429 is retryable (full-jitter backoff). 403 and quota-exceeded are TERMINAL — kill-switch, do not retry.
+    retryable_status: [429]
+    terminal_status: [403]
+    terminal_error_substrings: ["quota", "insufficient_quota", "FreeQuota"]
+    backoff_base_s: 1.0
+    backoff_max_s: 32.0
+    backoff_jitter: "full"
+    max_retries_429: 5
+  local_vlm:
+    name: "local_vlm"
+    model_id: "Qwen/Qwen3-VL-2B-Instruct"
+    model_date: "2025-09-23"
+    precision_tag_options: ["fp16", "4bit"]
+    min_ram_gb: 16
+    run_today: false  # skeleton only unless RAM test passes AND local-only branch
+
+decoding:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 1024
+  retry_repair: 1
+
+prompt:
+  none_instruction: "no clear scenario → none"
+  uncertain_instruction: "not sure → uncertain"
+  # few-shot corpus is Day 3 / Day 2 GT freeze. Do not write the final few-shot here.
+
+ledger:
+  checkpoint_n: 50
+  heartbeat: "data/cache/ledger.heartbeat"
+  path: "results/ledger.csv"

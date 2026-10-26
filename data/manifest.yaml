@@ -1,0 +1,15 @@
+# Hashes only. Mini tgz is structure-gated, not self-SHA'd.
+- name: nuscenes-mini
+  url: https://www.nuscenes.org/data/v1.0-mini.tgz
+  path: data/raw/v1.0-mini.tgz
+  sha256: structure-gate-not-self-sha
+  bytes: 4167696325
+- name: nuscenes-map-expansion-v1.3
+  url: https://zenodo.org/records/15667707/files/nuScenes-map-expansion-v1.3.zip?download=1
+  path: data/raw/nuScenes-map-expansion-v1.3.zip
+  sha256: 9dbc80a095b6b28d9b79fc9a43471a750dc92ca78c6d0db288fd92b34be5a144
+- name: coda-lm-test-500
+  url: https://huggingface.co/datasets/KaiChen1998/coda-lm
+  path: data/coda/unpacked
+  sha256: 55e94b2924731a3c5a0c8a78391209d61141f00879b0e7794c2a764558608217
+  n_test_json: 500

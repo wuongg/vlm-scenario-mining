@@ -1,0 +1,14 @@
+{
+  "backend": "local_vlm",
+  "model_id": "Qwen/Qwen3-VL-2B-Instruct",
+  "min_ram_gb": 16.0,
+  "ram_ok": false,
+  "run_today": false,
+  "import_torch": true,
+  "load_attempted": false,
+  "oom": false,
+  "decision": "local-only branch \u2014 RAM gate failed; do not load 2B",
+  "cuda": false,
+  "torch_version": "2.14.1+cpu",
+  "t_end": 1793012486.7738476
+}

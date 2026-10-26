@@ -19,6 +19,12 @@ backends:
     nms: "class_agnostic"
     nms_iou: 0.5
     cache_dir: "data/cache/detector"
+    # D12: combined caption (13.5 s/frame CPU). 960×540 does not speed up vs native.
+    # 1 middle frame/window → ~81 min for 360; 2160 combined forwards ≈ 8.3 h.
+    caption_mode: "combined"  # per_phrase = 105 s/frame — not a corpus path
+    input_wh: [960, 540]
+    frames_per_window: 1
+    latency_probe_frames: 20
   api_vlm:
     name: "api_vlm"
     model_id: "qwen3-vl-plus"

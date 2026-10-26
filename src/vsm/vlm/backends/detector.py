@@ -1,4 +1,4 @@
-"""Grounding-DINO-tiny. Per-phrase 'class .', remove_combined=True, no repetition trick."""
+"""Grounding-DINO-tiny. D12 default: combined caption at 960×540, one middle frame/window."""
 
 from __future__ import annotations
 
@@ -16,6 +16,9 @@ _THRESHOLDS = [float(x) for x in _DET["box_threshold_sweep"]]
 _DEFAULT_THR = float(_DET["box_threshold_default"])
 _NMS_IOU = float(_DET["nms_iou"])
 _CACHE = REPO_ROOT / str(_DET["cache_dir"])
+_CAPTION_MODE = str(_DET.get("caption_mode") or "combined")
+_INPUT_WH = [int(x) for x in (_DET.get("input_wh") or [960, 540])]
+_FRAMES_PER_WINDOW = int(_DET.get("frames_per_window") or 1)
 
 
 class DetectorUnavailable(RuntimeError):
@@ -89,17 +92,19 @@ class GroundingDinoTiny:
 
         rows = frames.to_dicts() if isinstance(frames, pl.DataFrame) else list(frames)
         phrases = list(DETECTOR_PHRASES)
-        text = " ".join(phrases)  # processor still gets per-phrase queries below
-        del text
+        combined = " ".join(p.lower() for p in phrases)
+        queries = phrases if _CAPTION_MODE == "per_phrase" else [combined]
         out_rows: list[dict] = []
         for row in rows:
-            path = Path(str(row.get(COLS.CLIP_REF.value) or ""))
+            path = Path(str(row.get(COLS.CLIP_REF.value) or row.get("clip_ref") or row.get("path") or ""))
             if not path.exists():
                 continue
             image = Image.open(path).convert("RGB")
+            native_w, native_h = image.size
+            if _INPUT_WH:
+                image = image.resize((int(_INPUT_WH[0]), int(_INPUT_WH[1])))
             w, h = image.size
-            for phrase in phrases:
-                # per-phrase "class ." lowercase; no repetition trick
+            for phrase in queries:
                 inputs = self._proc(images=image, text=phrase.lower(), return_tensors="pt")
                 with torch.no_grad():
                     outputs = self._model(**inputs)
@@ -124,11 +129,16 @@ class GroundingDinoTiny:
                 keep = _nms_class_agnostic(np.asarray(boxes), np.asarray(scores), _NMS_IOU)
                 for idx in keep:
                     box = [float(v) for v in boxes[idx]]
+                    # remap resized coords onto native pixels then into Qwen [0,1000)
+                    sx = native_w / float(w)
+                    sy = native_h / float(h)
+                    native_box = [box[0] * sx, box[1] * sy, box[2] * sx, box[3] * sy]
+                    raw_label = str(labels[idx] if idx < len(labels) else phrase).strip()
                     out_rows.append(
                         {
-                            "frame_id": row.get(COLS.FRAME_ID.value),
-                            "class": str(labels[idx] if idx < len(labels) else phrase).strip(),
-                            "bbox_2d": _to_qwen(box, w, h),
+                            "frame_id": row.get(COLS.FRAME_ID.value) or row.get("frame_id"),
+                            "class": raw_label,
+                            "bbox_2d": _to_qwen(native_box, native_w, native_h),
                             "logit": float(scores[idx]),
                             "source": "grounding_dino_tiny",
                             "box_threshold": self.box_threshold,
@@ -161,7 +171,12 @@ class GroundingDinoTiny:
         from vsm.constants import GEOMETRY_B, PROVENANCE_GRID
         from vsm.vlm.schema import ObjectClaim, VLMFinding, WindowOutput, class_family
 
-        df = self.detect_objects(frames)
+        rows = frames.to_dicts() if isinstance(frames, pl.DataFrame) else list(frames)
+        if _FRAMES_PER_WINDOW > 0 and len(rows) > _FRAMES_PER_WINDOW:
+            mid = len(rows) // 2
+            half = max(_FRAMES_PER_WINDOW // 2, 0)
+            rows = rows[max(0, mid - half) : mid - half + _FRAMES_PER_WINDOW]
+        df = self.detect_objects(rows)
         findings = []
         rows = frames.to_dicts() if isinstance(frames, pl.DataFrame) else list(frames)
         window_id = "detector"

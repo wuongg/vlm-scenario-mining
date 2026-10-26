@@ -172,3 +172,39 @@ def pixel_to_qwen_bbox(bbox_px: tuple | list, W: int, H: int) -> list[int]:
         int(np.clip(x2 / W * s, 0, s - 1)),
         int(np.clip(y2 / H * s, 0, s - 1)),
     ]
+
+
+def qwen_bottom_center_px(bbox_1000: list | tuple, W: int, H: int) -> tuple[float, float]:
+    """Return pixel (u, v) of the bbox bottom-center (feet)."""
+
+    x1, y1, x2, y2 = rescale_qwen_bbox(bbox_1000, W, H)
+    return (x1 + x2) / 2.0, y2
+
+
+def pixel_to_ground_xy(
+    u: float,
+    v: float,
+    ego: dict,
+    cs: dict,
+    plane_z: float | None = None,
+) -> tuple[float, float] | None:
+    """Unproject a pixel through K / cs / ego onto the z=plane_z ground (global)."""
+
+    k = np.asarray(cs["camera_intrinsic"], dtype=np.float64)
+    try:
+        kinv = np.linalg.inv(k)
+    except np.linalg.LinAlgError:
+        return None
+    d_cam = kinv @ np.array([float(u), float(v), 1.0], dtype=np.float64)
+    r_cs = quaternion_rotation_matrix(np.asarray(cs["rotation"], dtype=np.float64))
+    r_ego = quaternion_rotation_matrix(np.asarray(ego["rotation"], dtype=np.float64))
+    d_glob = r_ego @ (r_cs @ d_cam)
+    origin = r_ego @ np.asarray(cs["translation"], dtype=np.float64) + np.asarray(ego["translation"], dtype=np.float64)
+    z_plane = float(ego["translation"][2] if plane_z is None else plane_z)
+    if abs(float(d_glob[2])) < 1e-8:
+        return None
+    t = (z_plane - float(origin[2])) / float(d_glob[2])
+    if t <= 0:
+        return None
+    p = origin + t * d_glob
+    return float(p[0]), float(p[1])

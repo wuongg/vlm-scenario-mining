@@ -1,0 +1,54 @@
+# T0 rule knobs. Engine picks Mode A if capabilities present, else Mode B.
+join:
+  pedestrian_cross: "ped_cross_v2_ped_ground_in_crossing"
+  ego_path_buffer_m: 3.5  # v1 only; v2 does not use this as the positive predicate
+  straddle_m: 0.75
+  intrusion_frac: 0.25
+  intrusion_min_frames: 2
+  sidewalk_frac: 0.50
+  moto_min_frames: 3
+  pixel_band_lo: 0.32
+  pixel_band_hi: 0.68
+  center_band_lo: 0.38
+  center_band_hi: 0.62
+  lead_slope_max: -0.012  # 1/h falling
+  jitter_px: [2, 4]
+  turn_lane_types: ["TURN", "LEFT", "RIGHT"]
+
+rules:
+  lane_split_moto:
+    family: safety_spatial
+    required_capabilities: [map, calibrated_ego]
+    t0_support: full
+  lane_intrusion:
+    family: safety_spatial
+    required_capabilities: [map, calibrated_ego]
+    t0_support: full
+  sidewalk_mount:
+    family: safety_spatial
+    required_capabilities: [map, calibrated_ego]
+    t0_support: full
+  cut_in:
+    family: safety_maneuver
+    required_capabilities: [calibrated_ego]
+    t0_support: full
+  lead_braking:
+    family: safety_maneuver
+    required_capabilities: [calibrated_ego]
+    t0_support: full
+  pedestrian_cross:
+    family: safety_spatial
+    required_capabilities: [map, calibrated_ego]
+    t0_support: full
+  oncoming:
+    family: safety_maneuver
+    required_capabilities: [map, calibrated_ego]
+    t0_support: thin  # likely coverage-only
+  turn_lane_drift:
+    family: safety_maneuver
+    required_capabilities: [map, calibrated_ego]
+    t0_support: thin  # likely coverage-only
+  red_light_violation:
+    family: compliance
+    required_capabilities: []
+    t0_support: presence_only  # no GT; flag lamp presence, do not score

@@ -10,16 +10,16 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import polars as pl
-from shapely.geometry import LineString
 
-from vsm.config import cfg_dict
+from vsm.config import REPO_ROOT, cfg_dict
 from vsm.constants import CLASS_IDS, COLS, WIN_COLS
 
 _EVAL = cfg_dict("eval")
 _MIN_PER_MAP = int(_EVAL["allocation"]["min_windows_per_map"])
 _OUT = int(_EVAL["allocation"]["out_of_headline_if_positives_lt"])
 
-JOIN_RULE_PED = "ped_cross_v1_crossing_layer_ego_path_and_ped_object"
+JOIN_RULE_PED = str(cfg_dict("rules")["join"]["pedestrian_cross"])
+JOIN_RULE_PED_V1 = "ped_cross_v1_crossing_layer_ego_path_and_ped_object"
 JOIN_RULE_CUTIN = "cut_in_v1_lateral_enter_center_band"
 JOIN_RULE_LEAD = "lead_braking_v1_invh_slope"
 HEADLINE_CANDIDATES = ("pedestrian_cross", "lead_braking", "cut_in")
@@ -69,6 +69,8 @@ def _is_vehicle(name: str) -> bool:
 
 def _is_ped(name: str) -> bool:
     key = name.lower()
+    if "motorcycle" in key:
+        return False
     return any(tok in key for tok in PED_TOKENS)
 
 
@@ -125,10 +127,54 @@ def _window_moto_frames(subset: pl.DataFrame) -> int:
     return n
 
 
+def _cs_index() -> dict[str, dict]:
+    from vsm.ingest.convert import _find_version_dir, _load_table
+
+    try:
+        version = _find_version_dir(REPO_ROOT / "data" / "raw" / "v1.0-mini")
+        return {str(r["token"]): r for r in _load_table(version, "calibrated_sensor")}
+    except FileNotFoundError:
+        return {}
+
+
+def _ped_ground_in_crossing(row: dict, crossings: list, cs: dict | None) -> bool:
+    """v2 predicate: unprojected ped feet sit inside a ped_crossing polygon."""
+
+    from shapely.geometry import Point
+
+    from vsm.constants import IMAGE_H, IMAGE_W
+    from vsm.geometry.projection import pixel_to_ground_xy, qwen_bottom_center_px
+
+    if not crossings or cs is None:
+        return False
+    try:
+        ego = json.loads(str(row.get(COLS.EGO_POSE_JSON.value) or "{}"))
+    except json.JSONDecodeError:
+        return False
+    if "rotation" not in ego:
+        return False
+    if "translation" not in ego:
+        xyz = ego.get("xyz") or [0.0, 0.0, 0.0]
+        ego["translation"] = [float(xyz[0]), float(xyz[1]), 0.0]
+    for obj in _objects(row.get(COLS.OBJECTS_JSON.value)):
+        if not _is_ped(str(obj.get("class") or "")):
+            continue
+        bbox = obj.get("bbox_2d") or []
+        if len(bbox) < 4:
+            continue
+        u, v = qwen_bottom_center_px(bbox, IMAGE_W, IMAGE_H)
+        xy = pixel_to_ground_xy(u, v, ego, cs)
+        if xy is None:
+            continue
+        if any(poly.contains(Point(xy[0], xy[1])) for poly in crossings):
+            return True
+    return False
+
+
 def pseudo_gt_pedestrian_cross(
     windows: pl.DataFrame, frames: pl.DataFrame, map_root: Path | None = None
 ) -> pl.DataFrame:
-    """Join rule ped_cross_v1: ped_crossing layer ∩ ego-path buffer AND a pedestrian object.
+    """Join rule v2: ped bbox bottom-center unprojected into a ped_crossing polygon.
 
     Hand-checks of this join must be disjoint from the eval-60 list.
     """
@@ -136,6 +182,7 @@ def pseudo_gt_pedestrian_cross(
     from vsm.geometry.map_layers import load_map_layers
 
     cache: dict[str, Any] = {}
+    cs_ix = _cs_index()
     rows: list[dict] = []
     for w in windows.iter_rows(named=True):
         subset = _window_frames(frames, w)
@@ -156,12 +203,19 @@ def pseudo_gt_pedestrian_cross(
                 pts.append(xy)
         hit_map = False
         if len(pts) >= 2 and crossings:
+            from shapely.geometry import LineString
+
             path = LineString(pts)
             if path.length > 0:
-                buf = path.buffer(3.5)
+                buf = path.buffer(float(cfg_dict("rules")["join"]["ego_path_buffer_m"]))
                 hit_map = any(buf.intersects(poly) for poly in crossings)
-        has_ped = _window_has_ped(subset)
-        if hit_map and has_ped:
+        hit_ped = False
+        for row in subset.iter_rows(named=True):
+            cs = cs_ix.get(str(row.get("calibrated_sensor_token") or ""))
+            if _ped_ground_in_crossing(row, crossings, cs):
+                hit_ped = True
+                break
+        if hit_map and hit_ped:
             rows.append(
                 {
                     WIN_COLS.WINDOW_ID.value: w[WIN_COLS.WINDOW_ID.value],

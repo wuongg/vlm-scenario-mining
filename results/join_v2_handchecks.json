@@ -1,0 +1,13 @@
+{
+  "join_rule_version": "ped_cross_v2_ped_ground_in_crossing",
+  "n_handchecks": 10,
+  "n_join_pos_v1": 5,
+  "n_join_pos_v2": 3,
+  "n_join_fp_v1": 2,
+  "n_join_fp_v2": 1,
+  "join_fp_rate_v1": 0.4,
+  "join_fp_rate_v2": 0.333,
+  "threshold": 0.4,
+  "fallback_full_reframe": false,
+  "note": "1/3 remaining v2 positives is still Boston curb-ped JOIN-FP; rate 33% < 40% so scoring proceeds with v2 as upper bound"
+}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from vsm.config import load_named
-from vsm.eval.gt import build_gt_list, gt_list_sha, prevalence_audit
+from vsm.eval.gt import JOIN_RULE_PED, build_gt_list, gt_list_sha, prevalence_audit
 from vsm.geometry.synth_fixtures import three_synth_windows
 from vsm.ingest.conditions import add_condition_columns
 
@@ -26,6 +26,10 @@ def test_prevalence_out_of_headline_rule() -> None:
     table = prevalence_audit(windows, pseudo, frames)
     assert "lead_braking" in table.out_of_headline
     assert table.to_dataframe().height > 0
+
+
+def test_join_rule_is_v2() -> None:
+    assert JOIN_RULE_PED == "ped_cross_v2_ped_ground_in_crossing"
 
 
 def test_gt_list_sha_stable() -> None:

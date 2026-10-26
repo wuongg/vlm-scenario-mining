@@ -1,0 +1,63 @@
+{
+  "denominator_frozen": 500,
+  "n_loaded": 500,
+  "n_gt_objects": 1123,
+  "overlap": {
+    "nuscenes_sample_tokens_json": [],
+    "present": false,
+    "test_json_scene_or_hex_mentions": 0,
+    "sample_mentions": [],
+    "mini_token_overlap_image_ids": [],
+    "n_mini_overlap": 0,
+    "held_out_ok": true
+  },
+  "smoke": {
+    "n_images_found": 50,
+    "n_images_missing": 450,
+    "detector_ran": true,
+    "n_smoked": 50,
+    "object_recall_50": 0.17687074829931973,
+    "note": "smoke on 50 images with qwen-to-pixel remap; official table uses frozen 500",
+    "tp": 26,
+    "n_gt_objects": 147,
+    "by_group": {
+      "barrier": {
+        "tp": 0,
+        "n": 44,
+        "recall": 0.0
+      },
+      "other": {
+        "tp": 0,
+        "n": 19,
+        "recall": 0.0
+      },
+      "traffic_cone": {
+        "tp": 0,
+        "n": 37,
+        "recall": 0.0
+      },
+      "traffic_light": {
+        "tp": 0,
+        "n": 3,
+        "recall": 0.0
+      },
+      "traffic_sign": {
+        "tp": 2,
+        "n": 11,
+        "recall": 0.18181818181818182
+      },
+      "vehicle": {
+        "tp": 17,
+        "n": 25,
+        "recall": 0.68
+      },
+      "vru": {
+        "tp": 7,
+        "n": 8,
+        "recall": 0.875
+      }
+    },
+    "n_pred_boxes": 614,
+    "n_images": 50
+  }
+}

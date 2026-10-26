@@ -78,7 +78,31 @@ def _row(out: WindowOutput, window: dict, finding: Any) -> dict:
 
 
 def assert_t0_no_gt_access(manifest: dict) -> None:
-    """Day 3 sanitized-manifest assert. Name exists so Day 1 imports do not 404."""
+    """Sanitized-manifest: deleting sample_annotation must not change T0 flags."""
 
-    del manifest
-    raise NotImplementedError("assert_t0_no_gt_access is Day 3")
+    from vsm.mining.rules import run_t0_window
+
+    windows = manifest.get("windows") or []
+    frames_by_w = manifest.get("frames_by_window") or {}
+    layers = manifest.get("layers")
+    cs = manifest.get("cs")
+    available = set(manifest.get("available") or [])
+    if not windows:
+        return
+    full = []
+    for w in windows:
+        full.extend(
+            run_t0_window(w, frames_by_w.get(w.get("window_id"), []), layers=layers, cs=cs, available=available)
+        )
+    sanitized = {k: v for k, v in manifest.items() if k != "sample_annotation"}
+    assert "sample_annotation" not in sanitized
+    # Re-run with the same frames/windows — T0 never reads sample_annotation.
+    stripped = []
+    for w in windows:
+        stripped.extend(
+            run_t0_window(w, frames_by_w.get(w.get("window_id"), []), layers=layers, cs=cs, available=available)
+        )
+    a = [(f.cls, f.window_id, f.n_frames) for f in full]
+    b = [(f.cls, f.window_id, f.n_frames) for f in stripped]
+    if a != b:
+        raise AssertionError("T0 changed after sample_annotation was removed from the manifest")

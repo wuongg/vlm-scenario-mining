@@ -1,0 +1,27 @@
+{
+  "n_windows": 360,
+  "n_flags": 197,
+  "n_windows_flagged": 153,
+  "assert_t0_no_gt_access": true,
+  "by_class": {
+    "cut_in": 105,
+    "lane_intrusion": 21,
+    "lane_split_moto": 17,
+    "pedestrian_cross": 21,
+    "sidewalk_mount": 33,
+    "lead_braking": 0,
+    "oncoming": 0,
+    "turn_lane_drift": 0,
+    "red_light_violation": 0
+  },
+  "geometry_mode": {
+    "A_mapful": 92,
+    "B_mapless": 105
+  },
+  "notes": {
+    "cut_in": "same 105-count 2D heuristic as Day-2; Mode B, expected FP-heavy, not n_pos",
+    "lane_split_moto": "17 flags vs 72 windows with moto>=3 frames; straddle is stricter than presence",
+    "oncoming_turn_lane": "T0 support thin — coverage-only, never auto-fire",
+    "red_light_violation": "presence_only; no lamp objects on mini → 0"
+  }
+}

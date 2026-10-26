@@ -108,20 +108,28 @@ def main(argv: list[str] | None = None) -> int:
                 }
                 atomic_write_json(progress, REPO_ROOT / "results" / "coda_progress.json")
                 print(json.dumps(progress))
-        subset = [r for r in records if r["image_id"] in {h["image_id"] for h in take}]
-        smoke_metrics = object_level_recall(subset, preds)
+        found_ids = {h["image_id"] for h in take}
+        missing_ids = {r["image_id"] for r in records} - found_ids
+        if args.full:
+            smoke_metrics = object_level_recall(records, preds, parse_fail_ids=missing_ids)
+        else:
+            subset = [r for r in records if r["image_id"] in found_ids]
+            smoke_metrics = object_level_recall(subset, preds)
         smoke.update(
             {
                 "detector_ran": True,
                 "n_smoked": len(take),
-                "object_recall_50": smoke_metrics["object_recall"] if len(take) == 50 else None,
+                "n_images_missing_scored_as_miss": len(missing_ids) if args.full else 0,
+                "object_recall_50": smoke_metrics["object_recall"] if (not args.full and len(take) == 50) else None,
                 "object_recall": smoke_metrics["object_recall"],
                 "tp": smoke_metrics["tp"],
                 "n_gt_objects": smoke_metrics["n_gt_objects"],
                 "by_group": smoke_metrics["by_group"],
                 "elapsed_s": time.time() - t0,
                 "note": (
-                    "official frozen-500 table" if args.full else "smoke on 50 images; official table uses frozen 500"
+                    "official frozen-500 table; missing images = parse-fail = miss"
+                    if args.full
+                    else "smoke on found images; official table uses frozen 500"
                 ),
             }
         )
@@ -145,10 +153,20 @@ def main(argv: list[str] | None = None) -> int:
                 "gap": "combined lowercase '{cls} .' caption vs paper per-phrase / extra vocab",
             },
             {
+                "axis": "threshold",
+                "gap": "frozen tau=0.30 (box_threshold_default); paper sweeps / uses a different operating point",
+            },
+            {
                 "axis": "denominator",
                 "gap": "parse-fail = miss; denom frozen 500 even if images missing",
             },
+            {
+                "axis": "images",
+                "gap": f"{len(image_hits)}/500 CODA2022-test images present locally; missing scored as miss",
+            },
         ],
+        "wording": "cross-locale sanity comparison under a different setup — not a leaderboard claim",
+        "held_out_ok": bool(overlap.get("held_out_ok")),
     }
     dest = REPO_ROOT / "results" / ("coda_full.json" if args.full else "coda_smoke.json")
     atomic_write_json(report, dest)

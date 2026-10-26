@@ -65,6 +65,46 @@ def _night() -> tuple[bool, str]:
     return True, "night confound recorded (hollandv only) — condition-breakdown, not headline"
 
 
+def _e2e_parse() -> tuple[bool, str]:
+    """≥10 windows E2E with parse_ok ≥80%."""
+
+    api = REPO_ROOT / "results" / "api_mine_records.json"
+    n = n_ok = 0
+    if api.exists():
+        recs = json.loads(api.read_text(encoding="utf-8"))
+        gt60 = [r for r in recs if r.get("role") in {None, "gt60"}]
+        n = len(gt60)
+        n_ok = sum(1 for r in gt60 if r.get("parse_ok"))
+    rate = (n_ok / n) if n else 0.0
+    smoke = REPO_ROOT / "results" / "smoke_e2e.json"
+    smoke_n = smoke_ok = 0.0
+    if smoke.exists():
+        rec = json.loads(smoke.read_text(encoding="utf-8"))
+        smoke_n = float(rec.get("n_windows") or 0)
+        smoke_ok = float(rec.get("parse_ok") or 0)
+    ok = (n >= 10 and rate >= 0.8) or (smoke_n >= 10 and smoke_ok >= 0.8)
+    return ok, f"api n={n} parse_ok={n_ok} rate={rate:.3f}; e2e_smoke n={int(smoke_n)} parse_ok={smoke_ok}"
+
+
+def _gt30() -> tuple[bool, str]:
+    n = load_gt_labels().height if (REPO_ROOT / "results" / "gt_labels.jsonl").exists() else 0
+    return n >= 30, f"GT labeled {n} (gate ≥30, target 60)"
+
+
+def _t0_two_scenes() -> tuple[bool, str]:
+    path = REPO_ROOT / "results" / "t0_flags.parquet"
+    if not path.exists():
+        summary = REPO_ROOT / "results" / "t0_summary.json"
+        if summary.exists():
+            rec = json.loads(summary.read_text(encoding="utf-8"))
+            n_win = int(rec.get("n_windows") or 0)
+            return n_win >= 2, f"t0_flags missing; t0_summary n_windows={n_win}"
+        return False, "no t0_flags.parquet"
+    df = pl.read_parquet(path)
+    scenes = sorted({str(w).split("_")[0] for w in df["window_id"].to_list()})
+    return len(scenes) >= 2, f"T0 scenes={len(scenes)} {scenes}"
+
+
 def main() -> int:
     ks = _EVAL["kill_switch"]
     if not (REPO_ROOT / "data" / "frames" / "frames.parquet").exists():
@@ -89,18 +129,39 @@ def main() -> int:
         ("geometry fixture", _geometry),
         ("night confound", _night),
     ]
+    day7 = [
+        (">=10 windows E2E parse_ok>=80%", _e2e_parse),
+        (">=30 GT labeled", _gt30),
+        ("T0 clean >=2 scenes", _t0_two_scenes),
+    ]
     items = []
     all_ok = True
     for label, fn in checks:
         ok, note = fn()
         items.append({"item": label, "pass": ok, "note": note})
         all_ok = all_ok and ok
+    track_items = []
+    track_ok = True
+    for label, fn in day7:
+        ok, note = fn()
+        track_items.append({"item": label, "pass": ok, "note": note})
+        track_ok = track_ok and ok
+    n_track = sum(1 for x in track_items if x["pass"])
+    decision = (
+        "kill-switch 3/3 pass — v1.0-track continues"
+        if track_ok
+        else f"kill-switch {n_track}/3 — ship-config activated"
+    )
     payload = {
         "recorded_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "deadline_local": ks["deadline_local"],
         "now_local": now.isoformat(),
         "past_deadline": now > deadline,
         "pass": all_ok,
+        "v1_0_track": "continues" if track_ok else "ship-config",
+        "day7_gate": {"pass": track_ok, "n_pass": n_track, "n": 3, "items": track_items},
+        "decision": decision,
+        "sunk_cost": True,
         "items": items,
     }
     dest = Path(REPO_ROOT / "results" / "killswitch.json")

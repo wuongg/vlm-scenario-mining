@@ -1,0 +1,17 @@
+{
+  "ready": true,
+  "n_windows_with_boxes": 351,
+  "n_windows_expected": 360,
+  "n_ped_cross_windows": 221,
+  "stitch": {
+    "pre": 221,
+    "post": 60,
+    "delta": -161,
+    "overmerge_incidents": 15,
+    "n_identity": 184,
+    "n_tracks": 184
+  },
+  "index_headline_events": 60,
+  "elapsed_s": 5159.070922613144,
+  "n_boxes": 4457
+}

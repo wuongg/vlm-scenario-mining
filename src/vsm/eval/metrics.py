@@ -51,6 +51,9 @@ def neff_wilson(per_scene_hits: dict[str, tuple[int, int]], z: float = 1.96) -> 
     """ICC from per-scene recall; n_eff = n / (1+(mbar-1)ICC); Wilson on n_eff.
 
     per_scene_hits: scene -> (tp, n_gt). Caveat: G=10 scenes, diagnostic only.
+
+    ICC=0 with 5/10 scenes having positives — recall 1.0 on every positive scene
+    gives no between-scene ANOVA variance; deff≈1. The limitation is still n_scenes=10.
     """
 
     groups: list[list[float]] = []

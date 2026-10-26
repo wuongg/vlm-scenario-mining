@@ -1,0 +1,4 @@
+point,recall,precision,usd,wall_clock_s,n_pred,n_gt,tokens,provenance,note
+detector_only,1.0,0.19607843137254902,0,9943.8,51,10,0,grid_draft,event ped_cross; box-level VRU P=0.440 R=0.212; corpus API not run
+api_gt60,0.3,0.75,0,764.6,4,10,76424,grid_draft,4 claims on GT-60; D20 ship 2-point; reseller canary_freeze
+union,1.0,0.19607843137254902,0,10708.4,51,10,76424,grid_draft,union ≈ detector on this corpus; API contributes claims not coverage

@@ -1,0 +1,22 @@
+{
+  "pass": "corpus",
+  "n_windows_expected": 360,
+  "n_windows_done": 360,
+  "n_frames_per_window": 1,
+  "n_boxes": 4457,
+  "box_threshold_floor": 0.25,
+  "sweep": [
+    0.25,
+    0.3,
+    0.35,
+    0.4
+  ],
+  "cache": {
+    "hit": 0,
+    "miss": 490,
+    "n": 490
+  },
+  "elapsed_s": 5159.070922613144,
+  "partial_json": 0,
+  "path": "C:\\Users\\phamv\\Downloads\\vlm-scenario-mining\\results\\detector_corpus.parquet"
+}

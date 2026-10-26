@@ -12,7 +12,7 @@ from typing import Any, Iterable
 import polars as pl
 
 from vsm.config import REPO_ROOT, cfg_dict
-from vsm.constants import CLASS_IDS, COLS, WIN_COLS
+from vsm.constants import CLASS_IDS, COLS, FAMILIES, WIN_COLS
 
 _EVAL = cfg_dict("eval")
 _MIN_PER_MAP = int(_EVAL["allocation"]["min_windows_per_map"])
@@ -507,6 +507,75 @@ def pick_quick_scan_windows(windows: pl.DataFrame, n: int = 20, seed: int = 13) 
     """20 stray windows for quick-mode presence flags."""
 
     return pick_handcheck_windows(windows, n=n, seed=seed)
+
+
+_MANEUVER = set(FAMILIES.get("safety_maneuver") or [])
+_SPATIAL_SLOT = {"lane_split_moto", "sidewalk_mount", "lane_intrusion"}
+_REQUIRED_GT = (
+    "window_id",
+    "event_id",
+    "class_set",
+    "ts_start_us",
+    "ts_end_us",
+    "latency_s",
+    "definition_doubt",
+)
+
+
+def verify_gt_schema(rows: Iterable[dict], expected_ids: Iterable[str] | None = None) -> dict[str, Any]:
+    """Day-7 GT-60 contract: 2-axis class_set, human event_id, latency, doubt flags."""
+
+    last: dict[str, dict] = {}
+    for rec in rows:
+        last[str(rec.get("window_id") or "")] = rec
+    expected = [str(x) for x in (expected_ids if expected_ids is not None else last)]
+    errors: list[str] = []
+    if "" in last:
+        errors.append("empty window_id")
+        last.pop("", None)
+    if expected and set(last) != set(expected):
+        errors.append(f"window_id set mismatch have={len(last)} expected={len(expected)}")
+    for wid, rec in last.items():
+        missing = [k for k in _REQUIRED_GT if k not in rec]
+        if missing:
+            errors.append(f"{wid} missing {missing}")
+            continue
+        if not str(rec.get("event_id") or "").strip():
+            errors.append(f"{wid} event_id empty (must be human-assigned)")
+        cs = rec.get("class_set") or []
+        if isinstance(cs, str):
+            try:
+                cs = json.loads(cs)
+            except json.JSONDecodeError:
+                errors.append(f"{wid} class_set not a list")
+                continue
+        if not isinstance(cs, list) or not cs:
+            errors.append(f"{wid} class_set empty")
+            continue
+        unknown = [c for c in cs if c not in CLASS_IDS and c != "none"]
+        if unknown:
+            errors.append(f"{wid} unknown class {unknown}")
+        maneuvers = [c for c in cs if c in _MANEUVER]
+        spatial = [c for c in cs if c in _SPATIAL_SLOT]
+        if len(maneuvers) > 1:
+            errors.append(f"{wid} >1 maneuver {maneuvers}")
+        if len(spatial) > 1:
+            errors.append(f"{wid} >1 spatial-slot {spatial}")
+        if "none" in cs and [c for c in cs if c != "none"]:
+            errors.append(f"{wid} none combined with {cs}")
+        try:
+            float(rec.get("latency_s"))
+        except (TypeError, ValueError):
+            errors.append(f"{wid} latency_s not numeric")
+        if rec.get("definition_doubt") not in {True, False}:
+            errors.append(f"{wid} definition_doubt not bool")
+    return {
+        "ok": not errors,
+        "n": len(last),
+        "n_expected": len(expected),
+        "errors": errors[:20],
+        "n_errors": len(errors),
+    }
 
 
 def load_gt_labels(path: Path | None = None) -> pl.DataFrame:

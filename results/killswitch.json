@@ -1,9 +1,34 @@
 {
-  "recorded_at": "2026-10-26T15:46:38Z",
+  "recorded_at": "2026-10-26T17:01:28Z",
   "deadline_local": "2026-11-01T18:00:00+07:00",
-  "now_local": "2026-10-26T22:46:38.785578+07:00",
+  "now_local": "2026-10-27T00:01:28.813846+07:00",
   "past_deadline": false,
   "pass": true,
+  "v1_0_track": "continues",
+  "day7_gate": {
+    "pass": true,
+    "n_pass": 3,
+    "n": 3,
+    "items": [
+      {
+        "item": ">=10 windows E2E parse_ok>=80%",
+        "pass": true,
+        "note": "api n=60 parse_ok=55 rate=0.917; e2e_smoke n=5 parse_ok=1.0"
+      },
+      {
+        "item": ">=30 GT labeled",
+        "pass": true,
+        "note": "GT labeled 60 (gate \u226530, target 60)"
+      },
+      {
+        "item": "T0 clean >=2 scenes",
+        "pass": true,
+        "note": "T0 scenes=9 ['scene-0061', 'scene-0103', 'scene-0553', 'scene-0655', 'scene-0757', 'scene-0796', 'scene-0916', 'scene-1094', 'scene-1100']"
+      }
+    ]
+  },
+  "decision": "kill-switch 3/3 pass \u2014 v1.0-track continues",
+  "sunk_cost": true,
   "items": [
     {
       "item": "GT n=60 labeled",

@@ -48,9 +48,17 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - CODA-LM path on: load 500 (1,123 GT objects), overlap 0. Detector smoke 50: object-level recall 0.177 (not official).
 - 6 Day-3 commits pushed (`e6a3b38`).
 
-## Day 6 (in progress)
+## Day 7 (done)
 
-- Pre-reg **v0.2.3** appendix: corpus API held at GT-60 (D17). Detector-only corpus. Day 7 retry-or-ship.
+- Kill-switch **3/3 pass — v1.0-track continues** (sunk-cost). Days 8–10 = official eval + routing skeleton + README. No v1.0 tag today.
+- D20: **SHIP 2-point frontier**. No corpus-API retry. `results/cost_frontier.csv`: detector ($0, R=1.0, P=0.196, 9944 s) + API-GT60 ($0, R=0.3, P=0.75, 765 s) + union ($0, R=1.0, P=0.196, 10708 s). Draft grid until Day 9.
+- Corpus detector **360/360** (4457 boxes, 5159 s). Stitch ped_cross 221→**60 events** (overmerge 15). 9 windows with no boxes. Index headline = 60.
+- CODA-500 official: 50/500 images local; 450 missing = miss. Object recall **0.024** (27/1123). Wording: cross-locale sanity, not a leaderboard claim. Overlap 0, held-out stands.
+- GT-60 schema **ok** 60/60 (2-axis, event_id, latency, doubt).
+
+## Day 6 (done — commit `0e5e22d`)
+
+- Pre-reg **v0.2.3** appendix: corpus API held at GT-60 (D17). Detector-only corpus. Day 7 retry-or-ship → D20 ship.
 - Detector 41 FP: 15 sampled (seed 13) → standing 7 / object-FP 7 / boundary 1. Box-level VRU P=0.440 R=0.212 vs event-level P=0.196 R=1.0 (GT-60, τ=0.30, IoU>0.5).
 - Frontier detector-only = ($0, R=1.0, P=0.196). API tier contributes claims, not coverage; union ≈ detector on this corpus.
 - 0757 oscillation evidence in `results/0757_oscillation.json`. Phrase keep (D18).

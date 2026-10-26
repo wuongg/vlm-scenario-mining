@@ -79,6 +79,6 @@ This is a reporting guard, not a redraw. The n=60 list and seed=7 formula stay f
 
 Corpus API tier held at GT-60 only due to backend instability (canary alarms D17). Corpus tier = detector-only. Frontier has 2 API points (GT-60) + detector corpus point.
 
-Day 7 decides: retry the canary once if the reseller restabilizes, or ship the 2-point frontier. Do not override D17 today.
+**Day 7 (D20, sunk-cost):** SHIP 2-point frontier. No retry. GT-60 API already yields 4 claims for claim-audit; corpus API would only add coverage that union ≈ detector already has; reseller still oscillates (`results/0757_oscillation.json`). Corpus tier = detector-only. Frontier = (detector $0, event-R 1.0 / P 0.196) + (API GT-60, R 0.3 / P 0.75) + box-level split (VRU P=0.440 / R=0.212). CSV: `results/cost_frontier.csv`.
 
 This is a reporting guard, not a backend swap and not a GT redraw.

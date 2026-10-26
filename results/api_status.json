@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-10-26T15:17:21Z",
+  "recorded_at": "2026-10-26T15:30:50Z",
   "backend": "iteracompute",
   "model_id": "qwen/qwen3.8-27b",
   "free_quota_only": true,
@@ -9,25 +9,60 @@
   "concurrency": 5,
   "key_present": true,
   "n_mined_gt60": 60,
-  "n_parse_ok": 55,
   "n_mined_corpus": 0,
-  "subfail": {
-    "ok": 55,
-    "schema_violation": 3,
-    "loop_detected": 2
-  },
+  "subfail": {},
   "token_usage": {
-    "prompt": 70260,
-    "completion": 6164,
-    "total": 76424
+    "prompt": 0,
+    "completion": 0,
+    "total": 0
   },
   "canary": {
     "ran": true,
-    "source": "itera_canary.json",
-    "baseline_written": true,
-    "alarms": [],
-    "first_run_n": 5
+    "session": 2,
+    "recollect": true,
+    "source": "itera_canary_session2.json",
+    "alarms": [
+      {
+        "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+        "class_set_pm1": false,
+        "token_delta_gt_20pct": true,
+        "parse_ok_flip": false
+      },
+      {
+        "window_id": "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+        "class_set_pm1": false,
+        "token_delta_gt_20pct": true,
+        "parse_ok_flip": false
+      },
+      {
+        "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+        "class_set_pm1": true,
+        "token_delta_gt_20pct": true,
+        "parse_ok_flip": false
+      },
+      {
+        "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+        "class_set_pm1": false,
+        "token_delta_gt_20pct": false,
+        "parse_ok_flip": true
+      }
+    ],
+    "hard_alarms": [
+      {
+        "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+        "class_set_pm1": true,
+        "token_delta_gt_20pct": true,
+        "parse_ok_flip": false
+      },
+      {
+        "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+        "class_set_pm1": false,
+        "token_delta_gt_20pct": false,
+        "parse_ok_flip": true
+      }
+    ]
   },
-  "status": "gt60_done",
-  "note": "GT-60 complete (60/60 calls). parse_ok 55/60. Corpus skipped to keep free-tier headroom."
+  "status": "canary_freeze",
+  "note": "canary-lite class-set/parse alarms after re-collect \u2014 freeze corpus API",
+  "n_parse_ok": 55
 }

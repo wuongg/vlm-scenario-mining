@@ -42,10 +42,20 @@ def test_parse_window_label_none() -> None:
     assert out.none_ is True
 
 
-def test_parse_empty_frame_list_is_none() -> None:
+def test_missing_none_flag_is_schema_violation() -> None:
+    raw = '{"none": false, "uncertain": false, "findings": []}'
+    out = parse_output(raw, "stop", 1024, window_id="w")
+    assert out.parse_ok is False
+    assert out.parse_subfail == Subfail.schema_violation
+    assert out.none_ is False
+    assert out.findings == []
+
+
+def test_parse_empty_frame_list_missing_none_flag() -> None:
     raw = '[{"frame_idx": 0, "findings": []}]'
     out = parse_output(raw, "stop", 1024, window_id="w")
-    assert out.none_ is True
+    assert out.parse_ok is False
+    assert out.parse_subfail == Subfail.schema_violation
 
 
 def test_classify_empty() -> None:

@@ -1,0 +1,129 @@
+{
+  "records": [
+    {
+      "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+      "role": "canary",
+      "parse_ok": true,
+      "parse_subfail": null,
+      "finish_reason": "stop",
+      "truncated": false,
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "class_set": [
+        "none"
+      ],
+      "none": true,
+      "n_findings": 0,
+      "has_bbox": false,
+      "completion_tokens": 25,
+      "prompt_tokens": 1171,
+      "error": null
+    },
+    {
+      "window_id": "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+      "role": "canary",
+      "parse_ok": true,
+      "parse_subfail": null,
+      "finish_reason": "stop",
+      "truncated": false,
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "class_set": [
+        "none"
+      ],
+      "none": true,
+      "n_findings": 0,
+      "has_bbox": false,
+      "completion_tokens": 25,
+      "prompt_tokens": 1171,
+      "error": null
+    },
+    {
+      "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+      "role": "canary",
+      "parse_ok": true,
+      "parse_subfail": null,
+      "finish_reason": "stop",
+      "truncated": false,
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "class_set": [
+        "none"
+      ],
+      "none": true,
+      "n_findings": 0,
+      "has_bbox": false,
+      "completion_tokens": 83,
+      "prompt_tokens": 1171,
+      "error": null
+    },
+    {
+      "window_id": "scene-0796_CAM_FRONT_LEFT_1538448756504844",
+      "role": "canary",
+      "parse_ok": true,
+      "parse_subfail": null,
+      "finish_reason": "stop",
+      "truncated": false,
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "class_set": [
+        "none"
+      ],
+      "none": true,
+      "n_findings": 0,
+      "has_bbox": false,
+      "completion_tokens": 24,
+      "prompt_tokens": 1171,
+      "error": null
+    },
+    {
+      "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+      "role": "canary",
+      "parse_ok": false,
+      "parse_subfail": "schema_violation",
+      "finish_reason": "stop",
+      "truncated": false,
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "class_set": [],
+      "none": false,
+      "n_findings": 0,
+      "has_bbox": false,
+      "completion_tokens": 141,
+      "prompt_tokens": 1171,
+      "error": null
+    }
+  ],
+  "alarms": [
+    {
+      "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+      "class_set_pm1": false,
+      "token_delta_gt_20pct": true,
+      "parse_ok_flip": false
+    },
+    {
+      "window_id": "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+      "class_set_pm1": false,
+      "token_delta_gt_20pct": true,
+      "parse_ok_flip": false
+    },
+    {
+      "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+      "class_set_pm1": true,
+      "token_delta_gt_20pct": true,
+      "parse_ok_flip": false
+    },
+    {
+      "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+      "class_set_pm1": false,
+      "token_delta_gt_20pct": false,
+      "parse_ok_flip": true
+    }
+  ],
+  "baseline": "canary_baseline.json"
+}

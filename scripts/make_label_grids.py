@@ -1,4 +1,4 @@
-"""Write 2×3 jpeg grids for session-2 labeling (anchors + 25 interleaved unlabeled)."""
+"""Write 2×3 jpeg grids for labeling (session-3: 5 blinded anchors + remaining unlabeled)."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from vsm.constants import COLS, WIN_COLS
 from vsm.eval.gt import _attach_meta
 
 _EVAL = cfg_dict("eval")
-OUT = REPO_ROOT / "results" / "session2_grids"
+OUT = REPO_ROOT / "results" / "session3_grids"
 
 
 def _interleave(ids: list[str], seed: int) -> list[str]:
@@ -54,27 +54,30 @@ def _grid(paths: list[Path], dest: Path, title: str) -> None:
 def main() -> int:
     frames = pl.read_parquet(REPO_ROOT / "data" / "frames" / "frames.parquet")
     windows = _attach_meta(pl.read_parquet(REPO_ROOT / "data" / "frames" / "windows.parquet"), frames)
-    labeled = []
+    labeled: list[str] = []
     lab_path = REPO_ROOT / "results" / "gt_labels.jsonl"
     if lab_path.exists():
-        labeled = [
-            json.loads(line)["window_id"] for line in lab_path.read_text(encoding="utf-8").splitlines() if line.strip()
-        ]
+        last: dict[str, dict] = {}
+        for line in lab_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                last[str(rec["window_id"])] = rec
+        labeled = list(last)
     gt_ids = list(_EVAL["gt_list"]["window_ids"])
     unlabeled = [w for w in gt_ids if w not in labeled]
     ordered = _interleave(unlabeled, int(_EVAL["seeds"]["label_interleave"]))
     todo = ordered[:25]
-    # session-2 anchors = 5 already-labeled borderline (highest-ambiguity first)
+    # session-3 anchors = 5 already-labeled borderline (C1/C2 kept; do not relabel from VLM)
     anchors = [
-        "scene-0061_CAM_FRONT_1532402939662460",
         "scene-0916_CAM_FRONT_1538984236412460",
+        "scene-0061_CAM_FRONT_1532402939662460",
+        "scene-1094_CAM_FRONT_1542800849412460",
         "scene-0061_CAM_FRONT_LEFT_1532402935154844",
-        "scene-0757_CAM_FRONT_1535657117112404",
-        "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+        "scene-0757_CAM_FRONT_1535657121612404",
     ]
-    plan = {"anchors": anchors, "new_25": todo, "n_labeled_before": len(labeled)}
+    plan = {"session": 3, "anchors": anchors, "new_25": todo, "n_labeled_before": len(labeled)}
     OUT.mkdir(parents=True, exist_ok=True)
-    (REPO_ROOT / "results" / "session2_plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
+    (REPO_ROOT / "results" / "session3_plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
     wix = {r[WIN_COLS.WINDOW_ID.value]: r for r in windows.iter_rows(named=True)}
     for kind, ids in (("anchor", anchors), ("new", todo)):
         for i, wid in enumerate(ids):

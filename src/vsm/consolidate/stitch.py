@@ -27,9 +27,11 @@ def stitch_events(findings: pl.DataFrame, cfg=None) -> pl.DataFrame:
             pl.lit("").alias("stitch_group"),
             pl.lit(0).alias("stitch_pre_n"),
             pl.lit(0).alias("stitch_post_n"),
+            pl.lit(0).alias("overmerge_incidents"),
         )
     pre_n = findings.height
     rows = findings.to_dicts()
+    overmerge_incidents = 0
     buckets: dict[tuple[str, str, str], list[dict]] = defaultdict(list)
     for rec in rows:
         scene, cam, ts = _scene_cam_ts(str(rec.get("window_id") or ""))
@@ -51,6 +53,8 @@ def stitch_events(findings: pl.DataFrame, cfg=None) -> pl.DataFrame:
             if gap <= _GAP_US and len(cur) < _OVERMERGE_N:
                 cur.append(rec)
             else:
+                if gap <= _GAP_US and len(cur) >= _OVERMERGE_N:
+                    overmerge_incidents += 1
                 groups += 1
                 gid = f"{key[0]}|{key[1]}|{key[2]}|{groups}"
                 for x in cur:
@@ -66,7 +70,11 @@ def stitch_events(findings: pl.DataFrame, cfg=None) -> pl.DataFrame:
         rec.setdefault("stitch_group", str(rec.get("window_id") or ""))
     out = pl.DataFrame(rows)
     post_n = out["stitch_group"].n_unique() if out.height else 0
-    return out.with_columns(pl.lit(pre_n).alias("stitch_pre_n"), pl.lit(post_n).alias("stitch_post_n"))
+    return out.with_columns(
+        pl.lit(pre_n).alias("stitch_pre_n"),
+        pl.lit(post_n).alias("stitch_post_n"),
+        pl.lit(overmerge_incidents).alias("overmerge_incidents"),
+    )
 
 
 def stitch_count_delta(findings: pl.DataFrame) -> dict[str, int]:
@@ -76,4 +84,5 @@ def stitch_count_delta(findings: pl.DataFrame) -> dict[str, int]:
         return {"pre": 0, "post": 0, "delta": 0}
     pre = int(findings["stitch_pre_n"][0]) if "stitch_pre_n" in findings.columns else findings.height
     post = int(findings["stitch_post_n"][0]) if "stitch_post_n" in findings.columns else findings.height
-    return {"pre": pre, "post": post, "delta": post - pre}
+    over = int(findings["overmerge_incidents"][0]) if "overmerge_incidents" in findings.columns else 0
+    return {"pre": pre, "post": post, "delta": post - pre, "overmerge_incidents": over}

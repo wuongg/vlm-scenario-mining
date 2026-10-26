@@ -67,8 +67,8 @@ def parse_output(raw: str, finish_reason: str, max_tokens: int, window_id: str =
     if isinstance(payload, list):
         empty = all(not (item.get("findings") if isinstance(item, dict) else item) for item in payload)
         if empty:
-            none_ = True
-            payload = {"none": True, "findings": []}
+            # 0757: empty frame-list with no none/uncertain flag → schema_violation
+            payload = {"none": False, "uncertain": False, "findings": []}
         else:
             payload = {"findings": [x for x in payload if isinstance(x, dict)]}
     if isinstance(payload, dict):
@@ -101,8 +101,7 @@ def parse_output(raw: str, finish_reason: str, max_tokens: int, window_id: str =
                 except (TypeError, ValueError):
                     sub = Subfail.schema_violation
         if not findings and not none_ and not uncertain:
-            if "none" in text.lower():
-                none_ = True
+            sub = Subfail.schema_violation  # missing_none_flag (0757)
     if sub is not None:
         parse_ok = False
         if sub == Subfail.valid_but_empty:

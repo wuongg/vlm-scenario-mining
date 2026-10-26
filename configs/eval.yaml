@@ -1,27 +1,41 @@
 n_gt: 60
-tIoU: [0.3, 0.5, 0.7]
+tIoU:
+- 0.3
+- 0.5
+- 0.7
 seeds:
   gt_list: 7
   label_interleave: 13
   search_demo: 0
 allocation:
-  rule: "stratified_by_map_then_light"
+  rule: proportional_map_plus_presence_oversample
+  formula: quota_m = min_windows_per_map + leftover * (W_m / W_tot); W_i = 1 * weight_presence[if
+    pseudo+] * weight_night[if night]; sample WOR seed=gt_list
   min_windows_per_map: 5
   out_of_headline_if_positives_lt: 3
-  maps_expected: ["boston-seaport", "singapore-onenorth", "singapore-hollandvillage", "singapore-queenstown"]
+  weight_presence: 2.0
+  weight_night: 1.2
+  maps_expected:
+  - boston-seaport
+  - singapore-onenorth
+  - singapore-hollandvillage
+  - singapore-queenstown
 prevalence:
-  # Headline class-set is frozen on Day 2 AFTER this audit runs on the labeled 10 + pseudo-GT.
-  skeleton_only: true
+  skeleton_only: false
+  headline_classes:
+  - pedestrian_cross
+  frozen: true
 kill_switch:
-  deadline_local: "2026-11-01T18:00:00+07:00"  # Day 7 18:00
+  deadline_local: '2026-11-01T18:00:00+07:00'
   checklist:
-    - "GT n=60 labeled or prevalence says a class is out-of-headline"
-    - "At least two backends produced schema-valid WindowOutput on the 60"
-    - "Keyword index search + negative-space coverage_report run on the corpus"
-    - "No P1 embedder / MCP / routing work started"
-    - "If API quota TERMINAL: freeze detector+fallback numbers and stop spend"
-    - "If geometry fixture red on real mini: do not mine"
-    - "If night confound (all night=hollandv) dominates a claim: condition-breakdown, not headline"
+  - GT n=60 labeled or prevalence says a class is out-of-headline
+  - At least two backends produced schema-valid WindowOutput on the 60
+  - Keyword index search + negative-space coverage_report run on the corpus
+  - No P1 embedder / MCP / routing work started
+  - 'If API quota TERMINAL: freeze detector+fallback numbers and stop spend'
+  - 'If geometry fixture red on real mini: do not mine'
+  - 'If night confound (all night=hollandv) dominates a claim: condition-breakdown,
+    not headline'
 labeling:
   smoke_n: 5
   session_cap_min: 75
@@ -34,3 +48,68 @@ ci:
   job_timeout_min: 15
   fail_fast: true
   synthetic_windows: 3
+gt_list:
+  n: 60
+  sha256: a380a0340051e72d8c41695256d949e49c058ee63f2a3c1c7153ebec68e2215c
+  window_ids:
+  - scene-0061_CAM_FRONT_1532402929162460
+  - scene-0061_CAM_FRONT_1532402938162460
+  - scene-0061_CAM_FRONT_1532402939662460
+  - scene-0061_CAM_FRONT_1532402941262460
+  - scene-0061_CAM_FRONT_LEFT_1532402929154844
+  - scene-0061_CAM_FRONT_LEFT_1532402933604844
+  - scene-0061_CAM_FRONT_LEFT_1532402935154844
+  - scene-0061_CAM_FRONT_LEFT_1532402941254844
+  - scene-0061_CAM_FRONT_LEFT_1532402944154844
+  - scene-0061_CAM_FRONT_RIGHT_1532402927620339
+  - scene-0061_CAM_FRONT_RIGHT_1532402929170339
+  - scene-0061_CAM_FRONT_RIGHT_1532402935170339
+  - scene-0061_CAM_FRONT_RIGHT_1532402936670339
+  - scene-0061_CAM_FRONT_RIGHT_1532402942670339
+  - scene-0061_CAM_FRONT_RIGHT_1532402944170339
+  - scene-0103_CAM_FRONT_LEFT_1533151606504799
+  - scene-0553_CAM_FRONT_1535489299012404
+  - scene-0553_CAM_FRONT_LEFT_1535489300504799
+  - scene-0553_CAM_FRONT_LEFT_1535489310904799
+  - scene-0553_CAM_FRONT_RIGHT_1535489307920482
+  - scene-0553_CAM_FRONT_RIGHT_1535489309370482
+  - scene-0655_CAM_FRONT_1535385099362404
+  - scene-0655_CAM_FRONT_1535385103912404
+  - scene-0655_CAM_FRONT_LEFT_1535385103904799
+  - scene-0757_CAM_FRONT_1535657117112404
+  - scene-0757_CAM_FRONT_1535657121612404
+  - scene-0757_CAM_FRONT_1535657124612404
+  - scene-0757_CAM_FRONT_LEFT_1535657109754799
+  - scene-0757_CAM_FRONT_LEFT_1535657115604799
+  - scene-0757_CAM_FRONT_LEFT_1535657124604799
+  - scene-0757_CAM_FRONT_RIGHT_1535657108270482
+  - scene-0796_CAM_FRONT_1538448747512460
+  - scene-0796_CAM_FRONT_1538448752012460
+  - scene-0796_CAM_FRONT_LEFT_1538448744404844
+  - scene-0796_CAM_FRONT_LEFT_1538448750504844
+  - scene-0796_CAM_FRONT_LEFT_1538448753504844
+  - scene-0796_CAM_FRONT_LEFT_1538448756504844
+  - scene-0796_CAM_FRONT_RIGHT_1538448749020339
+  - scene-0796_CAM_FRONT_RIGHT_1538448759520339
+  - scene-0916_CAM_FRONT_1538984236412460
+  - scene-0916_CAM_FRONT_1538984243912460
+  - scene-0916_CAM_FRONT_1538984249912460
+  - scene-0916_CAM_FRONT_LEFT_1538984245404844
+  - scene-0916_CAM_FRONT_RIGHT_1538984242420339
+  - scene-0916_CAM_FRONT_RIGHT_1538984249920351
+  - scene-1077_CAM_FRONT_1542800378362460
+  - scene-1077_CAM_FRONT_1542800379862460
+  - scene-1077_CAM_FRONT_RIGHT_1542800370920339
+  - scene-1077_CAM_FRONT_RIGHT_1542800373920345
+  - scene-1077_CAM_FRONT_RIGHT_1542800384370339
+  - scene-1094_CAM_FRONT_1542800849412460
+  - scene-1094_CAM_FRONT_1542800855412460
+  - scene-1094_CAM_FRONT_LEFT_1542800849404844
+  - scene-1094_CAM_FRONT_LEFT_1542800852404844
+  - scene-1094_CAM_FRONT_LEFT_1542800861404844
+  - scene-1094_CAM_FRONT_RIGHT_1542800850920339
+  - scene-1094_CAM_FRONT_RIGHT_1542800852420339
+  - scene-1094_CAM_FRONT_RIGHT_1542800861420339
+  - scene-1100_CAM_FRONT_1542800992412460
+  - scene-1100_CAM_FRONT_LEFT_1542800990904844
+  exclude_handchecks: true

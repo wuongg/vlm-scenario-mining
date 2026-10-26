@@ -25,8 +25,14 @@ Proposal numbers are **not** the paper numbers. Measured on nuScenes mini after 
 6. Day-1 user brief asked for backends + keyword index + pre-reg draft, which repo_design §7 places on Days 3 and 6. Implemented as **skeletons that run**, not the full cascade.
 7. nuScenes `sample.json` has no `data` map and `sample_data.json` has no `channel` — join via calibrated_sensor → sensor. Not a rename; the JSON dump != the Python NuScenes object.
 
-## Day 2
+## Day 2 (done)
 
-- Run `prevalence_audit` on the first 10 labeled windows + pseudo-GT join.
-- Freeze the 8 pre-reg items (headline class-set).
-- SHA the GT list. Label 10 more.
+- Headline frozen: `{pedestrian_cross}` only. 41 map-join positives (BOS 17 / HV-night 15 / ON 9 / QT 0). 8 classes out-of-headline (<3 verified pos).
+- GT list n=60 SHA `a380a0340051e72d8c41695256d949e49c058ee63f2a3c1c7153ebec68e2215c`. Session 1 labeled 10 (1 pedestrian_cross with doubt, 1 none with doubt, 8 none). Mean latency 24.1 s.
+- local_vlm RAM gate failed → local-only branch.
+- T0 rules still Day 3.
+
+## Day 3
+
+- `vlm/prompt+parse` + detector/api smoke on 5 windows.
+- `mining/rules` Mode A/B + cascade E2E.

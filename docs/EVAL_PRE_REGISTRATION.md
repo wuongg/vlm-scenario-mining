@@ -1,27 +1,62 @@
-# Eval pre-registration (DRAFT — Day 1)
+# Eval pre-registration v0.2 — FROZEN 2026-10-26
 
-Eight load-bearing items. **Headline class-set waits on `prevalence_audit` (Day 2).** Numbers live in `configs/eval.yaml`.
+Changes after this file = version bump + changelog. Do not edit in place.
 
-| # | Item | Frozen on Day 1 | Still DRAFT |
-|---|---|---|---|
-| 1 | Primary metric | Recall @ tIoU=0.5, greedy score-match, window unit | Class-set in the headline |
-| 2 | tIoU sweep | {0.3, 0.5, 0.7}; AP is secondary | — |
-| 3 | GT size / allocation | n=60; stratified by map then light; ≥5 windows/map | Which 60 window_ids + SHA |
-| 4 | Out-of-headline rule | <3 positives → drop from headline | Applied after prevalence |
-| 5 | Seeds | `gt_list=7`, `label_interleave=13` | — |
-| 6 | Backends in the comparison | detector (GD-tiny, frozen τ sweep) + api_vlm (qwen3-vl-plus, T=0, top_p=1) + fallback (CI-only, **not a baseline**) | Which of api/local actually runs |
-| 7 | Kill-switch | Day 7 18:00 local; checklist in `configs/eval.yaml` | Pass/fail |
-| 8 | Confounds | Night=hollandv; red_light has no GT; drop-rate ≠ VLM miss | Condition breakdown tables |
+Numbers live in `configs/eval.yaml`. GT list SHA-256: `a380a0340051e72d8c41695256d949e49c058ee63f2a3c1c7153ebec68e2215c`.
 
-## Narrative fallbacks (skeleton)
+## Eight load-bearing items
 
-| If this happens | Fallback (pre-registered, not a fishing license) |
+| # | Item | Frozen value |
+|---|---|---|
+| 1 | Primary metric | Recall @ tIoU=0.5, greedy score-match, window unit. **Headline class-set = {pedestrian_cross} only.** Sweep {0.3,0.5,0.7} is sensitivity, not a fishing license. |
+| 2 | tIoU sweep | {0.3, 0.5, 0.7}; AP is secondary. tIoU=0.7 is valid only if the event is ≥2.5 s; timestamps quantized ±0.25 s. |
+| 3 | GT size / allocation | n=60. Formula: `quota_m = 5 + leftover * (W_m / W_tot)` with `W_i = 1 * 2.0[if pseudo+] * 1.2[if night]`, sample without replacement, seed `gt_list=7`. ≥5 windows/map (measured 16/15/15/14). Hand-check 10 ids excluded. SHA above. |
+| 4 | Out-of-headline rule | <3 corpus positives → coverage row, not headline. Applied: cut_in, lead_braking, oncoming, turn_lane_drift, lane_split_moto, lane_intrusion, sidewalk_mount, red_light_violation. |
+| 5 | Seeds | `gt_list=7`, `label_interleave=13`, `search_demo=0`. |
+| 6 | Backends | detector (GD-tiny, frozen τ sweep) + api_vlm (qwen3-vl-plus, T=0, top_p=1) if quota allows. fallback = CI-only, **not a baseline**. **local_vlm = local-only branch** (RAM gate failed Day 2; not in the comparison). |
+| 7 | Kill-switch | 2026-11-01 18:00 +07. Checklist in `configs/eval.yaml`. |
+| 8 | Confounds / claim-audit | Night=hollandv only. `red_light_violation` has no signal GT. drop-rate ≠ VLM miss. **GT-bounded hallucination** = false class on a GT window. **detector-unsupported claim rate** = corpus-wide claims with no detector box (includes detector misses). |
+
+### Interpretation rule
+
+Primary table = 1 headline class × recall@0.5. README Day-12 number must equal that cell (`interpretation_gate`). Sweep numbers are appendix.
+
+### n_eff-Wilson
+
+`deff = 1 + (m̄ − 1) * ICC`, `n_eff = n / deff`, Wilson interval on `n_eff`. ICC from one-way ANOVA of per-scene recall (10 scenes). Report per-scene min/med/max. **Limitation: n_scenes=10** — treat the interval as a diagnostic, not a population CI.
+
+### Labeling protocol
+
+Session cap 75'. Interleave scene order with seed 13. `definition_doubt` is a real field. 5 borderline anchors = 1 window each of the highest-ambiguity pairs + 1 none + 1 rare (when a rare class appears). Alarm: ≥1 class-flip on an anchor → STOP → re-read card → re-label the range. Decision log: case-level note vs rule-change+backfill. **Minimum-viable GT n≥40** is pre-declared; n=60 is the target.
+
+## Narrative fallbacks
+
+| If this happens | Fallback (pre-registered) |
 |---|---|
-| A class has <3 GT positives | Out of headline; still in appendix prevalence |
-| API 403/quota TERMINAL | Report detector + (optional) local; stop spend |
+| A class has <3 GT positives | Out of headline; appendix prevalence only |
+| API 403/quota TERMINAL | Report detector only; stop spend. local_vlm stays local-only. |
 | Geometry fixture red on real mini | Do not mine; quarantine scenes |
 | Night claim is map-confounded | Condition-breakdown only |
-| Detector extra cannot install <30 min | Skeleton stays; fallback is not promoted to a baseline |
-| Map expansion SHA mismatch | Quarantine mapful Mode A; Mode B flagged `geometry_mode=B_mapless` |
+| Detector extra cannot install <30 min | Skeleton stays; fallback is not a baseline |
+| Map expansion SHA mismatch | Quarantine Mode A; Mode B `geometry_mode=B_mapless` |
+| VLM loses to T0 on a class | Flip the claim to "where does semantics pay" — T0 is the headline for that class |
+| GT-bounded hallucination >30% | Mandatory breakdown: schema-error vs perception-error. Do not quote a single rate. |
+| 6/9 classes empty on mini | CODA-LM Test 500 becomes the primary *quantitative object-level* table; mini stays qualitative / pedestrian_cross only |
+| Join-FP on pedestrian_cross >40% of hand-checks | Tighten join (require ped bbox ∩ crossing) before scoring; current 2/5 pos hand-checks are JOIN-FP |
 
-Primary claims in the README (Day 12) must equal the primary table. `interpretation_gate` will assert that.
+## Twelve short items
+
+1. **Decoding parity** — T=0, top_p=1, fps required on video input; one repair.
+2. **Tag ladder** — v0.2-eval-frozen (today) → v0.3-mined → v1.0 only after kill-switch pass.
+3. **Stitch → match** — stitch predictions first; match on stitched events; GT event_id is human, stitcher never writes GT.
+4. **Model ID** — dated snapshot in `configs/model.yaml` (`qwen3-vl-plus` 2026-10-26; GD-tiny 2024-05-28).
+5. **Seeds** — 7 / 13 / 0 as above.
+6. **Stopping rule** — kill-switch 18:00 Day 7 or API TERMINAL, whichever first.
+7. **tIoU 0.7** — valid only if event ≥2.5 s; timestamps ±0.25 s quantization.
+8. **Hand-checks** — 10 ped_cross join checks, disjoint from the 60 (listed in `results/prevalence_summary.json`).
+9. **Stratify metadata** — map then light; night confound recorded.
+10. **Truncated flag** — `truncated=true` when finish_reason=length or tokens ≥0.95×max; parse_ok forced false.
+11. **Subfail taxonomy** — refused / truncated / loop_detected / valid_but_empty / schema_violation.
+12. **Condition columns** — light, blur_quartile, density_bin, visibility_bin on every frame; night=hollandv.
+
+Primary claims in the README (Day 12) must equal the primary table.

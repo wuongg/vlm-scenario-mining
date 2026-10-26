@@ -12,6 +12,8 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 | D3 | 2026-10-26 | REPLACED | TAXONOMY | Day-1 reconstruction from mining-rule names — superseded by D7 spec 9+1 |
 | D7 | 2026-10-26 | ADOPTED | TAXONOMY | Spec 9+1: safety_maneuver / safety_spatial / compliance / none. Drop cut_out+overtaking. Add oncoming (wrong-way-only) + turn_lane_drift. Rename ped_cross→pedestrian_cross, red_light→red_light_violation. uncertain is a schema slot, not a class. |
 | D8 | 2026-10-26 | ADOPTED | INGEST | Day-1 drop-rate 0.584 omitted camera-frame z. 11233/27112 behind-camera boxes were kept after sign-flip. Filter now uses z>near per (box, this camera). Remeasured mean 0.799 (FRONT 0.705 / LEFT 0.903 / RIGHT 0.790). Not a wrong-camera join. |
+| D9 | 2026-10-26 | ADOPTED | EVAL | Headline = {pedestrian_cross} only. Spec fallback 3-class is not claimed: cut_in/lead_braking have <3 verified positives. |
+| D10 | 2026-10-26 | ADOPTED | VLM | local_vlm RAM gate failed (host <16 GB). Comparison row is local-only; do not improvise a 2B number later. |
 | D4 | 2026-10-26 | ADOPTED | GEOM | Synthetic oracle (hand-computed pixels) is the CI fixture; real-devkit compare is a local gate after download |
 | D5 | 2026-10-26 | ADOPTED | INGEST | Mini tgz uses structure/gzip/tar integrity, not a self-computed SHA; map v1.3 and CODA-LM Test pin SHA after download |
 | D6 | 2026-10-26 | ADOPTED | INDEX | DuckDB FTS stemmer='none'; Python BM25 fallback if the fts extension cannot load |
@@ -28,3 +30,6 @@ Source of truth for names: `docs/repo_design_v1.md`. Architecture docs `architec
 - ADOPTED D6: FTS extension needs a network install; tests must still pass. Same EN documents, two query backends.
 - REJECTED: video scrubber, dashboard, MCP, few-shot corpus, GT freeze — Day 1 gold-plate / Day 2 work.
 - REJECTED: installing torch on the default extra — CI stays CPU-only; `[detect]` and `[local]` are opt-in with a 30-minute timebox.
+- ADOPTED D9: Prevalence audit (map join `ped_cross_v1` n=41; 10 hand-checks; 20-window quick scan; T0 not implemented). Only pedestrian_cross clears the <3 rule. 2/5 join-positives were painted-crossing + curb-ped FPs — join is an upper bound.
+- ADOPTED D10: `scripts/run_ram_test.py` → ram_ok=false. Pre-reg backend #6 records local-only today.
+- REJECTED: using the 105-count 2D cut_in heuristic as n_pos — it is not T0 and is not a class label.

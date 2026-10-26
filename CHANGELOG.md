@@ -5,7 +5,14 @@ Format: what changed and why.
 
 ## [Unreleased]
 
-- Pre-reg bump v0.2 → v0.2.1: appendix only (scene-0061 15/60 + leave-one-scene-out). Formula and GT list unchanged.
+## [v0.3-mined] — 2026-10-26
+
+- GT-60 mined on detector (60/60, 4,111 boxes) + API tier (55/60 parse_ok, iteracompute `qwen/qwen3.8-27b`, $0).
+- Pre-reg v0.2.2 backend switch DashScope → IteraCompute (D16). Canary structural checks required every session.
+- Canary 4-check grounding = class-claim bbox on a single middle frame (video 503; 6-image 400 `too_many_images`).
+- D14: GT-60 detector uses 6 frames/window; corpus uses 1 middle frame. Overnight two-pass + checkpoint/heartbeat.
+- D15: T0 cut_in requires closure slope + ego-lane occupancy. 105 → 0 flags; rule stays enabled.
+- Session-2 GT: 35/60 labeled (last-write-wins). Anchor alarm 1/5 flip (C3) → range re-label.
 - Tighten pedestrian_cross join to v2 (ped ground in crossing polygon). JOIN-FP 2/5 → 1/3.
 - T0 Mode A/B + closure slope-fit + sanitized-manifest assert. CODA-LM Test 500 loader (object-level, denom 500).
 - Detector D12: combined caption, 960×540, one middle frame per window.

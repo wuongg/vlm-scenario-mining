@@ -1,0 +1,231 @@
+{
+  "backend": "iteracompute",
+  "model_id": "qwen/qwen3.8-27b",
+  "base_url": "https://api.iteracompute.com/v1",
+  "input_mode": "image_middle_1",
+  "video_probe": {
+    "ok": false,
+    "error": "InternalServerError: Error code: 503 - {'error': {'message': 'IteraCompute service is temporarily unavailable', 'type': 'api_error', 'code': 'provider_api_error'}}",
+    "latency_s": 2.4061551094055176,
+    "finish_reason": "",
+    "fallback_reason": "InternalServerError: Error code: 503 - {'error': {'message': 'IteraCompute service is temporarily unavailable', 'type': 'api_error', 'code': 'provider_api_error'}}"
+  },
+  "image6_probe": {
+    "ok": false,
+    "error": "BadRequestError: Error code: 400 - {'error': {'message': 'at most 1 image is allowed per request', 'type': 'invalid_request_error', 'code': 'too_many_images'}}",
+    "latency_s": 3.6355059146881104,
+    "finish_reason": "",
+    "fallback_reason": "BadRequestError: Error code: 400 - {'error': {'message': 'at most 1 image is allowed per request', 'type': 'invalid_request_error', 'code': 'too_many_images'}}"
+  },
+  "input_tradeoff": "reseller allows at most 1 image/request; video-file 503/unavailable; GT-60 mining uses 1 middle keyframe (token saving vs 6 serial calls)",
+  "decoding": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_tokens": 1024,
+    "enable_thinking": false
+  },
+  "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+  "checks": {
+    "1_schema_json": {
+      "pass": true,
+      "n_ok": 5,
+      "n": 5
+    },
+    "2_grounding_bbox": {
+      "pass": true,
+      "n_ok": 1,
+      "n": 5
+    },
+    "3_none_uncertain": {
+      "pass": false,
+      "n_ok": 4,
+      "n": 5
+    },
+    "4_latency_tokens": {
+      "latency_s": [
+        13.898,
+        7.469,
+        6.008,
+        10.848,
+        25.491
+      ],
+      "mean_latency_s": 12.742799999999999,
+      "usage": [
+        {
+          "prompt_tokens": 1171,
+          "completion_tokens": 119,
+          "total_tokens": 1290
+        },
+        {
+          "prompt_tokens": 1171,
+          "completion_tokens": 160,
+          "total_tokens": 1331
+        },
+        {
+          "prompt_tokens": 1171,
+          "completion_tokens": 100,
+          "total_tokens": 1271
+        },
+        {
+          "prompt_tokens": 1171,
+          "completion_tokens": 183,
+          "total_tokens": 1354
+        },
+        {
+          "prompt_tokens": 1171,
+          "completion_tokens": 24,
+          "total_tokens": 1195
+        }
+      ]
+    }
+  },
+  "verdict": "t1_t2_full",
+  "grounding_note": null,
+  "records": [
+    {
+      "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+      "gt_class_set": [
+        "none"
+      ],
+      "input_mode": "image_middle_1",
+      "n_frames": 6,
+      "latency_s": 13.898,
+      "usage": {
+        "prompt_tokens": 1171,
+        "completion_tokens": 119,
+        "total_tokens": 1290
+      },
+      "finish_reason": "stop",
+      "error": null,
+      "schema_json": true,
+      "fence_stripped": true,
+      "grounding_bbox": false,
+      "parse_ok": true,
+      "parse_subfail": null,
+      "none": true,
+      "uncertain": false,
+      "n_findings": 0,
+      "invented_findings_on_none_gt": false,
+      "raw_head": "```json\n{\n  \"window_label\": \"none\",\n  \"findings\": [],\n  \"confidence\": 0.9,\n  \"rationale\": \"The ego vehicle is following a white van in a lane marked with '100' and delineated by traffic cones. The lead vehicle appears to be moving at a steady pace or stopped in a queue, with no sharp deceleration or cut-in events observed. There are no pedestrians, wrong-way traffic, or other safety/compliance violations present in the 6-frame window.\"\n}\n```",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b"
+    },
+    {
+      "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+      "gt_class_set": [
+        "none"
+      ],
+      "input_mode": "image_middle_1",
+      "n_frames": 6,
+      "latency_s": 7.469,
+      "usage": {
+        "prompt_tokens": 1171,
+        "completion_tokens": 160,
+        "total_tokens": 1331
+      },
+      "finish_reason": "stop",
+      "error": null,
+      "schema_json": true,
+      "fence_stripped": true,
+      "grounding_bbox": true,
+      "parse_ok": true,
+      "parse_subfail": null,
+      "none": false,
+      "uncertain": false,
+      "n_findings": 1,
+      "invented_findings_on_none_gt": true,
+      "raw_head": "```json\n{\n  \"findings\": [\n    {\n      \"class\": \"pedestrian_cross\",\n      \"confidence\": 0.85,\n      \"evidence\": \"A pedestrian is standing on the edge of the roadway near the yellow box junction, appearing to wait or prepare to cross the ego vehicle's path.\",\n      \"bbox_2d\": [\n        405,\n        505,\n        435,\n        680\n      ],\n      \"frames\": [\n        0,\n        1,\n        2,\n        3,\n        4,\n        5\n      ]\n    }\n  ]\n}\n```",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b"
+    },
+    {
+      "window_id": "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+      "gt_class_set": [
+        "none"
+      ],
+      "input_mode": "image_middle_1",
+      "n_frames": 6,
+      "latency_s": 6.008,
+      "usage": {
+        "prompt_tokens": 1171,
+        "completion_tokens": 100,
+        "total_tokens": 1271
+      },
+      "finish_reason": "stop",
+      "error": null,
+      "schema_json": true,
+      "fence_stripped": true,
+      "grounding_bbox": false,
+      "parse_ok": true,
+      "parse_subfail": null,
+      "none": true,
+      "uncertain": false,
+      "n_findings": 0,
+      "invented_findings_on_none_gt": false,
+      "raw_head": "```json\n{\n  \"window_label\": \"none\",\n  \"findings\": [],\n  \"rationale\": \"The scene shows a night driving environment with vehicles on the opposite side of a median or separated roadway. There are no immediate safety maneuvers, spatial intrusions, or compliance violations visible in the ego-vehicle's path. The white vehicle is traveling in the opposite direction on a separate lane, and no other actors are interacting with the ego lane.\"\n}\n```",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b"
+    },
+    {
+      "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+      "gt_class_set": [
+        "none"
+      ],
+      "input_mode": "image_middle_1",
+      "n_frames": 6,
+      "latency_s": 10.848,
+      "usage": {
+        "prompt_tokens": 1171,
+        "completion_tokens": 183,
+        "total_tokens": 1354
+      },
+      "finish_reason": "stop",
+      "error": null,
+      "schema_json": true,
+      "fence_stripped": true,
+      "grounding_bbox": false,
+      "parse_ok": true,
+      "parse_subfail": null,
+      "none": false,
+      "uncertain": false,
+      "n_findings": 0,
+      "invented_findings_on_none_gt": false,
+      "raw_head": "```json\n[\n  {\n    \"frame_idx\": 0,\n    \"detections\": [],\n    \"findings\": []\n  },\n  {\n    \"frame_idx\": 1,\n    \"detections\": [],\n    \"findings\": []\n  },\n  {\n    \"frame_idx\": 2,\n    \"detections\": [],\n    \"findings\": []\n  },\n  {\n    \"frame_idx\": 3,\n    \"detections\": [],\n    \"findings\": []\n  },\n  {\n    \"frame_idx\": 4,\n    \"detections\": [],\n    \"findings\": []\n  },\n  {\n    \"frame_idx\": 5,\n    \"detections\": [],\n    \"findings\": []\n  }\n]\n```",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b"
+    },
+    {
+      "window_id": "scene-0796_CAM_FRONT_LEFT_1538448756504844",
+      "gt_class_set": [
+        "none"
+      ],
+      "input_mode": "image_middle_1",
+      "n_frames": 6,
+      "latency_s": 25.491,
+      "usage": {
+        "prompt_tokens": 1171,
+        "completion_tokens": 24,
+        "total_tokens": 1195
+      },
+      "finish_reason": "stop",
+      "error": null,
+      "schema_json": true,
+      "fence_stripped": true,
+      "grounding_bbox": false,
+      "parse_ok": true,
+      "parse_subfail": null,
+      "none": true,
+      "uncertain": false,
+      "n_findings": 0,
+      "invented_findings_on_none_gt": false,
+      "raw_head": "```json\n{\n  \"findings\": [],\n  \"label\": \"none\"\n}\n```",
+      "prompt_version_hash": "9090938ca66928da9831b00fea394c0c0782f4a76ed70a81081dcd838b8052b4",
+      "backend": "iteracompute",
+      "model_id": "qwen/qwen3.8-27b"
+    }
+  ]
+}

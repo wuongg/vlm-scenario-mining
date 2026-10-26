@@ -36,7 +36,7 @@ def main() -> int:
     backends: list = [T0Backend(map_root=REPO_ROOT / "data" / "raw" / "maps")]
     detector_ok = False
     api_ok = False
-    api_note = "DASHSCOPE_API_KEY missing — T0+detector-only E2E; key needed before Day 4"
+    api_note = "ITERACOMPUTE_API_KEY missing — T0+detector-only E2E"
     try:
         from vsm.vlm.backends.detector import GroundingDinoTiny
 
@@ -44,7 +44,7 @@ def main() -> int:
         detector_ok = True
     except Exception as exc:  # noqa: BLE001
         print("detector_skip", type(exc).__name__, exc)
-    if os.environ.get("DASHSCOPE_API_KEY"):
+    if os.environ.get("ITERACOMPUTE_API_KEY"):
         try:
             from vsm.vlm.backends.api_vlm import ApiVLM
 

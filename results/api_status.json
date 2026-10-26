@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-10-26T15:17:21Z",
+  "backend": "iteracompute",
+  "model_id": "qwen/qwen3.8-27b",
+  "free_quota_only": true,
+  "budget_usd": 0,
+  "monthly_allowance_tokens": 30000000,
+  "budget_tokens_gt60": 800000,
+  "concurrency": 5,
+  "key_present": true,
+  "n_mined_gt60": 60,
+  "n_parse_ok": 55,
+  "n_mined_corpus": 0,
+  "subfail": {
+    "ok": 55,
+    "schema_violation": 3,
+    "loop_detected": 2
+  },
+  "token_usage": {
+    "prompt": 70260,
+    "completion": 6164,
+    "total": 76424
+  },
+  "canary": {
+    "ran": true,
+    "source": "itera_canary.json",
+    "baseline_written": true,
+    "alarms": [],
+    "first_run_n": 5
+  },
+  "status": "gt60_done",
+  "note": "GT-60 complete (60/60 calls). parse_ok 55/60. Corpus skipped to keep free-tier headroom."
+}

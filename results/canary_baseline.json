@@ -1,0 +1,42 @@
+[
+  {
+    "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+    "class_set": [
+      "none"
+    ],
+    "completion_tokens": 119,
+    "parse_ok": true
+  },
+  {
+    "window_id": "scene-0916_CAM_FRONT_1538984236412460",
+    "class_set": [
+      "claim"
+    ],
+    "completion_tokens": 160,
+    "parse_ok": true
+  },
+  {
+    "window_id": "scene-1077_CAM_FRONT_RIGHT_1542800373920345",
+    "class_set": [
+      "none"
+    ],
+    "completion_tokens": 100,
+    "parse_ok": true
+  },
+  {
+    "window_id": "scene-0757_CAM_FRONT_RIGHT_1535657108270482",
+    "class_set": [
+      "claim"
+    ],
+    "completion_tokens": 183,
+    "parse_ok": true
+  },
+  {
+    "window_id": "scene-0796_CAM_FRONT_LEFT_1538448756504844",
+    "class_set": [
+      "none"
+    ],
+    "completion_tokens": 24,
+    "parse_ok": true
+  }
+]

@@ -38,11 +38,19 @@ def cmd_stats() -> None:
 def cmd_coverage() -> None:
     conn = _open()
     report = negative_space(conn)
-    print(
-        json.dumps(
-            {"count": report.count, "t0_evidence": report.t0_evidence, "parse_fail": report.parse_fail}, indent=2
-        )
-    )
+    payload: dict = {
+        "count": report.count,
+        "t0_evidence": report.t0_evidence,
+        "parse_fail": report.parse_fail,
+        "t0_enabled": report.t0_enabled,
+        "t0_disabled": report.t0_disabled,
+    }
+    flags_path = Path("results/t0_flags.parquet")
+    if flags_path.exists():
+        from vsm.eval.coverage import t0_coverage_split
+
+        payload["t0_flags"] = t0_coverage_split(pl.read_parquet(flags_path))
+    print(json.dumps(payload, indent=2))
     conn.close()
 
 

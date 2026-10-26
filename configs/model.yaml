@@ -23,26 +23,43 @@ backends:
     # 1 middle frame/window → ~81 min for 360; 2160 combined forwards ≈ 8.3 h.
     caption_mode: "combined"  # per_phrase = 105 s/frame — not a corpus path
     input_wh: [960, 540]
-    frames_per_window: 1
+    frames_per_window: 1  # corpus default (D12/D14)
+    gt60_frames_per_window: 6  # D14: full temporal evidence where scored
+    corpus_frames_per_window: 1
     latency_probe_frames: 20
   api_vlm:
     name: "api_vlm"
-    model_id: "qwen3-vl-plus"
+    # D16 2026-10-26: IteraCompute reseller. Do not call this qwen3-vl-plus.
+    model_id: "qwen/qwen3.8-27b"
     model_date: "2026-10-26"
+    reseller: "iteracompute"
+    backend_tag: "iteracompute"
     base_url_env: "VLM_BASE_URL"
-    base_url_default: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
-    api_key_env: "DASHSCOPE_API_KEY"
-    video_file_input: true
-    fps_param_required: true
+    base_url_default: "https://api.iteracompute.com/v1"
+    api_key_env: "ITERACOMPUTE_API_KEY"
+    # DashScope fallback (unavailable phía user 2026-10-26) — keep for a later bump, do not use:
+    # dashscope_model_id: "qwen3-vl-plus"
+    # dashscope_base_url: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+    # dashscope_api_key_env: "DASHSCOPE_API_KEY"
+    video_file_input: false  # canary: video 503; 6-image 400 too_many_images
+    fps_param_required: false
+    max_images_per_request: 1
+    frames_per_request: 1  # middle keyframe
+    enable_thinking: false  # required on free Qwen or content can be empty
+    concurrency: 5  # free shared capacity; never fire parallel retries of the same request
     log_usage_from_response: true  # never estimate prompt_tokens by hand
     free_quota_only: true
-    temperature: 0.0
+    monthly_token_allowance: 30000000
+    budget_tokens_gt60: 800000
+    temperature: 0.0  # canary accepted T=0 / top_p=1
     top_p: 1.0
     max_tokens: 1024
     retry_repair: 1
-    # Rate-limit footnote: 429 is retryable (full-jitter backoff). 403 and quota-exceeded are TERMINAL — kill-switch, do not retry.
-    retryable_status: [429]
-    terminal_status: [403]
+    # 429: honor Retry-After + full-jitter. free_model_monthly_limit = STOP (no auto-overage).
+    retryable_status: [429, 500, 503]
+    retryable_error_codes: ["free_model_tpm_limit", "provider_rate_limit", "provider_api_error"]
+    monthly_stop_codes: ["free_model_monthly_limit"]
+    terminal_status: [401, 403]
     terminal_error_substrings: ["quota", "insufficient_quota", "FreeQuota"]
     backoff_base_s: 1.0
     backoff_max_s: 32.0

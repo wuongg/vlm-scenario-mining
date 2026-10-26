@@ -22,6 +22,8 @@ data/coda/*
 .cache/
 .env
 .env.*
+results/env
+results/env.*
 
 __pycache__/
 *.py[cod]

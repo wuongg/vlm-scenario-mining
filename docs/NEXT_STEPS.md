@@ -24,7 +24,7 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 | moto ≥3 frames | — | **72 windows** | T0 `lane_split_moto` support |
 | join v2 JOIN-FP | — | **1/3 = 33%** | D11; below 40% fallback. v1 was 2/5 = 40% |
 | scene-0061 share of GT-60 | — | **15/60** | do not redraw; leave-one-scene-out (appendix v0.2.1) |
-| T0 flags / 360 | — | **197 flags, 153 windows** | lane_split_moto 17; pedestrian_cross 21; cut_in 105 (loose 2D); lead/oncoming/turn/red=0 |
+| T0 flags / 360 | — | **92 flags (T0-enabled 92 / T0-disabled 0)** | D15 cut_in 105→0 (tightened, still enabled). sidewalk_mount 33; lane_intrusion 21; pedestrian_cross 21; lane_split_moto 17 |
 | DINO steady-state | — | **13.45 s/frame combined** | load 4.4 s once. 960×540 = 13.85 s (no win). per-phrase 105 s. 360 middles ≈ 81 min; 2160 ≈ 8.3 h |
 
 ## Design deltas (ask, not silently patch)
@@ -41,13 +41,20 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - Headline `{pedestrian_cross}`. GT list n=60 SHA `a380a034…e2215c`. Session 1: 10 labeled (1 pedestrian_cross+doubt, 1 none+doubt, 8 none).
 - local_vlm RAM gate failed → local-only (D10).
 
-## Day 3 (this tag stays v0.2-eval-frozen; next tag = v0.3-mined)
+## Day 3 (done; tag stayed v0.2-eval-frozen)
 
 - T0 Mode A/B on 360 → `results/t0_flags.parquet`. Sanitized-manifest assert.
 - Join v2 + 10 re-handchecks. DINO config D12 (combined 960×540, 1 frame/window).
-- Smoke E2E 5 labeled windows. **DASHSCOPE_API_KEY still needed before Day 4.**
-- CODA-LM path on: load 500 (1,123 GT objects), overlap check (no `nuscenes_sample_tokens.json`, 0 mini-token leak → held-out stands). Detector smoke 50 images: object-level recall **0.177** (vehicle 0.68 / vru 0.88 / cone+barrier 0 — phrases do not cover them). Not the official 500-image number.
-- Smoke E2E 5 labeled windows: parse_ok **1.0**. Search works. **DASHSCOPE_API_KEY still missing — needed before Day 4.**
+- CODA-LM path on: load 500 (1,123 GT objects), overlap 0. Detector smoke 50: object-level recall 0.177 (not official).
+- 6 Day-3 commits pushed (`e6a3b38`).
+
+## Day 4 (GT-60 detector + API done — v0.3-mined eligible, not tagged this turn)
+
+- D14: corpus = 1 middle frame; GT-60 = full 6 frames. Sequential overnight, checkpoint 50, atomic write, heartbeat.
+- D15: cut_in tightened (slope + ego-lane ≥25% ≥2). **105 → 0**. status=enabled. Coverage splits T0-enabled / T0-disabled.
+- GT: **35/60** labeled (session-2 +25, last-write-wins). Session-2 anchors: **1/5 class-flip** (C3) → STOP + re-read card + range re-label none.
+- Detector: GT-60 full-6 **done** (60/60, 4111 boxes, 0 partial JSON, 4785 s ≈ 80 min). Corpus 360 middles running.
+- API: IteraCompute `qwen/qwen3.8-27b` (pre-reg **v0.2.2**, D16). Canary 5/5 schema JSON; 1 middle image/request; grounding on claims only. GT-60 mined 60/60 (parse_ok 55; schema_violation 3; loop_detected 2). Tokens 70,260 + 6,164 = **76,424** ($0 / 30M mo). Corpus API skipped (headroom).
 
 ## Effort (corrected)
 

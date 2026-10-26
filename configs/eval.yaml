@@ -113,3 +113,22 @@ gt_list:
   - scene-1100_CAM_FRONT_1542800992412460
   - scene-1100_CAM_FRONT_LEFT_1542800990904844
   exclude_handchecks: true
+backends_actual:
+  recorded_at: "2026-10-26"
+  detector: "gt60_full6 + corpus_middle1 (D14)"
+  api_vlm: "iteracompute/qwen/qwen3.8-27b"
+  local_vlm: "local-only"
+  free_quota_only: true
+  pre_reg: "v0.2.2"
+  note: "D16. DashScope unavailable. Canary required every session. 1 image/request."
+canary:
+  n: 5
+  required_every_session: true
+  compare: [class_set_pm1, token_delta_gt_20pct, parse_ok_flip]
+  note: "REQUIRED at the start of every API session (reseller quantization may change); do not compare hashes"
+  window_ids:
+  - scene-0061_CAM_FRONT_1532402939662460
+  - scene-0916_CAM_FRONT_1538984236412460
+  - scene-1077_CAM_FRONT_RIGHT_1542800373920345
+  - scene-0757_CAM_FRONT_RIGHT_1535657108270482
+  - scene-0796_CAM_FRONT_LEFT_1538448756504844

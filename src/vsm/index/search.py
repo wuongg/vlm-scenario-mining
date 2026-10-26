@@ -20,11 +20,13 @@ class WindowHit:
 
 @dataclass
 class CoverageReport:
-    """Three columns — never call this 'recall'."""
+    """Three columns — never call this 'recall'. T0-enabled vs T0-disabled are split."""
 
     count: int
     t0_evidence: int
     parse_fail: int
+    t0_enabled: int = 0
+    t0_disabled: int = 0
     window_ids_none: list[str] = field(default_factory=list)
 
 

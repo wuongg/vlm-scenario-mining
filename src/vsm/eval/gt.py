@@ -509,6 +509,19 @@ def pick_quick_scan_windows(windows: pl.DataFrame, n: int = 20, seed: int = 13) 
     return pick_handcheck_windows(windows, n=n, seed=seed)
 
 
+def load_gt_labels(path: Path | None = None) -> pl.DataFrame:
+    """Last-write-wins per window_id so session-2 anchor flips replace session-1 rows."""
+
+    src = Path(path or REPO_ROOT / "results" / "gt_labels.jsonl")
+    if not src.exists():
+        return pl.DataFrame(schema={"window_id": pl.Utf8, "class_set": pl.List(pl.Utf8)})
+    rows = [json.loads(line) for line in src.read_text(encoding="utf-8").splitlines() if line.strip()]
+    last: dict[str, dict] = {}
+    for rec in rows:
+        last[str(rec["window_id"])] = rec
+    return pl.DataFrame(list(last.values())) if last else pl.DataFrame()
+
+
 def labeling_session(windows: pl.DataFrame, frames: pl.DataFrame, labeler: str, blinded: bool = False) -> Path:
     """Launch the 6-frame tool. Session cap lives in eval.yaml."""
 

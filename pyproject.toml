@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vsm"
+version = "0.1.0"
+description = "Three-stage labeling cascade over a frame-level index of driving data"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "VLM Scenario Mining contributors" }]
+dependencies = [
+    "pydantic>=2",
+    "pyyaml",
+    "polars",
+    "pyarrow",
+    "pillow",
+    "requests",
+    "orjson",
+    "pytest",
+    "ruff",
+    "tqdm",
+    "matplotlib",
+    "numpy",
+    "duckdb",
+    "shapely",
+]
+
+[project.optional-dependencies]
+api = ["openai"]
+local = ["transformers", "torch"]
+detect = ["transformers", "torch", "supervision"]
+video = ["opencv-python-headless"]
+
+[project.scripts]
+vsm = "vsm.index.serve_cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: downloads or real nuScenes I/O — never in CI",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["vsm"]

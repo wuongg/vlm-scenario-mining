@@ -45,7 +45,7 @@ def _category_name(ann: dict, instances: dict, categories: dict) -> str:
 def extract_gt_boxes(nusc: dict[str, Any], cfg: Settings) -> pl.DataFrame:
     """Project GT 3D boxes to 2D and keep a drop_rate column (not a VLM miss)."""
 
-    from vsm.geometry.projection import filter_boxes_in_image, pixel_to_qwen_bbox, project_box_global_to_pixel
+    from vsm.geometry.projection import box_corners_in_camera, filter_boxes_in_image, pixel_to_qwen_bbox
 
     ingest = cfg.model_dump()
     cameras = tuple(ingest.get("cameras") or CAMERAS)
@@ -64,18 +64,21 @@ def extract_gt_boxes(nusc: dict[str, Any], cfg: Settings) -> pl.DataFrame:
                 continue
             sd_token = sd["token"]
             boxes = anns_by_sample.get(sample["token"], [])
-            projected_pairs: list[tuple[dict, object]] = []
+            projected_pairs: list[tuple[dict, object, object]] = []
             for box in boxes:
                 try:
-                    pixels = project_box_global_to_pixel(box, nusc, sd_token)
+                    pixels, z_cam = box_corners_in_camera(box, nusc, sd_token)
                 except (ValueError, KeyError, RuntimeError):
                     continue
-                projected_pairs.append((box, pixels))
-            pixel_list = [p for _, p in projected_pairs]
-            kept, _drop = filter_boxes_in_image(pixel_list, IMAGE_W, IMAGE_H)
+                projected_pairs.append((box, pixels, z_cam))
+            # Per (box, this camera): all sample 3D anns, visibility via THIS cam's extrinsics.
+            # nuScenes anns are camera-agnostic; there is no "boxes belonging to cam" table.
+            pixel_list = [p for _, p, _ in projected_pairs]
+            z_list = [z for _, _, z in projected_pairs]
+            kept, _drop = filter_boxes_in_image(pixel_list, IMAGE_W, IMAGE_H, z_values=z_list)
             kept_ids = {id(k) for k in kept}
             projected: list[dict[str, Any]] = []
-            for box, pixels in projected_pairs:
+            for box, pixels, _z in projected_pairs:
                 if id(pixels) not in kept_ids:
                     continue
                 xs = [float(p[0]) for p in pixels]
@@ -116,7 +119,11 @@ def _attach_gt(frames: pl.DataFrame, nusc: dict[str, Any], cfg: Settings) -> pl.
     overlap = [c for c in (COLS.OBJECTS_JSON.value, COLS.GT_DROP_RATE.value) if c in frames.columns]
     if overlap:
         frames = frames.drop(overlap)
-    return frames.join(gt, on=[COLS.SAMPLE_TOKEN.value, COLS.CAMERA.value], how="left")
+    joined = frames.join(gt, on=[COLS.SAMPLE_TOKEN.value, COLS.CAMERA.value], how="left")
+    stray = [c for c in joined.columns if c.endswith("_right")]
+    if stray:
+        joined = joined.drop(stray)
+    return joined
 
 
 def build_frames_table(mini_root: Path, map_root: Path, cfg: Settings) -> pl.DataFrame:

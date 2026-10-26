@@ -7,7 +7,7 @@ import numpy as np
 from vsm.constants import IMAGE_H, IMAGE_W
 from vsm.geometry.fixture import run_geometry_fixture
 from vsm.geometry.map_layers import MapVersionError, bev_lane_position, synthetic_map_layers
-from vsm.geometry.projection import rescale_qwen_bbox
+from vsm.geometry.projection import filter_boxes_in_image, rescale_qwen_bbox
 from vsm.geometry.synth_fixtures import expected_pixel_of_point, make_synth_nusc
 
 
@@ -47,3 +47,18 @@ def test_map_version_mismatch_raises() -> None:
         assert MapVersionError is not None
     finally:
         ml._PINNED_VERSION = old
+
+
+def test_behind_camera_z_is_dropped() -> None:
+    corners = np.array(
+        [[100.0, 100.0], [200.0, 100.0], [200.0, 200.0], [100.0, 200.0]] * 2,
+        dtype=np.float64,
+    )
+    z_behind = np.full(8, -1.0)
+    kept, drop = filter_boxes_in_image([corners], IMAGE_W, IMAGE_H, z_values=[z_behind])
+    assert kept == []
+    assert drop == 1.0
+    z_front = np.full(8, 5.0)
+    kept_f, drop_f = filter_boxes_in_image([corners], IMAGE_W, IMAGE_H, z_values=[z_front])
+    assert len(kept_f) == 1
+    assert drop_f == 0.0

@@ -92,8 +92,8 @@ def _transform_global_to_sensor(
     return pts
 
 
-def project_box_global_to_pixel(box: dict, nusc: dict[str, Any], sd_token: str) -> np.ndarray:
-    """Return (8, 2) pixel corners. Ego transform runs before calibrated_sensor."""
+def box_corners_in_camera(box: dict, nusc: dict[str, Any], sd_token: str) -> tuple[np.ndarray, np.ndarray]:
+    """Return ((8, 2) pixels, (8,) camera-frame z). Ego transform runs before calibrated_sensor."""
 
     sd = nusc["sample_data"][sd_token] if not isinstance(nusc["sample_data"], dict) else nusc["sample_data"][sd_token]
     if isinstance(nusc["sample_data"], list):
@@ -112,8 +112,16 @@ def project_box_global_to_pixel(box: dict, nusc: dict[str, Any], sd_token: str) 
     )
     k = np.asarray(cs["camera_intrinsic"], dtype=np.float64)
     img = view_points(cam, k, normalize=True)
-    # sign-flip trap: z<0 corners invert after normalize — caller must filter
-    return np.stack((img[0, :], img[1, :]), axis=1)
+    # sign-flip trap: z<0 corners invert after normalize — caller must filter via z
+    pixels = np.stack((img[0, :], img[1, :]), axis=1)
+    return pixels, np.asarray(cam[2, :], dtype=np.float64).reshape(-1)
+
+
+def project_box_global_to_pixel(box: dict, nusc: dict[str, Any], sd_token: str) -> np.ndarray:
+    """Return (8, 2) pixel corners. Ego transform runs before calibrated_sensor."""
+
+    pixels, _z = box_corners_in_camera(box, nusc, sd_token)
+    return pixels
 
 
 def filter_boxes_in_image(

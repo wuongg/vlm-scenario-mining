@@ -14,7 +14,7 @@
 
 - **`red_light_violation` has no GT** on nuScenes (no signal-state labels). The class is a *violation event*, not a lamp state. `signal_state` is an attribute (on|off|unclear). Unsupported-claim audit may mention it; GT-bounded hallucination must not.
 - **Night confound:** mini has 3 Night scenes, all in `singapore-hollandvillage`. A night-condition claim is a map claim until a larger split exists. See `configs/ingest.yaml` `conditions.night_map_confound`.
-- **GT bbox drop-rate** from `box_in_image` is a separate column (`gt_drop_rate`). Dropped boxes are not VLM misses.
+- **GT bbox drop-rate** from `box_in_image` (with camera-frame z) is a separate column (`gt_drop_rate`). Denominator = all 3D sample anns projected through *this* camera. Day-2 remesure mean **0.799**. Dropped boxes are not VLM misses.
 
 ## CODA-LM Test 500 (pre-downloaded Day 1, not in the P0 headline)
 

@@ -12,7 +12,7 @@ Proposal numbers are **not** the paper numbers. Measured on nuScenes mini after 
 | windows | 360 | **360** | N=floor((K−6)/3)+1 per (scene, cam) matches |
 | SG scenes | unspecified | **6** | 3 hollandvillage + 2 queenstown + 1 onenorth; Boston 4 |
 | night frames / windows | 3 night scenes, all hollandv | **363 frames / 108 windows** | all `singapore-hollandvillage` — confound holds |
-| GT drop-rate mean | — | **0.584** | `box_in_image` drops; not a VLM miss |
+| GT drop-rate mean | — | **0.799** (Day-1 0.584 was a bug) | per (box, this camera) + z>near. FRONT 0.705 / LEFT 0.903 / RIGHT 0.790. 11,233 behind-cam boxes were kept after sign-flip without z. In-front-only denom = 0.604. Not a VLM miss. See D8. |
 | geometry max pixel error | <2 px | **0.00 px** | synthetic oracle; mutations all fail as required |
 
 ## Design deltas to ask, not silently patch

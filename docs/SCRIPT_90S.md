@@ -16,6 +16,6 @@ API: 4 claims, recall 0.3 / precision 0.75 — qualitative only (`n_pos<5`). Two
 
 CODA-LM Test 500, images complete: object-R **0.345** (387/1123). Barrier/cone zeros are phrase-coverage, not missing files.
 
-Frontier is three $0 points. Routing exists as a skeleton; the reseller's logprobs flag is a stub, so the τ curve stays a step.
+Frontier is three $0 points. Routing is a skeleton: step at dummy confidences; τ* spatial 0.8 is not a calibrated policy. The reseller's logprobs flag is a stub.
 
 One README number equals one primary cell. That is the product.

@@ -1,10 +1,15 @@
-"""Day 12 GIF/plots. Day 1 no-ops with an explicit message."""
+"""Regenerate presentation plots from frozen CSVs. Run twice → same bytes."""
 
 from __future__ import annotations
 
+import json
+
+from vsm.viz.plots import write_all
+
 
 def main() -> int:
-    print("assets are Day 12")
+    written = write_all()
+    print(json.dumps(written, indent=2))
     return 0
 
 

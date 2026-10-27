@@ -1,0 +1,14 @@
+{
+  "citation": 2,
+  "title": "claims need evidence",
+  "sibling": "results/0757_oscillation.json",
+  "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+  "model_id": "qwen/qwen3.8-27b",
+  "request": {"logprobs": true, "top_logprobs": 5, "temperature": 0.0, "enable_thinking": false},
+  "completion_tokens": 138,
+  "n_logprob_tokens": 1,
+  "finding": "API accepted logprobs=True (HTTP 200) but returned 1 stub token instead of 138 completion tokens — lying-by-omission.",
+  "usable_for_tau_sweep": false,
+  "self_consistency": "not run (D17 freeze / 0757 oscillation)",
+  "source": "results/logprob_probe.json"
+}

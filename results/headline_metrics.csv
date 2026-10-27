@@ -91,3 +91,7 @@ matching,n_same_window,,,7,10,
 matching,min_tIoU,,,0.9803921568627451,,
 matching,max_tIoU,,,1.0,,
 matching,saturates,,,False,,window-level matching saturates at this GT granularity (tIoU≥0.98 on all 10 TPs; 3/10 are cross-camera time-overlap); event-level tIoU needs finer GT windows (single-window events). Matcher not tightened Day 9.
+index,headline_events,,,45,221,D22 stitch post; corpus ped_cross windows
+killswitch,pass,,,3/3,3,Day-7 gate; results/killswitch.json
+routing,tau_star_spatial,,,0.8,,skeleton result, not calibrated policy; U=0.367
+routing,wording,,,step at dummy 0.75/0.85,,"2-point frontier with a step at dummy confidences; per-class τ routing deferred to v1.1 (confidence source unavailable: logprob stub documented)"

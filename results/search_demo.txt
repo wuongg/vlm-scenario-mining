@@ -1,0 +1,34 @@
+# vsm search demo (frozen queries; seed search_demo=0)
+
+## query: người sang đường
+4.600	scene-0655_CAM_FRONT_1535385099362404	class=lane_split_moto	family=safety_spatial
+  findings: pedestrian_cross safety_spatial pedestrian_cross bus car motorcycle bicycle pedestrian pedestrian traffic sign truck pedestrian_cross safety_spatial pedestrian_
+4.400	scene-0916_CAM_FRONT_1538984236412460	class=lane_split_moto	family=safety_spatial
+  findings: pedestrian_cross safety_spatial pedestrian_cross car motorcycle motorcycle bicycle pedestrian traffic light traffic sign truck truck bus pedestrian_cross safety
+4.400	scene-0061_CAM_FRONT_LEFT_1532402935154844	class=lane_split_moto	family=safety_spatial
+  findings: pedestrian_cross safety_spatial pedestrian_cross car motorcycle pedestrian traffic light traffic sign pedestrian_cross safety_spatial pedestrian_cross
+4.400	scene-1094_CAM_FRONT_RIGHT_1542800850920339	class=pedestrian_cross	family=safety_spatial
+  findings: pedestrian_cross safety_spatial pedestrian_cross bicycle bus car pedestrian traffic light traffic sign pedestrian_cross safety_spatial pedestrian_cross
+4.000	scene-0553_CAM_FRONT_1535489297512404	class=lane_split_moto	family=safety_spatial
+  findings: bus car motorcycle pedestrian pedestrian sign traffic light traffic sign pedestrian_cross safety_spatial pedestrian_cross
+
+## query: xe máy cắt làn
+3.700	scene-1077_CAM_FRONT_1542800367912460	class=lane_split_moto	family=safety_spatial
+  findings: car car motorcycle car truck traffic car car
+3.600	scene-0916_CAM_FRONT_1538984246912460	class=lane_split_moto	family=safety_spatial
+  findings: car car truck motorcycle traffic sign truck bus car car
+3.600	scene-0796_CAM_FRONT_RIGHT_1538448747520339	class=lane_split_moto	family=safety_spatial
+  findings: car car bus motorcycle traffic light traffic sign car car
+3.600	scene-0757_CAM_FRONT_1535657121612404	class=lane_split_moto	family=safety_spatial
+  findings: car car motorcycle motorcycle pedestrian traffic light traffic sign truck bus pedestrian_cross safety_spatial pedestrian_cross
+3.600	scene-0061_CAM_FRONT_RIGHT_1532402935170339	class=lane_split_moto	family=safety_spatial
+  findings: car car truck motorcycle motorcycle bicycle pedestrian traffic light traffic sign truck pedestrian_cross safety_spatial pedestrian_cross
+
+## coverage (negative-space; not recall)
+{
+  "count": 9,
+  "t0_evidence": 358,
+  "parse_fail": 5,
+  "t0_enabled": 0,
+  "t0_disabled": 0
+}

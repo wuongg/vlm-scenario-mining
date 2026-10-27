@@ -74,9 +74,21 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - README T2 filled (capability 9/5/1, rejected-findings 8, data/licensing, results table). T1 + GIF still Day 12.
 - Tag **v1.0**.
 
-## Remaining (Day 12)
+## Day 10–11 (done)
 
-- T1 ≤150 words + GIF (`make assets`). Pretty plots. No new headline number.
+- README T2 self-check: numbers trace to frozen CSV; claims wording (pre-registered / cross-locale sanity / capability-stratified / GT-bounded vs unsupported). Cross-camera limitation explicit. Routing wrap-up wording (D27).
+- `make_assets.py` regenerates `frontier.png` / `quadrant.png` / `recall_bars.png` from CSV. `results/search_demo.txt` for the Day-12 GIF.
+- Tag **v1.1-ROUTING-SKELETON**. v1.0 tag message already has kill-switch 3/3, box-vs-event, CODA 0.345.
+- Outreach drafts: `docs/OUTREACH.md`, `docs/REPO_COMPARE.md`, `docs/SCRIPT_90S.md`.
+
+## v1.1 plan (routing, later)
+
+Per-class τ deferred until a real confidence source exists (logprob stub documented). Do not self-consistency under D17 freeze.
+
+## Remaining (Days 12–14)
+
+- Day 12: T1 ≤150 words + GIF from `results/search_demo.txt` + the three regenerated plots. No new headline number. interpretation_gate must still pass.
+- Day 13–14: post + template-sync with repo #1 (`docs/REPO_COMPARE.md`). User reviews outreach CV lines.
 
 ## Day 6 (done — commit `0e5e22d`)
 

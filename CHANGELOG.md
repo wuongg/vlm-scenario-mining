@@ -5,6 +5,12 @@ Format: what changed and why.
 
 ## [Unreleased]
 
+## [v1.1-ROUTING-SKELETON] — 2026-10-27
+
+- Routing wrap-up: 2-point $0 frontier with a step at dummy confs (0.75/0.85); per-class τ deferred; τ* spatial=0.8 is a skeleton result, not a calibrated policy. Logprob stub documented (`results/logprob_stub.json`).
+- README T2 self-check: every headline number traces to `headline_metrics.csv`; cross-camera + matching-saturation limitations; CODA transfer/doesn't; claims-need-evidence citations (0757 + logprob stub).
+- Honest-failure trail v0.1→v1.1: 0757 oscillation, logprob stub, corpus API held (D17/D20), matching saturation (D25), CODA phrase zeros (D24). `make_assets.py` regenerates frontier / quadrant / recall bars from frozen CSVs.
+
 ## [v1.0] — 2026-10-27
 
 - GT-60 pre-registered eval frozen: detector event R=1.0 / P=0.196 vs box R=0.212 / P=0.440 — the join rule is the story; API 4 claims R=0.3 / P=0.75 (qualitative); CODA cross-locale sanity R=0.345 object-level; 2-point frontier $0 (3 rows: detector / API-GT60 / union).

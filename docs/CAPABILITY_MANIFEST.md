@@ -24,4 +24,4 @@ DESIGN_LOG (`architecture_final_v5_mvp.md` / v4) was **not in the workspace on D
 
 ## Partial (1)
 
-1. Family-level routing skeleton (`eval/routing.py`). Utility frozen; confidence is dummy until a logprob/self-consistency source lands.
+1. Family-level routing skeleton (`eval/routing.py`). Utility frozen. 2-point frontier with a step at dummy confidences; per-class τ deferred (logprob stub). τ* spatial=0.8 is a skeleton result, not a calibrated policy.

@@ -1,0 +1,13 @@
+{
+  "gitleaks_history": true,
+  "gitleaks_src_scripts": true,
+  "notebooks_in_history": false,
+  "scratch_files": [],
+  "gitignore_covers_data": true,
+  "license_mit": true,
+  "data_licensing_section": true,
+  "uv_lock_present": true,
+  "results_scan": "committed results clean (git history); working-tree results/env is gitignored and not scanned",
+  "notes": [],
+  "ok": true
+}

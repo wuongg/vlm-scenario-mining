@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 from vsm.config import REPO_ROOT
 
@@ -132,11 +133,80 @@ def quadrant_heatmap(dest: Path) -> Path:
     return dest
 
 
+def _terminal_frame(title: str, body: str) -> Image.Image:
+    """Render one dark terminal frame. Bytes are deterministic (Agg + no PNG metadata)."""
+
+    fig, ax = plt.subplots(figsize=(7.2, 4.05), dpi=120, facecolor="#1e1e1e")
+    ax.set_facecolor("#1e1e1e")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    ax.text(
+        0.02,
+        0.96,
+        title,
+        color="#9cdcfe",
+        fontsize=9,
+        fontfamily="DejaVu Sans Mono",
+        va="top",
+        transform=ax.transAxes,
+    )
+    ax.text(
+        0.02,
+        0.88,
+        body,
+        color="#d4d4d4",
+        fontsize=7.4,
+        fontfamily="DejaVu Sans Mono",
+        va="top",
+        transform=ax.transAxes,
+        linespacing=1.35,
+    )
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    fig.canvas.draw()
+    rgba = np.asarray(fig.canvas.buffer_rgba())
+    plt.close(fig)
+    return Image.fromarray(rgba).convert("P", palette=Image.Palette.ADAPTIVE, colors=48)
+
+
+def demo_gif(dest: Path, source: Path | None = None) -> Path:
+    """3-frame GIF from the frozen search_demo.txt (no live CLI)."""
+
+    raw = (source or (REPO_ROOT / "results" / "search_demo.txt")).read_text(encoding="utf-8")
+    parts = raw.split("## ")
+    blocks: dict[str, str] = {}
+    for part in parts:
+        if not part.strip():
+            continue
+        head, _, rest = part.partition("\n")
+        blocks[head.strip()] = rest.strip().replace("\t", "    ")
+    q1 = blocks.get("query: người sang đường", "")
+    q2 = blocks.get("query: xe máy cắt làn", "")
+    cov = blocks.get("coverage (negative-space; not recall)", "")
+    frames = [
+        _terminal_frame('$ vsm search "người sang đường"', q1),
+        _terminal_frame('$ vsm search "xe máy cắt làn"', q2),
+        _terminal_frame("$ coverage (negative-space; not recall)", cov),
+    ]
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    frames[0].save(
+        dest,
+        save_all=True,
+        append_images=frames[1:],
+        duration=1800,
+        loop=0,
+        optimize=False,
+        disposal=2,
+    )
+    return dest
+
+
 def write_all(dest_dir: Path | None = None) -> dict[str, str]:
     dest = dest_dir or (REPO_ROOT / "results")
     out = {
         "frontier": str(frontier_plot(dest / "frontier.png")),
         "recall_bars": str(recall_bars(dest / "recall_bars.png")),
         "quadrant": str(quadrant_heatmap(dest / "quadrant.png")),
+        "demo": str(demo_gif(dest / "demo.gif")),
     }
     return out

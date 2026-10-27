@@ -5,6 +5,10 @@ Format: what changed and why.
 
 ## [Unreleased]
 
+- README T1 TL;DR (≤150 words) + `results/demo.gif` from frozen `search_demo.txt`. No new tag (presentation). SCRIPT_90S Act 1 corrected: repo#1 is the EV scheduler (VOI / min-cap / drift→retrain), not the join story.
+- Hygiene final gate (Day 12): gitleaks history + src/scripts scan clean; `git log --all --full-history -- "*.ipynb"` empty; `.gitignore` covers `data/*`; LICENSE MIT + Data & Licensing section intact; no scratch (`test2.py`, `_old/`); `uv.lock` pinned; every tag hygiene already recorded. Checklist: `results/hygiene_final.json`.
+- D28 template-sync vs ev-charging-intel (observe-only): badge layout already aligned; repo#1 has no CHANGELOG; frozen-tag footer added; REPO_COMPARE cascade row fixed.
+
 ## [v1.1-ROUTING-SKELETON] — 2026-10-27
 
 - Routing wrap-up: 2-point $0 frontier with a step at dummy confs (0.75/0.85); per-class τ deferred; τ* spatial=0.8 is a skeleton result, not a calibrated policy. Logprob stub documented (`results/logprob_stub.json`).

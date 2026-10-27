@@ -85,10 +85,23 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 
 Per-class τ deferred until a real confidence source exists (logprob stub documented). Do not self-consistency under D17 freeze.
 
-## Remaining (Days 12–14)
+## Day 12 (done)
 
-- Day 12: T1 ≤150 words + GIF from `results/search_demo.txt` + the three regenerated plots. No new headline number. interpretation_gate must still pass.
-- Day 13–14: post + template-sync with repo #1 (`docs/REPO_COMPARE.md`). User reviews outreach CV lines.
+- README T1 ≤150 words + `results/demo.gif` from `search_demo.txt` (family-label noise left frozen). interpretation_gate still 1.0. No new tag.
+- SCRIPT_90S Act 1 corrected (repo#1 = EV scheduler / VOI, not join-honesty).
+- Hygiene final gate: `results/hygiene_final.json`.
+
+## Day 13–14 (done)
+
+- D28 template-sync vs ev-charging-intel (observe-only). Profile README on `github.com/wuongg`. Post draft in `docs/OUTREACH.md` — user reviews before publish.
+- GitHub Releases created from the five annotated tags. NEXT_STEPS closing below.
+
+## What I'd do next (not this freeze)
+
+- v1.1 per-class τ routing — blocked on a real confidence source (logprob stub documented).
+- CODA-LM event-level extension (object table is the current sanity cell).
+- VN Mapillary smoke, CC-BY-SA only.
+- Corpus API tier if the reseller backend is stable (D17 freeze still in force today).
 
 ## Day 6 (done — commit `0e5e22d`)
 

@@ -2,9 +2,11 @@
 
 Speak this. Do not demo a dashboard. No GIF in this file.
 
-## Act 1 — repo #1 (design, ~25 s)
+## Act 1 — repo #1 (decision layer, ~25 s)
 
-A cascade over driving frames only works if the *join* is honest: a pedestrian box is not a crossing event. Pre-register the headline class, freeze the GT list, and refuse to promote empty classes.
+Repo #1 is a workplace EV charging scheduler: a rolling-horizon LP under site-capacity constraints. Eval was pre-registered. Value of information: the best non-oracle dwell belief still costs 182% of charge-on-arrival. Min capacity that serves the bank is 79.6 kW. Drift alarm → retrain cuts pinball −67.8%.
+
+Same rigor, different layer — repo #2 attacks the data layer.
 
 ## Act 2 — this repo (eval, ~65 s)
 

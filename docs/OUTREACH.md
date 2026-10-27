@@ -16,8 +16,24 @@ No inter-rater claim. CODA is its own bullet, not mixed into the mini headline.
 
 ## 90-second script
 
-See [`docs/SCRIPT_90S.md`](SCRIPT_90S.md). Two acts: repo#1 (join honesty) → this repo (frozen cell + limitations).
+See [`docs/SCRIPT_90S.md`](SCRIPT_90S.md). Two acts: repo#1 (EV scheduler / VOI) → this repo (frozen cell + join + limitations).
 
 ## Definition cards
 
 Class cards + eval vocabulary (policy / hallucination / frontier / pre-registered / negative-space): [`docs/DEFINITION_CARDS.md`](DEFINITION_CARDS.md).
+
+## LinkedIn / VN-DS post (draft — do not publish until user review)
+
+Detector event recall is 1.0. Box recall is 0.212. The join rule is the story.
+
+I built a three-stage labeling cascade (rules → open-vocab detector → VLM) over a frame-level index of nuScenes mini.
+
+- What: mines ADAS events from 360 driving windows; keyword search returns window_id + findings + coverage.
+- Eval: pre-registered headline `{pedestrian_cross}` @ tIoU=0.5. Kill-switch 3/3. Claim-audit: 2/4 GT-bounded hallucinations (qualitative, n_pos<5). CODA-LM Test 500 as a cross-locale object check (R=0.345).
+- Frontier: three $0 points. Routing stays a skeleton — the reseller's logprobs flag is a stub.
+
+Repo: https://github.com/wuongg/vlm-scenario-mining
+
+#computervision #autonomousdriving #dataengineering
+
+(~145 words. No “VN data”. No agent count.)

@@ -8,7 +8,11 @@ Three-stage labeling cascade over a frame-level index of driving data.
 
 ## T1 — TL;DR
 
-<!-- ≤150 words + GIF. Placeholder until Day 12 `make assets`. -->
+A three-stage cascade (rules → detector → VLM) mines ADAS events from a frame-level index of driving data.
+
+![vsm search: queries return window_id, class, findings, and coverage](results/demo.gif)
+
+Detector event recall is **1.0** but box recall is 0.212 — the join rule is the story. Cost frontier: three $0 points. Eval is pre-registered: the headline cell was frozen before the official table. Every claim: [T2](#t2--one-page).
 
 ## T2 — One page
 
@@ -94,3 +98,5 @@ make test
 make lint
 make assets
 ```
+
+Frozen tags: [`v1.0`](https://github.com/wuongg/vlm-scenario-mining/releases/tag/v1.0) (eval) · [`v1.1-ROUTING-SKELETON`](https://github.com/wuongg/vlm-scenario-mining/releases/tag/v1.1-ROUTING-SKELETON) (routing wrap-up). T1 / GIF are presentation — no later tag.

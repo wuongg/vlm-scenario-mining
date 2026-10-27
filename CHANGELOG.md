@@ -5,11 +5,12 @@ Format: what changed and why.
 
 ## [Unreleased]
 
-- Day-8 official GT-60 first run (grid provenance): ped_cross recall@tIoU {0.3,0.5,0.7} + Wilson/n_eff + per-scene + condition + FP + claim-audit. Routing skeleton (`eval/routing.py`) with frozen U=1·%auto−5·FN-auto.
-- D21: CODA2022-test 500/500 on disk. Official object-R 0.345 (387/1123). Do not quote the Day-7 missing-image figure. D22 stitch duration cap 30 s / 15 windows: corpus 221→45, overmerge 0.
-- Kill-switch 3/3 pass — v1.0-track continues. D20 ship 2-point frontier (corpus API not retried). `results/cost_frontier.csv` frozen (draft grid numbers until Day 9).
-- Pre-reg v0.2.3 appendix: corpus API held at GT-60. Detector event vs box P/R split (D19). `eval/metrics.py` n_eff-Wilson + kill-switch script. Phrase keep (D18).
-- Session-3 GT 60/60; canary-lite freeze (D17) blocked corpus API. missing_none_flag → schema_violation (0757). Draft ped_cross stitch/recall + quadrant on GT-60.
+## [v1.0] — 2026-10-27
+
+- GT-60 pre-registered eval frozen: detector event R=1.0 / P=0.196 vs box R=0.212 / P=0.440 — the join rule is the story; API 4 claims R=0.3 / P=0.75 (qualitative); CODA cross-locale sanity R=0.345 object-level; 2-point frontier $0 (3 rows: detector / API-GT60 / union).
+- Kill-switch 3/3 pass (Day 7). Matching saturates at window granularity (D25). Combined-caption CODA zeros documented (D24). Routing logprobs are a stub (D26); τ frontier stays a step.
+- Claim-audit raw counts: 2/4 GT-bounded hallucination, 0/4 detector-unsupported; n_pos<5. interpretation_gate: README 1.0 = primary cell. Tag v1.0.
+- Path: D17 canary freeze held corpus API; D20 shipped the 2-point $0 frontier; D21 fetched CODA 500/500 (R=0.345); D22 stitch 221→45 overmerge 0.
 
 ## [v0.3-mined] — 2026-10-26
 

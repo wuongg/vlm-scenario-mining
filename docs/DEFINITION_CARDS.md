@@ -16,3 +16,15 @@ Read TRIGGER then EXCLUDE. Gold for the Day-2+ anchor-alarm. Do not edit after t
 | pedestrian_cross | safety_spatial | Pedestrian or cyclist crosses the ego path or a marked/unmarked crossing in-window. | Pedestrian waiting on the curb with no trajectory into the roadway. |
 | red_light_violation | compliance | EVENT: a relevant actor is in the intersection against a red facing signal. | Lamp-only (no actor); `signal_state` is an attribute, not the class. No signal GT on mini. |
 | none | none | No listed scenario is clearly present (empty-per-taxonomy). | Do not combine with any positive class. Use uncertain (schema slot) when the definition is doubtful. |
+
+## Eval vocabulary (Day 9 — not class cards)
+
+Five terms from the claims-audit. Not labeling TRIGGER/EXCLUDE; do not use these as `class_set` values.
+
+| term | TRIGGER (what it is) | EXCLUDE (what it is not) |
+|---|---|---|
+| policy | A dated, frozen rule in `configs/*.yaml` + pre-reg that binds a later table. Changing it is a version bump. | A vibe, a post-hoc threshold pick, or a README number that disagrees with `headline_metrics.csv`. |
+| hallucination | **GT-bounded:** a class claimed on a GT window whose label is not that class (claim-audit raw counts). | A schema-forced none (`parse_ok=false`); a detector miss; an unsupported corpus claim with no GT. |
+| frontier | The $0 Pareto of (recall, precision, cost) for the backends that actually ran. 3 points: detector / API-GT60 / union. | A fourth box-level VRU point; a corpus-API point that was never mined (D20). |
+| pre-registered | The 8 load-bearing items frozen before the official table. Day-9 executed that table. | A fishing license on the tIoU sweep; redrawing GT because scene-0061 is 15/60. |
+| negative-space | Coverage of windows the index *cannot* retrieve for a query (true-none + out-of-headline). | A precision number; a claim that "none" on GT-60 is model accuracy. |

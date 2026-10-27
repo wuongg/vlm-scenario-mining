@@ -5,7 +5,14 @@ from __future__ import annotations
 import polars as pl
 
 from vsm.eval.detector_audit import box_level_pr, event_level_pr
-from vsm.eval.metrics import condition_breakdown, interpretation_gate, neff_wilson, per_scene_range, wilson_interval
+from vsm.eval.metrics import (
+    condition_breakdown,
+    interpretation_gate,
+    neff_wilson,
+    per_scene_range,
+    readme_primary_number,
+    wilson_interval,
+)
 
 
 def test_wilson_bounds() -> None:
@@ -50,6 +57,17 @@ def test_condition_breakdown_night_note() -> None:
 def test_interpretation_gate_mismatch() -> None:
     assert interpretation_gate(0.3, 0.3)["ok"] is True
     assert interpretation_gate(0.3, 0.5)["ok"] is False
+
+
+def test_readme_primary_number_marker() -> None:
+    assert readme_primary_number("<!-- interpretation_gate: 1.0 -->") == 1.0
+
+
+def test_readme_interpretation_gate_frozen_primary() -> None:
+    from vsm.config import REPO_ROOT
+
+    text = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    assert interpretation_gate(1.0, readme_primary_number(text))["ok"] is True
 
 
 def test_event_level_frontier_point() -> None:

@@ -1,0 +1,5 @@
+window_id,class_set,gt_class_set,gt_bounded_hallucination,detector_supported
+scene-0061_CAM_FRONT_LEFT_1532402935154844,pedestrian_cross,,True,True
+scene-0655_CAM_FRONT_1535385099362404,pedestrian_cross,pedestrian_cross,False,True
+scene-0916_CAM_FRONT_1538984236412460,pedestrian_cross,,True,True
+scene-1094_CAM_FRONT_RIGHT_1542800850920339,pedestrian_cross,pedestrian_cross,False,True

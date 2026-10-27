@@ -85,8 +85,13 @@
     {
       "axis": "images",
       "gap": "500/500 CODA2022-test images present locally; missing scored as miss"
+    },
+    {
+      "axis": "phrase-coverage",
+      "gap": "combined caption does not emit barrier/cone phrases \u2014 structural zero, documented; not a missing-image hole"
     }
   ],
   "wording": "cross-locale sanity comparison under a different setup \u2014 not a leaderboard claim",
-  "held_out_ok": true
+  "held_out_ok": true,
+  "frozen": true
 }

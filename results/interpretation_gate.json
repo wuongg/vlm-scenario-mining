@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "primary_cell": 1.0,
+  "readme_number": 1.0,
+  "rule": "README Day-12 number must equal the 1 headline class x recall@0.5 cell",
+  "matching_saturation": {
+    "n_tp": 10,
+    "n_same_window": 7,
+    "min_tIoU": 0.9803921568627451,
+    "max_tIoU": 1.0,
+    "saturates": false,
+    "limitation": "window-level matching saturates at this GT granularity (tIoU\u22650.98 on all 10 TPs; 3/10 are cross-camera time-overlap); event-level tIoU needs finer GT windows (single-window events). Matcher not tightened Day 9."
+  },
+  "leave_one_0061": {
+    "tp": 8,
+    "n_gt": 8,
+    "recall": 1.0
+  }
+}

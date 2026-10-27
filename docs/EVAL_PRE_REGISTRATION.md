@@ -1,6 +1,10 @@
-# Eval pre-registration v0.2.3 — FROZEN 2026-10-26
+# Eval pre-registration v0.3 — FROZEN 2026-10-27
 
 Changes after this file = version bump + changelog. Do not edit in place.
+
+**Primary table executed as pre-registered** (Day 9 freeze). Headline cell = pedestrian_cross recall@tIoU=0.5 = 1.0 (10/10, detector=union). CSV `results/headline_metrics.csv`.
+
+v0.3 adds only the execution appendix (matching saturation, claim-audit n=4 qualitative, Wilson diagnostic wording, CODA structural zeros, routing dummy confs). Headline, GT list, seeds, tIoU, kill-switch, backends, and prior appendices are unchanged.
 
 v0.2.3 adds only the corpus-API appendix (D17). Headline, GT list, seeds, tIoU, kill-switch, backends, and prior appendices are unchanged.
 
@@ -82,3 +86,13 @@ Corpus API tier held at GT-60 only due to backend instability (canary alarms D17
 **Day 7 (D20, sunk-cost):** SHIP 2-point frontier. No retry. GT-60 API already yields 4 claims for claim-audit; corpus API would only add coverage that union ≈ detector already has; reseller still oscillates (`results/0757_oscillation.json`). Corpus tier = detector-only. Frontier = (detector $0, event-R 1.0 / P 0.196) + (API GT-60, R 0.3 / P 0.75) + box-level split (VRU P=0.440 / R=0.212). CSV: `results/cost_frontier.csv`.
 
 This is a reporting guard, not a backend swap and not a GT redraw.
+
+## Appendix — Day-9 execution (v0.3)
+
+Primary table ran as pre-registered. Deviations (reporting, not redraws):
+
+1. **Matching saturation (D25).** Detector/union recall is 1.0 at tIoU {0.3, 0.5, 0.7}. Per-TP tIoU on the 10 matches is ≥0.98 (7 same-window identity; 3 cross-camera time-overlap). Window-level matching saturates at this GT granularity; event-level tIoU needs finer GT windows (single-window events). Matcher not tightened.
+2. **Claim-audit n=4.** Raw counts only (2 GT-bounded hallucination, 0 detector-unsupported). `n_pos<5` → qualitative only, insufficient positives for a rate.
+3. **Wilson n_eff=10, ICC=0.** Interval [0.72, 1.0] is a conservative diagnostic. Honest statement: 10/10 on the 60-window grid, clustered by 10 scenes.
+4. **CODA structural zeros (D24).** Combined caption does not emit barrier/cone phrases — structural zero, documented. Not a missing-image hole. Official object-R 0.345 (387/1123) on 500/500.
+5. **Routing dummy confs (D26).** IteraCompute accepts `logprobs=True` but returns 1 stub token vs 138 completion tokens — not verdict-token confidence. Self-consistency not run (D17 freeze / 0757 oscillation). Family τ frontier stays a step. Limitation, not a third backend.

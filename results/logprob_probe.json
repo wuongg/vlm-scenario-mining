@@ -1,0 +1,17 @@
+{
+  "window_id": "scene-0061_CAM_FRONT_1532402939662460",
+  "model_id": "qwen/qwen3.8-27b",
+  "ok": true,
+  "supported": true,
+  "error": null,
+  "n_logprob_tokens": 1,
+  "usage": {
+    "prompt_tokens": 1171,
+    "completion_tokens": 138
+  },
+  "latency_s": 24.412301540374756,
+  "raw_head": "```json\n{\n  \"findings\": [\n    {\n      \"class\": \"none\",\n      \"label\": \"none\",\n      \"confidence\": 0.9,\n      \"bbox\": [\n        0,\n        0,\n        1000,\n        1000\n      ],\n      \"evidence\": \"The ego vehicle is following a white van in a lane marked with speed limit text. Traffic cones are visible on the right, but no dynamic safety events like cut-ins, sudden braking, or pedestrian crossings are observed in the window.\"\n    }\n  ]\n}\n```",
+  "decision": "logprobs accepted but stub (1 token vs 138 completion) — not verdict-token; keep dummy confs",
+  "usable_for_tau_sweep": false,
+  "self_consistency": "not run: D17 freeze / 0757 oscillation still in force; n=4 claims already qualitative"
+}

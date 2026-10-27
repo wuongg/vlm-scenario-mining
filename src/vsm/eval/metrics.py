@@ -5,9 +5,12 @@ n_scenes=10 is a diagnostic, not a population CI (pre-reg).
 
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from math import sqrt
 from typing import Any, Iterable
+
+_GATE_RE = re.compile(r"interpretation_gate:\s*([0-9]*\.?[0-9]+)")
 
 
 def wilson_interval(k: int, n: float, z: float = 1.96, p: float | None = None) -> tuple[float, float, float]:
@@ -143,3 +146,12 @@ def interpretation_gate(primary_cell: float, readme_number: float, eps: float = 
         "readme_number": float(readme_number),
         "rule": "README Day-12 number must equal the 1 headline class x recall@0.5 cell",
     }
+
+
+def readme_primary_number(text: str) -> float:
+    """Parse `<!-- interpretation_gate: N -->` from README. Missing marker is a freeze fail."""
+
+    match = _GATE_RE.search(text)
+    if match is None:
+        raise ValueError("README missing <!-- interpretation_gate: N --> marker")
+    return float(match.group(1))

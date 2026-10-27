@@ -4,7 +4,7 @@ Proposal numbers are **not** the paper numbers. Measured on nuScenes mini after 
 
 ## Headline (frozen)
 
-Primary event-level cell = recall@tIoU=0.5 on `{pedestrian_cross}` only (pre-reg v0.2.3). Day-8 first-run grid: union **1.0** (10/10) — freeze Day 9.
+Primary event-level cell = recall@tIoU=0.5 on `{pedestrian_cross}` only (pre-reg **v0.3**, executed). Frozen union **1.0** (10/10). `results/headline_metrics.csv`.
 
 CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen fallback: 8/9 classes <3 positives). Mini is pedestrian_cross event-level + qualitative.
 
@@ -66,11 +66,17 @@ CODA-LM Test 500 is the primary **quantitative object-level** table (D13, frozen
 - D20 2-point frontier unchanged. Box-level split stays a note, not a 4th point.
 - No v1.0 tag.
 
-## Remaining (Days 9–12)
+## Day 9 (done)
 
-- Day 9: freeze the official table (same cells as Day 8 unless a bug). Interpretation gate.
-- Day 10–11: README T1/T2 skeleton; still no v1.0 tag until that lands.
-- Day 12: pretty plots (today's `day8_*.png` are drafts). Tag v1.0 after README + interpretation_gate.
+- Frozen `results/headline_metrics.csv`. Pre-reg **v0.3**. interpretation_gate pass (README 1.0 = primary cell).
+- tIoU-per-TP: min 0.980 / max 1.0; 7 same-window, 3 cross-camera. Sweep saturates (D25). Matcher not tightened.
+- D24 CODA structural zeros documented. D26 logprobs stub (1 token / 138); keep dummy confs; no self-consistency.
+- README T2 filled (capability 9/5/1, rejected-findings 8, data/licensing, results table). T1 + GIF still Day 12.
+- Tag **v1.0**.
+
+## Remaining (Day 12)
+
+- T1 ≤150 words + GIF (`make assets`). Pretty plots. No new headline number.
 
 ## Day 6 (done — commit `0e5e22d`)
 

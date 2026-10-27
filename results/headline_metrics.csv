@@ -1,0 +1,93 @@
+section,metric,backend,tIoU,value,n,note
+primary,recall,union,0.5,1.0,10,FROZEN Day-9; window-level matching saturates at this GT granularity (tIoU≥0.98 on all 10 TPs; 3/10 are cross-camera time-overlap); event-level tIoU needs finer GT windows (single-window events). Matcher not tightened Day 9.
+primary,precision,union,0.5,0.19607843137254902,51,
+recall_sweep,recall,api,0.3,0.3,10,
+recall_sweep,precision,api,0.3,0.75,4,
+recall_sweep,tp,api,0.3,3,,
+recall_sweep,fp,api,0.3,1,,
+recall_sweep,fn,api,0.3,7,,
+recall_sweep,recall,api,0.5,0.3,10,
+recall_sweep,precision,api,0.5,0.75,4,
+recall_sweep,tp,api,0.5,3,,
+recall_sweep,fp,api,0.5,1,,
+recall_sweep,fn,api,0.5,7,,
+recall_sweep,recall,api,0.7,0.3,10,
+recall_sweep,precision,api,0.7,0.75,4,
+recall_sweep,tp,api,0.7,3,,
+recall_sweep,fp,api,0.7,1,,
+recall_sweep,fn,api,0.7,7,,
+recall_sweep,recall,detector,0.3,1.0,10,
+recall_sweep,precision,detector,0.3,0.19607843137254902,51,
+recall_sweep,tp,detector,0.3,10,,
+recall_sweep,fp,detector,0.3,41,,
+recall_sweep,fn,detector,0.3,0,,
+recall_sweep,recall,detector,0.5,1.0,10,
+recall_sweep,precision,detector,0.5,0.19607843137254902,51,
+recall_sweep,tp,detector,0.5,10,,
+recall_sweep,fp,detector,0.5,41,,
+recall_sweep,fn,detector,0.5,0,,
+recall_sweep,recall,detector,0.7,1.0,10,
+recall_sweep,precision,detector,0.7,0.19607843137254902,51,
+recall_sweep,tp,detector,0.7,10,,
+recall_sweep,fp,detector,0.7,41,,
+recall_sweep,fn,detector,0.7,0,,
+recall_sweep,recall,union,0.3,1.0,10,
+recall_sweep,precision,union,0.3,0.19607843137254902,51,
+recall_sweep,tp,union,0.3,10,,
+recall_sweep,fp,union,0.3,41,,
+recall_sweep,fn,union,0.3,0,,
+recall_sweep,recall,union,0.5,1.0,10,
+recall_sweep,precision,union,0.5,0.19607843137254902,51,
+recall_sweep,tp,union,0.5,10,,
+recall_sweep,fp,union,0.5,41,,
+recall_sweep,fn,union,0.5,0,,
+recall_sweep,recall,union,0.7,1.0,10,
+recall_sweep,precision,union,0.7,0.19607843137254902,51,
+recall_sweep,tp,union,0.7,10,,
+recall_sweep,fp,union,0.7,41,,
+recall_sweep,fn,union,0.7,0,,
+wilson,n_eff,,,10.0,10,"Wilson on n_eff=10 is a conservative diagnostic; the honest statement is 10/10 on the 60-window grid, clustered by 10 scenes"
+wilson,icc,,,0.0,,ICC=0 — no between-scene ANOVA variance at R=1.0
+wilson,lo,,,0.7224598312333834,,
+wilson,hi,,,1.0,,
+wilson,n_scenes_with_gt_pos,,,5,10,
+per_scene,min,,,1.0,,
+per_scene,median,,,1.0,,
+per_scene,max,,,1.0,,
+per_scene,scene-0061,,,1.0,2,tp=2
+per_scene,scene-0553,,,1.0,3,tp=3
+per_scene,scene-0655,,,1.0,1,tp=1
+per_scene,scene-0757,,,1.0,1,tp=1
+per_scene,scene-1094,,,1.0,3,tp=3
+per_scene,leave_one_scene_out_0061,,,1.0,8,pre-reg v0.2.1 appendix
+condition,day/boston-seaport,,,1.0,5,windows=16
+condition,day/singapore-onenorth,,,1.0,2,windows=15
+condition,day/singapore-queenstown,,,,0,windows=14
+condition,night/singapore-hollandvillage,,,1.0,3,windows=15
+condition,night_confound,,,all night=hollandv,,
+fp,api_gt_bounded_hallucination,,,2,2,
+fp,api_schema_forced,,,5,5,
+fp,detector_event_fp,,,41,41,
+fp,detector_sample_standing,,,7,15,seed=13
+fp,detector_sample_object_fp,,,7,15,
+fp,detector_sample_boundary,,,1,15,
+claim_audit,n_claims,,,4,4,insufficient positives for rate; n_pos<5 → qualitative only
+claim_audit,gt_bounded_hallucination,,,2,4,
+claim_audit,detector_unsupported,,,0,4,
+coda,object_recall,,,0.3446126447016919,1123,387/1123; denom 500
+coda,tp,,,387,1123,
+coda,n_images,,,500,500,
+coda,structural_zeros,,,barrier/cone/other/light=0,,"combined caption does not emit barrier/cone phrases — structural zero, documented"
+coda,vru_recall,,,0.7837837837837838,74,
+coda,vehicle_recall,,,0.7623529411764706,425,
+frontier,detector_only_R,,,1.0,,event ped_cross; $0
+frontier,detector_only_P,,,0.19607843137254902,,"box-level VRU P=0.440 R=0.212 is a note, not a 4th point"
+frontier,api_gt60_R,,,0.3,4,4 claims; qualitative
+frontier,api_gt60_P,,,0.75,4,
+frontier,union_R,,,1.0,,union ≈ detector
+frontier,union_P,,,0.19607843137254902,,
+matching,n_tp_pairs,,,10,10,
+matching,n_same_window,,,7,10,
+matching,min_tIoU,,,0.9803921568627451,,
+matching,max_tIoU,,,1.0,,
+matching,saturates,,,False,,window-level matching saturates at this GT granularity (tIoU≥0.98 on all 10 TPs; 3/10 are cross-camera time-overlap); event-level tIoU needs finer GT windows (single-window events). Matcher not tightened Day 9.

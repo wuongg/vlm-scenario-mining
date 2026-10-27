@@ -131,8 +131,8 @@ backends_actual:
   api_vlm: "iteracompute/qwen/qwen3.8-27b"
   local_vlm: "local-only"
   free_quota_only: true
-  pre_reg: "v0.2.3"
-  note: "D16 IteraCompute. D17 hold + D20 ship 2-point frontier. Canary required every session. 1 image/request."
+  pre_reg: "v0.3"
+  note: "D16 IteraCompute. D17 hold + D20 ship 2-point. D26 logprobs stub. Canary required every session. 1 image/request."
 canary:
   n: 5
   required_every_session: true

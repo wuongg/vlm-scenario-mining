@@ -1,8 +1,8 @@
 {
   "provenance": "grid",
-  "frozen": false,
+  "frozen": true,
   "official_first_run": true,
-  "day9_freeze": "pending",
+  "day9_freeze": "frozen",
   "headline": "pedestrian_cross",
   "recall_tIoU": {
     "api": {
@@ -545,5 +545,15 @@
     },
     "cause": "T0 silent because no enabled predicate fired: night hollandv arterial, moto boxes=14 (lane_split needs \u22653 frames straddle), ped_cross v2 needs ego-path\u2229crossing AND ped in polygon, cut_in D15 is 0 corpus-wide. Not a map-lookup crash \u2014 windows exist and objects project."
   },
-  "do_not_quote_coda_0024": true
+  "do_not_quote_coda_0024": true,
+  "matching_saturation": {
+    "n_tp": 10,
+    "n_same_window": 7,
+    "min_tIoU": 0.9803921568627451,
+    "max_tIoU": 1.0,
+    "saturates": false,
+    "limitation": "window-level matching saturates at this GT granularity (tIoU\u22650.98 on all 10 TPs; 3/10 are cross-camera time-overlap); event-level tIoU needs finer GT windows (single-window events). Matcher not tightened Day 9."
+  },
+  "wilson_honest": "Wilson on n_eff=10 is a conservative diagnostic; the honest statement is 10/10 on the 60-window grid, clustered by 10 scenes",
+  "claim_audit_caveat": "insufficient positives for rate; n_pos<5 \u2192 qualitative only"
 }
